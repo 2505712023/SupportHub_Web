@@ -17,6 +17,7 @@
 - ASP.NET Core
 - Razor Pages
 - SQL Server
+- NetBird
 
 ### Docente:
 
