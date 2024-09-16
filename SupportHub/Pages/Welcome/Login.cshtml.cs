@@ -1,0 +1,41 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+
+namespace SupportHub.Pages.Welcome
+{
+    public class LoginModel : PageModel
+    {
+        private readonly ILogger<LoginModel> _logger;
+        public LoginModel(ILogger<LoginModel> logger)
+        {
+            _logger = logger;
+        }
+
+        [BindProperty]
+        public string Username { get; set; }
+
+        [BindProperty]
+        public string Password { get; set; }
+
+        public void OnGet()
+        {
+        }
+
+        public IActionResult OnPost()
+        {
+            // Aquí deberías implementar la lógica de autenticación
+            // Por ejemplo, validar las credenciales
+
+            // Si la autenticación es exitosa
+            if (Username == "a" && Password == "a") // Ejemplo simple, reemplaza con lógica real
+            {
+                Response.Redirect("/Index");
+            }
+
+            // Si la autenticación falla
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return Page();
+        }
+    }
+}

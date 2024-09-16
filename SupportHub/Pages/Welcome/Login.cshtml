@@ -1,0 +1,29 @@
+﻿@page
+@model SupportHub.Pages.Welcome.LoginModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_LayoutWelcome";
+}
+<script src="https://kit.fontawesome.com/52428cdec5.js" crossorigin="anonymous"></script>
+<section>
+    <div class="contenedor">
+        <div class="formulario">
+            <form method="post">
+                <h>Iniciar Sesión</h>
+            <div class="input-contenedor">
+                    <i class="fa-solid fa-users"></i>
+                    <input type="text" id="username" name="username" required />
+                    <label for="username">Username: </label>
+            </div>
+            <div class="input-contenedor">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" name="password" required />
+                    <label for="#">Password: </label>
+            </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
