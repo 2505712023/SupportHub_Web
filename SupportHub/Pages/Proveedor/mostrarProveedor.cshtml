@@ -1,0 +1,61 @@
+﻿@page
+@model SupportHub.Pages.Proveedor.mostrarProveedorModel
+@{
+    ViewData["Title"] = "Proveedores";
+    Layout = "_Layout";
+}
+<br />
+
+    <link rel="stylesheet" href="~/css/estiloPantallas.css">
+
+
+<div class="content-wrapper" style="max-width: 1300px;  border-radius: 20px;">
+    <h1>Gestión de Proveedores</h1>
+
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <div class="search-bar d-flex">
+                <input type="text" class="form-control me-2" placeholder="Buscar por código o nombre de proveedor...">
+                <button class="btn"><i class="fas fa-search"></i>Buscar</button>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-add"><i class="fas fa-plus-circle"></i>Agregar Proveedor</button>
+        </div>
+    </div>
+
+    <div>
+        <table class="table table-hover align-middle text-center" style="max-width: 1300px; width: 100%;">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.listaProveedor)
+                {
+                    <tr>
+                        <td><input type="checkbox" class="select-checkbox"></td>
+                        <td align="left">@item.codProveedor</td>
+                        <td align="left" >@item.nombreProveedor</td>
+                        <td align="left">@item.direccionProveedor</td>
+                        <td align="left">@item.telefonoProveedor</td>
+
+                        <td>
+                            <button class="btn btn-edit"><i class="fas fa-pen"></i>Modificar</button>
+                            <button class="btn btn-delete"><i class="fas fa-trash"></i>Eliminar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="/js/scriptPantalla.js"></script>
+
+
