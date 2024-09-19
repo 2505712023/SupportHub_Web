@@ -6,10 +6,9 @@
 }
 <br />
 
-    <link rel="stylesheet" href="~/css/estiloPantallas.css">
+<link rel="stylesheet" href="~/css/estiloPantallas.css">
 
-
-<div class="content-wrapper" style="max-width: 1300px;  border-radius: 20px;">
+<div class="content-wrapper" style="max-width: 1300px; border-radius: 20px;">
     <h1>Gestión de Proveedores</h1>
 
     <div class="row mb-3">
@@ -42,10 +41,9 @@
                     <tr>
                         <td><input type="checkbox" class="select-checkbox"></td>
                         <td align="left">@item.codProveedor</td>
-                        <td align="left" >@item.nombreProveedor</td>
+                        <td align="left">@item.nombreProveedor</td>
                         <td align="left">@item.direccionProveedor</td>
                         <td align="left">@item.telefonoProveedor</td>
-
                         <td>
                             <button class="btn btn-edit"><i class="fas fa-pen"></i>Modificar</button>
                             <button class="btn btn-delete"><i class="fas fa-trash"></i>Eliminar</button>
@@ -55,7 +53,11 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Botón para eliminar seleccionados -->
+    <button id="btn-eliminar-seleccionados" class="btn btn-delete">
+        <i class="fas fa-trash"></i>
+    </button>
 </div>
+
 <script src="/js/scriptPantalla.js"></script>
-
-

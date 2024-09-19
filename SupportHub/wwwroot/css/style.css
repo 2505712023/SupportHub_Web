@@ -1,50 +1,50 @@
 ﻿
 body {
-    padding-top: 56px; /* Para la barra superior */
+    padding-top: 56px; 
 }
 
-/* Cambiar color de fondo y texto */
+
 .offcanvas-start {
-    background-color: #05173B; /* Color similar al de la imagen */
+    background-color: #05173B; 
 }
 
 .nav-link {
-    font-size: 1.5rem; /* Tamaño de letra más grande */
-    text-align: center; /* Centrar texto */
-    color: white !important; /* Texto blanco */
-    padding: 15px 0; /* Espaciado adicional para mejorar la legibilidad */
+    font-size: 1.5rem; 
+    text-align: center; 
+    color: white !important; 
+    padding: 15px 0; 
     display: flex;
     align-items: center;
      justify-content: flex-start;
 }
 
     .nav-link:hover {
-        background-color: #061B46; /* Color más oscuro al pasar el cursor */
+        background-color: #061B46; 
     }
-/* Color y alineación de la barra superior */
+
 .navbar-dark {
-    background-color: #05173B; /* Cambiado al color especificado */
+    background-color: #05173B; 
 }
 
 .navbar-brand img {
-    max-height: 100px; /* Tamaño máximo para la imagen */
-    width: auto; /* Mantener proporciones */
-    margin-top: -15px; /* Alineación para que no desborde la barra */
+    max-height: 100px; 
+    width: auto; 
+    margin-top: -15px; 
 }
 .navbar-brand {
     display: flex;
-    justify-content: center; /* Centra horizontalmente la imagen dentro de la navbar-brand */
-    flex-grow: 1; /* Permite que la imagen ocupe el espacio disponible */
+    justify-content: center; 
+    flex-grow: 1
 }
-/* Ajustar tamaño del logo */
+
 .navbar-brand img {
-    height: 60px; /* Puedes ajustar el tamaño del logo */
+    height: 60px; 
 }
 
 .nav-link i {
-    margin-right: 10px; /* Espacio entre el icono y el texto */
-    vertical-align: middle; /* Alinea el icono con el texto */
-    font-size: 1.5rem; /* Ajusta el tamaño del icono si es necesario */
+    margin-right: 10px; 
+    vertical-align: middle;
+    font-size: 1.5rem;
 
 }
 

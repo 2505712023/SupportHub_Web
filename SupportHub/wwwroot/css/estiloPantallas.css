@@ -1,11 +1,14 @@
-﻿body {
+﻿/* Estilos existentes */
+body {
     padding-top: 56px;
 }
+
 table {
-    width: 100%; /* Ajusta el ancho a 100% del contenedor */
-    max-width: 1400px; /* O un valor apropiado dependiendo del diseño general */
-    margin: 0 auto; /* Para centrar la tabla */
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
 }
+
 .content-wrapper {
     background-color: #ffffff;
     border-radius: 20px;
@@ -30,10 +33,10 @@ h1 {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.search-bar input:focus {
-    outline: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
+    .search-bar input:focus {
+        outline: none;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
 
 .search-bar button {
     border-radius: 20px;
@@ -46,14 +49,14 @@ h1 {
     align-items: center;
 }
 
-.search-bar button:hover {
-    background-color: #007BFF;
-    color: white;
-}
+    .search-bar button:hover {
+        background-color: #007BFF;
+        color: white;
+    }
 
-.search-bar button i {
-    margin-right: 5px;
-}
+    .search-bar button i {
+        margin-right: 5px;
+    }
 
 .btn-add {
     background-color: #007BFF;
@@ -65,9 +68,9 @@ h1 {
     transition: background-color 0.3s ease;
 }
 
-.btn-add:hover {
-    background-color: #0056b3;
-}
+    .btn-add:hover {
+        background-color: #0056b3;
+    }
 
 .table th {
     background-color: #05173B;
@@ -101,9 +104,9 @@ h1 {
     color: white;
 }
 
-.btn-delete:hover {
-    background-color: #c82333;
-}
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
 
 .table-hover tbody tr:hover {
     background-color: #f8f9fa;
@@ -115,3 +118,29 @@ h1 {
         width: 100%;
     }
 }
+
+/* Botón de eliminar seleccionados */
+#btn-eliminar-seleccionados {
+    display: none;
+    background-color: #000;
+    color: white;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+#btn-eliminar-seleccionados i {
+        font-size: 20px;
+    }
+
+#btn-eliminar-seleccionados:hover {
+        background-color: #333;
+    }
+
