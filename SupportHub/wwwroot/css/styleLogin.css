@@ -2,6 +2,7 @@
     padding-top: 56px; 
     background: url(/imagenes/backgroundLogin.jpg);
 }
+
 .navbar-dark {
     background-color: #05173B;
 }
@@ -12,6 +13,7 @@
     margin-top: -15px; 
 }
 
+/* Ajustar tamaño del logo */
 .navbar-brand img {
     height: 60px; 
 }
