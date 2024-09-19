@@ -7,6 +7,7 @@ namespace SupportHub.Pages.Proveedor
     public class mostrarProveedorModel : PageModel
     {   //definir variable para acceder al archivo appsettings.json
         private readonly IConfiguration configuracion;
+
         //Lista de objetos de la clase clientes 
         public List<Proveedores> listaProveedor = new List<Proveedores>();
 
@@ -22,11 +23,8 @@ namespace SupportHub.Pages.Proveedor
                 // crear objeto de tipo "SqlConnection"
                 using (SqlConnection conexion = new SqlConnection(cadena))
                 {
-
                     // abrir la conexión
                     conexion.Open();
-
-
 
                     // crear objeto "SqlCommand"
                     using (SqlCommand comando = new SqlCommand("sp_obtener_proveedores_general", conexion))
@@ -35,7 +33,6 @@ namespace SupportHub.Pages.Proveedor
                         // crer objeto "SqlDataReader
                         using (SqlDataReader lector = comando.ExecuteReader())
                         {
-
                             while (lector.Read())
                             {
                                 // crear objeto de tipo "Cliente"
@@ -46,22 +43,17 @@ namespace SupportHub.Pages.Proveedor
                                 Proveedor.direccionProveedor = lector.GetString(3);
                                 Proveedor.telefonoProveedor = lector.GetString(4);
 
-
                                 //agregar de objeto a la lista
                                 listaProveedor.Add(Proveedor);
                             }
                             conexion.Close();
-
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine("Error: " + ex.Message);
-
-                throw;
             }
         }
     }

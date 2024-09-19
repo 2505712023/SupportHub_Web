@@ -21,8 +21,6 @@ body {
   margin-bottom: 60px;
 }
 
-
-
     body.dark-mode {
         background-color: #121212; /* Fondo oscuro */
         color: #e0e0e0; /* Texto claro */
@@ -80,6 +78,7 @@ body {
             body.dark-mode .btn-delete:hover {
                 background-color: #e0e0e0; /* Fondo de botones al pasar el cursor (cambio al color claro) */
             }
+
         body.dark-mode .time-container {
             background-color: #1e1e1e; /* Fondo oscuro para el contenedor del tiempo */
             color: #e0e0e0; /* Color del texto en modo oscuro */

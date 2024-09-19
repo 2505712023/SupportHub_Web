@@ -11,10 +11,5 @@ namespace SupportHub.Pages
         {
             _logger = logger;
         }
-
-        public void OnGet()
-        {
-
-        }
     }
 }

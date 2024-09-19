@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 56px; /* Para la barra superior */
 }
+
 .navbar-dark {
     background-color: #05173B; /* Cambiado al color especificado */
 }
@@ -10,6 +11,7 @@
     width: auto; /* Mantener proporciones */
     margin-top: -15px; /* Alineación para que no desborde la barra */
 }
+
 /* Ajustar tamaño del logo */
 .navbar-brand img {
     height: 60px; /* Puedes ajustar el tamaño del logo */
