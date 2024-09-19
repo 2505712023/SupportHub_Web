@@ -1,16 +1,142 @@
 ﻿body {
-    padding-top: 56px; /* Para la barra superior */
+    padding-top: 56px; 
+    background: url(/imagenes/backgroundLogin.jpg);
 }
 .navbar-dark {
-    background-color: #05173B; /* Cambiado al color especificado */
+    background-color: #05173B;
 }
 
 .navbar-brand img {
-    max-height: 100px; /* Tamaño máximo para la imagen */
-    width: auto; /* Mantener proporciones */
-    margin-top: -15px; /* Alineación para que no desborde la barra */
+    max-height: 100px; 
+    width: auto;
+    margin-top: -15px; 
 }
-/* Ajustar tamaño del logo */
+
 .navbar-brand img {
-    height: 60px; /* Puedes ajustar el tamaño del logo */
+    height: 60px; 
+}
+
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 80vh;
+    background-position: center;
+    background-size: cover;
+}
+
+.contenedor {
+    position: relative;
+    width: 400px;
+    border: 2px solid rgba(255,255,255,.6);
+    height: 450px;
+    backdrop-filter:blur(15px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.contenedor h2 {
+    font-size: 2.3rem;
+    color: black;
+    text-align: center;
+}
+
+.input-contenedor{
+    position: relative;
+    margin: 30px 0;
+    width: 300px;
+    border-bottom:2px solid #fff;
+}
+
+.input-contenedor label{
+    position:absolute;
+    top:50%;
+    left:5px;
+    transform:translateY(-50%);
+    color:black;
+    font-size:1rem;
+    pointer-events:none;
+    transition:.6s;
+    font-weight:bold;
+}
+
+input:focus ~ label,
+input:valid ~ label{
+    top:-5px;
+
+}
+
+.input-contenedor input{
+    width:100%;
+    height:50px;
+    background-color: transparent;
+    border:none;
+    outline:none;
+    font-size:1rem;
+    padding: - 35px 0 5px;
+    color:black;
+}
+
+.input-contenedor i{
+    position:absolute;
+    color:black;
+    font-size:1.6rem;
+    top:19px;
+    right:8px;
+}
+
+button{
+    width:100%;
+}
+
+.info-contenedor{
+    width:100%;
+    display:flex;
+    max-width:1100px;
+}
+.card{
+    width:100%;
+    margin:20px;
+    border-radius:6px;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0px 1px 10px rgba(0,0,0,0.2) ;
+    transition:all 400ms ease;
+}
+.card:hover{
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.4);
+    transform:translateY(-3%);
+}
+
+.card img{
+    width:100%;
+    height:210px;
+}
+
+.card .contenido{
+    padding:15px;
+    text-align:center;
+}
+
+.card .contenido p{
+    line-height:1.5;
+    color:black;
+}
+.card .contenido h3 {
+    font-weight:400;
+    margin-bottom:15px;
+}
+
+.card .contenido a {
+    text-decoration:none;
+    display:inline-block;
+    padding:10px;
+    margin-top:10px;
+    color:#2fb4cc;
+    border:1px solid #2fb4cc;
+    border-radius:4px;
+
 }
