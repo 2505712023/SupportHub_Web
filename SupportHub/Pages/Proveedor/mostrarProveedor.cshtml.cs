@@ -38,7 +38,6 @@ namespace SupportHub.Pages.Proveedor
                         comando = new SqlCommand("sp_obtener_proveedor", conexion);
                         comando.CommandType = System.Data.CommandType.StoredProcedure;
         
-
                         // Asignar parámetros con el valor de búsqueda o '-1'
                         comando.Parameters.AddWithValue("@codProveedor", searchQuery);
                         comando.Parameters.AddWithValue("@nombreProveedor", searchQuery);
@@ -75,5 +74,5 @@ namespace SupportHub.Pages.Proveedor
                 throw;
             }
         }
-        }
+    }
 }
