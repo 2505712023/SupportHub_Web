@@ -43,7 +43,6 @@
                 @foreach (var item in Model.listaProveedor)
                 {
                     <tr>
-                       
                         <td align="left">@item.codProveedor</td>
                         <td align="left">@item.nombreProveedor</td>
                         <td align="left">@item.direccionProveedor</td>
@@ -57,6 +56,10 @@
             </tbody>
         </table>
     </div>
+
 </div>
 
-<script src="/js/scriptPantalla.js"></script>
+
+@section Scripts {
+    <script src="/js/scriptPantalla.js"></script>
+}
