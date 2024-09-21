@@ -138,9 +138,8 @@ h1 {
 
 #btn-eliminar-seleccionados i {
         font-size: 20px;
-    }
+}
 
 #btn-eliminar-seleccionados:hover {
         background-color: #333;
-    }
-
+}
