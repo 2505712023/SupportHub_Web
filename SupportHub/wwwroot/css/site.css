@@ -67,12 +67,6 @@ body {
                 color: #e0e0e0; /* Color de texto claro en encabezado de tabla */
             }
 
-            body.dark-mode .table tbody td {
-                color: #e0e0e0; /* Color de texto claro en celdas de tabla */
-            }
-
-  
-
             body.dark-mode .btn-add:hover,
             body.dark-mode .btn-edit:hover,
             body.dark-mode .btn-delete:hover {
