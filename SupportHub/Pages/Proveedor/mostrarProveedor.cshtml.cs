@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using SupportHub.Modelos;
+using System.Text.Json;
 namespace SupportHub.Pages.Proveedor
 {
     public class mostrarProveedorModel : PageModel
@@ -15,38 +16,55 @@ namespace SupportHub.Pages.Proveedor
         
             this.configuracion = configuration;
         }
-        public void OnGet()
+        public void OnGet(string searchQuery = null)
         {
             try
-            {   // Definir la cadena de conexión
+            {
+                // Definir la cadena de conexión
                 string cadena = configuracion.GetConnectionString("CadenaConexion");
-                // crear objeto de tipo "SqlConnection"
+
+                // Crear objeto de tipo "SqlConnection"
                 using (SqlConnection conexion = new SqlConnection(cadena))
                 {
-                    // abrir la conexión
+                    // Abrir la conexión
                     conexion.Open();
 
-                    // crear objeto "SqlCommand"
-                    using (SqlCommand comando = new SqlCommand("sp_obtener_proveedores_general", conexion))
-                    {
-                        comando.CommandType = System.Data.CommandType.StoredProcedure;
-                        // crer objeto "SqlDataReader
-                        using (SqlDataReader lector = comando.ExecuteReader())
-                        {
-                            while (lector.Read())
-                            {
-                                // crear objeto de tipo "Cliente"
-                                Proveedores Proveedor = new Proveedores();
-                                Proveedor.idProveedor = lector.GetInt32(0);
-                                Proveedor.codProveedor = lector.GetString(1);
-                                Proveedor.nombreProveedor = lector.GetString(2);
-                                Proveedor.direccionProveedor = lector.GetString(3);
-                                Proveedor.telefonoProveedor = lector.GetString(4);
+                    // Crear objeto "SqlCommand" dependiendo de si se proporciona searchQuery
+                    SqlCommand comando;
 
-                                //agregar de objeto a la lista
-                                listaProveedor.Add(Proveedor);
-                            }
-                            conexion.Close();
+                    if (!string.IsNullOrEmpty(searchQuery))
+                    {
+                        // Si hay un valor de búsqueda, usar el procedimiento de búsqueda
+                        comando = new SqlCommand("sp_obtener_proveedor", conexion);
+                        comando.CommandType = System.Data.CommandType.StoredProcedure;
+        
+
+                        // Asignar parámetros con el valor de búsqueda o '-1'
+                        comando.Parameters.AddWithValue("@codProveedor", searchQuery);
+                        comando.Parameters.AddWithValue("@nombreProveedor", searchQuery);
+                    }
+                    else
+                    {
+                        // Si no hay búsqueda, usar el procedimiento general
+                        comando = new SqlCommand("sp_obtener_proveedores_general", conexion);
+                        comando.CommandType = System.Data.CommandType.StoredProcedure;
+                    }
+
+                    // Ejecutar el comando y leer los resultados
+                    using (SqlDataReader lector = comando.ExecuteReader())
+                    {
+                        while (lector.Read())
+                        {
+                            // Crear objeto de tipo "Proveedor"
+                            Proveedores proveedor = new Proveedores();
+                            proveedor.idProveedor = lector.GetInt32(0);
+                            proveedor.codProveedor = lector.GetString(1);
+                            proveedor.nombreProveedor = lector.GetString(2);
+                            proveedor.direccionProveedor = lector.GetString(3);
+                            proveedor.telefonoProveedor = lector.GetString(4);
+
+                            // Agregar objeto a la lista
+                            listaProveedor.Add(proveedor);
                         }
                     }
                 }
@@ -54,7 +72,8 @@ namespace SupportHub.Pages.Proveedor
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
+                throw;
             }
         }
-    }
+        }
 }
