@@ -1,13 +1,13 @@
 ﻿@page
 @model SupportHub.Pages.Proveedor.AgregarProveedorModel
 @{
-    ViewData["Title"] = "Agregar Proveedores";
+    ViewData["Title"] = "Agregar Proveedore";
     Layout = "_Layout";
 }
 <link rel="stylesheet" href="~/css/estiloPantallas.css">
 <div class="content-wrapper">
     <br />
-    <h1>Agregar Proveedores</h1>
+    <h1>Agregar Proveedore</h1>
     <br />
 
     <!--Para manejo de errores-->
@@ -22,7 +22,7 @@
     <form method="post">
 
         <div class="row mb-3">
-            <label class="col-sm-3" col-form-label>Código:</label>
+            <label class="col-sm-3 col-form-label col-form-label-lg text-lg-end fs-4" col-form-label>Código:</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" name="Codigo" value="@Model.newProveedor.codProveedor" />
 
@@ -30,7 +30,7 @@
         </div>
 
         <div class="row mb-3">
-            <label class="col-sm-3" col-form-label> Nombre:</label>
+            <label class="col-sm-3 col-form-label col-form-label-lg text-lg-end fs-4" col-form-label>Nombre:</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" name="nombre" value="@Model.newProveedor.nombreProveedor" />
 
@@ -38,7 +38,7 @@
         </div>
 
         <div class="row mb-3">
-            <label class="col-sm-3" col-form-label> Dirección:</label>
+            <label class="col-sm-3 col-form-label col-form-label-lg text-lg-end fs-4" col-form-label>Dirección:</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" name="direccion" value="@Model.newProveedor.direccionProveedor" />
 
@@ -46,7 +46,7 @@
         </div>
 
         <div class="row mb-3">
-            <label class="col-sm-3" col-form-label> Telefono:</label>
+            <label class="col-sm-3 col-form-label col-form-label-lg text-lg-end fs-4" col-form-label>Teléfono:</label>
             <div class="col-sm-6">
                 <input type="text" class="form-control" name="telefono" value="@Model.newProveedor.telefonoProveedor" />
 
