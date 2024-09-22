@@ -13,10 +13,14 @@
 
     <div class="row mb-3">
         <div class="col-md-8">
-            <div class="search-bar d-flex">
-                <input type="text" class="form-control me-2" placeholder="Buscar por código o nombre de proveedor...">
-                <button class="btn"><i class="fas fa-search"></i>Buscar</button>
-            </div>
+            <form method="get">
+                <div class="search-bar d-flex">
+                    <input type="text" name="searchQuery" class="form-control me-2" placeholder="Buscar por código o nombre de proveedor..."
+                           value="@Request.Query["searchQuery"]" oninput="checkSearch(this)" />
+                    <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
+                </div>
+            </form>
+
         </div>
         <div class="col-md-4 text-end">
             <a href="/proveedor/agregarProveedor" class="btn btn-add">
@@ -29,7 +33,7 @@
         <table class="table table-hover align-middle text-center" style="max-width: 1300px; width: 100%;">
             <thead>
                 <tr>
-                    <th><input type="checkbox" id="select-all"></th>
+                   
                     <th>Código</th>
                     <th>Nombre</th>
                     <th>Dirección</th>
@@ -41,13 +45,12 @@
                 @foreach (var item in Model.listaProveedor)
                 {
                     <tr>
-                        <td><input type="checkbox" class="select-checkbox"></td>
                         <td align="left">@item.codProveedor</td>
                         <td align="left">@item.nombreProveedor</td>
                         <td align="left">@item.direccionProveedor</td>
                         <td align="left">@item.telefonoProveedor</td>
                         <td>
-                            <button class="btn btn-edit"><i class="fas fa-pen"></i>Modificar</button>
+                            <a class="btn btn-edit" href="/Proveedor/modificarProveedor?codProveedor=@item.codProveedor"><i class="fas fa-pen"></i>Modificar</a>
                             <button class="btn btn-delete"><i class="fas fa-trash"></i>Eliminar</button>
                         </td>
                     </tr>
@@ -56,10 +59,8 @@
         </table>
     </div>
 
-    <!-- Botón para eliminar seleccionados -->
-    <button id="btn-eliminar-seleccionados" class="btn btn-delete">
-        <i class="fas fa-trash"></i>
-    </button>
 </div>
 
-<script src="/js/scriptPantalla.js"></script>
+@section Scripts {
+    <script src="/js/scriptPantalla.js"></script>
+}
