@@ -7,26 +7,26 @@ namespace SupportHub.Pages.Proveedor
 {
     public class AgregarProveedorModel : PageModel
     {
-        //definir variables para acceder a parametros de configuración
-
+        //Definir variables para acceder a parámetros de configuración
         private readonly IConfiguration configuracion;
-        //creart un objeto de tipo "Proveedor"
+        
+        //Crear un objeto de tipo "Proveedor"
         public Proveedores newProveedor = new Proveedores();
 
-        //Crear variable para manejor de errores 
+        //Crear variable para manejo de errores 
         public String mensajeError = "";
         public String mensajeExito = "";
-        //constructor
+
+        //Constructor
         public AgregarProveedorModel(IConfiguration configuration) { 
-        
-        this.configuracion = configuration; 
+            this.configuracion = configuration; 
         }
+
         public void OnGet()
         {
         }
 
         //Agregar método "OnPost"
-
         public void OnPost() {
             newProveedor.codProveedor = Request.Form["Codigo"];
             newProveedor.nombreProveedor = Request.Form["nombre"];
@@ -40,8 +40,8 @@ namespace SupportHub.Pages.Proveedor
             {
                 //Definamos una variable y le asignamos la cadena de conexion definida en el archvio appsetting.json
                 string cadena = configuracion.GetConnectionString("CadenaConexion");
-                /*creamos un objeto de la case SQLConnetion indicando como partametros la cadena de comnexion creada anteriormente*/
 
+                /*creamos un objeto de la case SQLConnetion indicando como partametros la cadena de comnexion creada anteriormente*/
                 SqlConnection conexion = new SqlConnection(cadena); 
 
                 //Abrir conexion 
@@ -51,44 +51,34 @@ namespace SupportHub.Pages.Proveedor
 
                 //Creamos un objeto de la clase SqlCommand
                 SqlCommand comando = new SqlCommand(query, conexion);
-                //Pasar datos ingresados a los parametros
 
+                //Pasar datos ingresados a los parametros
                 comando.Parameters.AddWithValue("@codProveedor", newProveedor.codProveedor);
                 comando.Parameters.AddWithValue("@nombreProveedor", newProveedor.nombreProveedor);
                 comando.Parameters.AddWithValue("@direccionProveedor", newProveedor.direccionProveedor);
                 comando.Parameters.AddWithValue("@telefonoProveedor", newProveedor.telefonoProveedor);
-                
 
-                // Le indicamos a SQL server que ejecute el comando espesificado anteriormente
+                //Le indicamos a SQL server que ejecute el comando espesificado anteriormente
                 comando.ExecuteNonQuery();
 
-                //cerramos conexion
+                //Cerramos conexión
                 conexion.Close();
-
-
             }
             catch (Exception ex )
             {
-
-                mensajeError =ex.Message;
+                mensajeError = ex.Message;
                 return;
             }
 
             //Limpiar controles
-
             newProveedor.codProveedor = "";
             newProveedor.nombreProveedor = "";
             newProveedor.direccionProveedor = "";
             newProveedor.telefonoProveedor = "";
             mensajeExito = "Proveedor agregado correctamente.";
 
-         //Redirigir a la pagina INDEX
-
+            //Redirigir a la pagina INDEX
             Response.Redirect("/Proveedor/mostrarProveedor");
-
         }
-
-        }
-
-  }
-
+    }
+}

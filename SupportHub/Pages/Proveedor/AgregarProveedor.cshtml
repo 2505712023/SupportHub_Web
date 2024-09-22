@@ -9,6 +9,7 @@
     <br />
     <h1>Agregar Proveedores</h1>
     <br />
+
     <!--Para manejo de errores-->
     @if (Model.mensajeError.Length > 0)
     {
@@ -16,7 +17,6 @@
             <strong>@Model.mensajeError</strong>
             <button type="button" class="btn-close" data-bs-dismiss='alert' arial-label='close'></button>
         </div>
-
     }
 
     <form method="post">
@@ -37,7 +37,6 @@
             </div>
         </div>
 
-
         <div class="row mb-3">
             <label class="col-sm-3" col-form-label> Dirección:</label>
             <div class="col-sm-6">
@@ -45,7 +44,6 @@
 
             </div>
         </div>
-
 
         <div class="row mb-3">
             <label class="col-sm-3" col-form-label> Telefono:</label>
@@ -67,6 +65,7 @@
                 </div>
             </div>
         }
+
         <div class="row mb-3">
 
             <div class="offset-sm-3 col-sm-3 d-grid">
@@ -78,8 +77,6 @@
             </div>
 
         </div>
-
-
 
     </form>
 </div>
