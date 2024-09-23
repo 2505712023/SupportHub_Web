@@ -143,3 +143,8 @@ h1 {
 #btn-eliminar-seleccionados:hover {
         background-color: #333;
 }
+
+form div label {
+    font-size: large;
+    padding-left: 50px;
+}
