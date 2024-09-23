@@ -1,9 +1,5 @@
 ﻿@page
 @using System.Data.SqlClient;
-
-
-
-
 @{
     Layout = "_Layout";
     try
@@ -12,7 +8,7 @@
         string codProveedor = Request.Query["id"];
         int idProveedorNum = int.Parse(codProveedor); // Asegúrate de que esto sea un entero
 
-        string cadena = "Data Source=localhost;DataBase=SupportHub;User Id=sa;Password=Isai091995";
+        string cadena = "Server = 100.101.36.39 ; DataBase = SupportHub ; User Id = SupportHub ; Password = SupportHub2024";
 
         // Crear conexión SQL
         using (SqlConnection conexion = new SqlConnection(cadena))
@@ -30,7 +26,6 @@
         }
         <div class="d-flex justify-content-center mt-5">
         <form>
-           
             <div class='alert alert-success alert-dismissible fade show' role='alert'>
                 <strong> Proveedor eliminado exitosamente</strong>
             </div>
@@ -40,7 +35,6 @@
     catch (Exception ex)
     {
         Console.WriteLine("Error: " + ex.Message);
-
     }
 }
 
