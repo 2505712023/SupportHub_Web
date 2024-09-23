@@ -50,7 +50,9 @@
                         <td align="left">@item.telefonoProveedor</td>
                         <td>
                             <button class="btn btn-edit"><i class="fas fa-pen"></i>Modificar</button>
-                            <button class="btn btn-delete"><i class="fas fa-trash"></i>Eliminar</button>
+                            <a href="javascript:void(0);" class="btn btn-delete" onclick="confirmDelete(@item.idProveedor)">
+                                <i class="fas fa-trash"></i>Eliminar
+                            </a>
                         </td>
                     </tr>
                 }
