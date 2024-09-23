@@ -24,11 +24,8 @@ namespace SupportHub.Pages.Welcome
 
         public IActionResult OnPost()
         {
-            // Aquí deberías implementar la lógica de autenticación
-            // Por ejemplo, validar las credenciales
-
-            // Si la autenticación es exitosa
-            if (Username == "a" && Password == "a") // Ejemplo simple, reemplaza con lógica real
+         
+            if (Username == "a" && Password == "a") 
             {
                 Response.Redirect("/Index");
             }
