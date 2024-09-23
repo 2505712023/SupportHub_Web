@@ -23,7 +23,9 @@
 
         </div>
         <div class="col-md-4 text-end">
-            <button class="btn btn-add"><i class="fas fa-plus-circle"></i>Agregar Proveedor</button>
+            <a href="/proveedor/agregarProveedor" class="btn btn-add">
+                <i class="fas fa-plus-circle"></i>Agregar Proveedor
+             </a>
         </div>
     </div>
 
@@ -43,7 +45,6 @@
                 @foreach (var item in Model.listaProveedor)
                 {
                     <tr>
-                       
                         <td align="left">@item.codProveedor</td>
                         <td align="left">@item.nombreProveedor</td>
                         <td align="left">@item.direccionProveedor</td>
@@ -59,6 +60,9 @@
             </tbody>
         </table>
     </div>
+
 </div>
 
-<script src="/js/scriptPantalla.js"></script>
+@section Scripts {
+    <script src="/js/scriptPantalla.js"></script>
+}

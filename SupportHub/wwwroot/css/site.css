@@ -29,6 +29,11 @@ body {
         body.dark-mode .container {
             background-color: #1e1e1e; /* Fondo del contenedor principal */
         }
+
+            body.dark-mode .container.hora {
+                background-color: #121212;
+            }
+
         body.dark-mode .content-wrapper h1,
         body.dark-mode .content-wrapper h2,
         body.dark-mode .content-wrapper h3,
@@ -67,12 +72,6 @@ body {
                 color: #e0e0e0; /* Color de texto claro en encabezado de tabla */
             }
 
-            body.dark-mode .table tbody td {
-                color: #e0e0e0; /* Color de texto claro en celdas de tabla */
-            }
-
-  
-
             body.dark-mode .btn-add:hover,
             body.dark-mode .btn-edit:hover,
             body.dark-mode .btn-delete:hover {
@@ -80,7 +79,7 @@ body {
             }
 
         body.dark-mode .time-container {
-            background-color: #1e1e1e; /* Fondo oscuro para el contenedor del tiempo */
+            /*background-color: #1e1e1e;*/ /* Fondo oscuro para el contenedor del tiempo */
             color: #e0e0e0; /* Color del texto en modo oscuro */
         }
 
