@@ -2,25 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using SupportHub.Modelos;
-
+using System.Text.Json;
 namespace SupportHub.Pages.Proveedor
 {
     public class mostrarProveedorModel : PageModel
-    {
-        // Definir variable para acceder al archivo appsettings.json
+    {   //definir variable para acceder al archivo appsettings.json
         private readonly IConfiguration configuracion;
 
-        // Lista de objetos de la clase Proveedores
+        //Lista de objetos de la clase clientes 
         public List<Proveedores> listaProveedor = new List<Proveedores>();
 
-        // Constructor para inyectar la configuración
         public mostrarProveedorModel(IConfiguration configuration)
         {
+
             this.configuracion = configuration;
         }
-
-        // Método que se ejecuta en la carga de la página
-        public void OnGet()
+        public void OnGet(string searchQuery = null)
         {
             try
             {
@@ -33,28 +30,41 @@ namespace SupportHub.Pages.Proveedor
                     // Abrir la conexión
                     conexion.Open();
 
-                    // Crear objeto "SqlCommand"
-                    using (SqlCommand comando = new SqlCommand("sp_obtener_proveedores_general", conexion))
+                    // Crear objeto "SqlCommand" dependiendo de si se proporciona searchQuery
+                    SqlCommand comando;
+
+                    if (!string.IsNullOrEmpty(searchQuery))
                     {
+                        // Si hay un valor de búsqueda, usar el procedimiento de búsqueda
+                        comando = new SqlCommand("sp_obtener_proveedor", conexion);
                         comando.CommandType = System.Data.CommandType.StoredProcedure;
 
-                        // Crear objeto "SqlDataReader"
-                        using (SqlDataReader lector = comando.ExecuteReader())
-                        {
-                            while (lector.Read())
-                            {
-                                // Crear objeto de tipo "Proveedores"
-                                Proveedores proveedor = new Proveedores();
-                                proveedor.idProveedor = lector.GetInt32(0);
-                                proveedor.codProveedor = lector.GetString(1);
-                                proveedor.nombreProveedor = lector.GetString(2);
-                                proveedor.direccionProveedor = lector.GetString(3);
-                                proveedor.telefonoProveedor = lector.GetString(4);
+                        // Asignar parámetros con el valor de búsqueda o '-1'
+                        comando.Parameters.AddWithValue("@codProveedor", searchQuery);
+                        comando.Parameters.AddWithValue("@nombreProveedor", searchQuery);
+                    }
+                    else
+                    {
+                        // Si no hay búsqueda, usar el procedimiento general
+                        comando = new SqlCommand("sp_obtener_proveedores_general", conexion);
+                        comando.CommandType = System.Data.CommandType.StoredProcedure;
+                    }
 
-                                // Agregar objeto a la lista
-                                listaProveedor.Add(proveedor);
-                            }
-                            conexion.Close();
+                    // Ejecutar el comando y leer los resultados
+                    using (SqlDataReader lector = comando.ExecuteReader())
+                    {
+                        while (lector.Read())
+                        {
+                            // Crear objeto de tipo "Proveedor"
+                            Proveedores proveedor = new Proveedores();
+                            proveedor.idProveedor = lector.GetInt32(0);
+                            proveedor.codProveedor = lector.GetString(1);
+                            proveedor.nombreProveedor = lector.GetString(2);
+                            proveedor.direccionProveedor = lector.GetString(3);
+                            proveedor.telefonoProveedor = lector.GetString(4);
+
+                            // Agregar objeto a la lista
+                            listaProveedor.Add(proveedor);
                         }
                     }
                 }
@@ -62,43 +72,37 @@ namespace SupportHub.Pages.Proveedor
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
+                throw;
             }
         }
-
-        // Método a ejecutar para manejar eliminación de un proveedor
-        public async Task<IActionResult> OnPostDeleteAsync(int idProveedor)
+        public IActionResult OnDelete(char codProveedor)
         {
             try
             {
-                // Definir la cadena de conexión
                 string cadena = configuracion.GetConnectionString("CadenaConexion");
 
-                // Crear objeto de tipo "SqlConnection"
                 using (SqlConnection conexion = new SqlConnection(cadena))
                 {
-                    // Abrir la conexión
-                    await conexion.OpenAsync();
+                    conexion.Open();
+                    SqlCommand comando = new SqlCommand("sp_eliminar_proveedor", conexion);
+                    comando.CommandType = System.Data.CommandType.StoredProcedure;
+                    comando.Parameters.AddWithValue("@codProveedor", codProveedor);
+                    int filasAfectadas = comando.ExecuteNonQuery();
 
-                    // Crear objeto "SqlCommand" para ejecutar el procedimiento almacenado de eliminación
-                    using (SqlCommand comando = new SqlCommand("sp_eliminar_proveedor", conexion))
+                    if (filasAfectadas > 0)
                     {
-                        comando.CommandType = System.Data.CommandType.StoredProcedure;
-                        comando.Parameters.AddWithValue("@idProveedor", idProveedor);
-
-                        // Ejecutar el comando
-                        await comando.ExecuteNonQueryAsync();
+                        return new JsonResult(new { success = true });
+                    }
+                    else
+                    {
+                        return new JsonResult(new { success = false });
                     }
                 }
-
-                // Redirigir la página de proveedores después de eliminar
-                return RedirectToPage("/Proveedor/mostrarProveedor");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
-
-                // Permanecer en la misma página en caso de error
-                return Page();
+                return new JsonResult(new { success = false, error = ex.Message });
             }
         }
     }
