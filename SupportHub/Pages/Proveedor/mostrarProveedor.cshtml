@@ -20,10 +20,11 @@
                     <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
                 </div>
             </form>
-
         </div>
         <div class="col-md-4 text-end">
-            <button class="btn btn-add"><i class="fas fa-plus-circle"></i>Agregar Proveedor</button>
+            <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                <i class="fas fa-plus-circle"></i> Agregar Proveedor
+            </button>
         </div>
     </div>
 
@@ -31,7 +32,6 @@
         <table class="table table-hover align-middle text-center" style="max-width: 1300px; width: 100%;">
             <thead>
                 <tr>
-                   
                     <th>Código</th>
                     <th>Nombre</th>
                     <th>Dirección</th>
@@ -43,26 +43,82 @@
                 @foreach (var item in Model.listaProveedor)
                 {
                     <tr>
-                       
                         <td align="left">@item.codProveedor</td>
                         <td align="left">@item.nombreProveedor</td>
                         <td align="left">@item.direccionProveedor</td>
                         <td align="left">@item.telefonoProveedor</td>
                         <td>
-                            <button class="btn btn-edit"><i class="fas fa-pen"></i>Modificar</button>
-                            <a href="javascript:void(0);" class="btn btn-delete" onclick="confirmDelete(@item.idProveedor)">
+                            <a class="btn btn-edit" href="/Proveedor/modificarProveedor?codProveedor=@item.codProveedor"><i class="fas fa-pen"></i>Modificar</a>
+                            <button type="button" class="btn btn-delete" onclick="confirmDelete(@item.idProveedor)">
                                 <i class="fas fa-trash"></i>Eliminar
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
-
-
-  
 </div>
 
+<!-- Modal para agregar un nuevo proveedor -->
+<div class="modal fade" id="AgregarModificar" tabindex="-1" aria-labelledby="AgregarModificar" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header encabezado-personalizado">
+                <h1 class="modal-title fs-5" id="AgregarModificar">Agregar Proveedor</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="formAgregarProveedor">
+                    <!-- Campo de Código -->
+                    <div class="mb-3">
+                        <label for="codigo">Código:</label>
+                        <input type="text" required class="form-control" id="codigo" name="Codigo">
+                    </div>
 
-<script src="/js/scriptPantalla.js"></script>
+                    <!-- Campo de Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" required class="form-control" id="nombre" name="nombre">
+                    </div>
+
+                    <!-- Campo de Dirección -->
+                    <div class="mb-3">
+                        <label for="direccion">Dirección:</label>
+                        <input type="text" required class="form-control" id="direccion" name="direccion">
+                    </div>
+
+                    <!-- Campo de Teléfono -->
+                    <div class="mb-3">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="text" required class="form-control" id="telefono" name="telefono">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="validarFormulario()">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="/js/scriptPantalla.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script type="text/javascript">
+        // Verifica si la operación fue exitosa
+        @if (Model.exito)
+        {
+            <text>
+                Swal.fire({
+                    title: "¡Excelentes!",
+                    text: "El proveedor ha sido agregado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+}
