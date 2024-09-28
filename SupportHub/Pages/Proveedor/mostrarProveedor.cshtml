@@ -23,7 +23,7 @@
         </div>
         <div class="col-md-4 text-end">
             <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
-                <i class="fas fa-plus-circle"></i> Agregar Proveedor
+                <i class="fas fa-plus-circle"></i>Agregar Proveedor
             </button>
         </div>
     </div>
@@ -51,7 +51,7 @@
                             <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
                                 <i class="fas fa-pen"></i>Modificar
                             </button>
-                            <button type="button" class="btn btn-delete" onclick="confirmDelete(@item.idProveedor)">
+                            <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
                                 <i class="fas fa-trash"></i>Eliminar
                             </button>
                         </td>
@@ -111,6 +111,29 @@
     </div>
 </div>
 
+<!-- Modal para eliminar un proveedor -->
+<div class="modal fade" id="Eliminar" tabindex="-1" aria-labelledby="Eliminar" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header encabezado-personalizado">
+                <h1 class="modal-title fs-5" id="AgregarModificar">Eliminar Proveedor</h1>
+                <button type="button" class="btn-close" onclick="limpiarModalEliminar()" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Seguro que desea eliminar un proveedor?</p>
+                <form method="post" id="formEliminarProveedor">
+                    <input type="hidden" name="idProveedor" id="idProveedor" value="" />
+                    <input type="hidden" name="esEliminacion" id="esEliminacion" value="" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="limpiarModalEliminar()" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="validarFormularioEliminar()" id="btnEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script type="text/javascript">
         // Verifica si la operación fue exitosa
@@ -136,6 +159,21 @@
                     title: "Oops...",
                     text: "Hubo un error al guardar el registro, valide que el código o el nombre del proveedor no exista.",
                     icon: "error",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+            // Verifica si la operación fue exitosa
+        @if (Model.eliminado == true)
+        {
+            <text>
+                Swal.fire({
+                    title: "¡Excelente!",
+                    text: "El proveedor ha sido eliminado correctamente.",
+                    icon: "success",
                     confirmButtonText: "OK"
                 });
             </text>

@@ -19,10 +19,12 @@ namespace SupportHub.Pages.Proveedor
             this.configuracion = configuration;
         }
 
-        public void OnGet(string searchQuery = null, bool exito = false, bool intentoRealizado = false)
+        public void OnGet(string searchQuery = null, bool exito = false, bool intentoRealizado = false, bool esEliminacion = false, bool eliminado = false)
         {
             this.exito = exito;
             this.intentoRealizado = intentoRealizado;
+            this.esEliminacion = esEliminacion;
+            this.eliminado = eliminado;
 
             try
             {
@@ -68,13 +70,47 @@ namespace SupportHub.Pages.Proveedor
 
         public bool exito { get; set; } = false;
         public bool intentoRealizado { get; set; } = false;
+        public bool esEliminacion { get; set; } = false;
+        public bool eliminado { get; set; } = false;
 
-        public IActionResult OnPost()
+        public IActionResult OnPost(bool esEliminacion = false)
         {
+            this.esEliminacion = esEliminacion;
             newProveedor.codProveedor = Request.Form["Codigo"];
             newProveedor.nombreProveedor = Request.Form["nombre"];
             newProveedor.direccionProveedor = Request.Form["direccion"];
             newProveedor.telefonoProveedor = Request.Form["telefono"];
+
+            if (esEliminacion)
+            {
+                newProveedor.idProveedor = Convert.ToInt32(Request.Form["idProveedor"]);
+                int registrosEliminados = 0;
+                try
+                {
+                    using (var conexion = new SqlConnection(configuracion.GetConnectionString("CadenaConexion")))
+                    {
+                        conexion.Open();
+                        using (var comando = new SqlCommand("sp_eliminar_proveedor", conexion))
+                        {
+                            comando.CommandType = CommandType.StoredProcedure;
+                            comando.Parameters.AddWithValue("@idProveedor", newProveedor.idProveedor);
+                            registrosEliminados = Convert.ToInt32(comando.ExecuteScalar());
+                        }
+                    }
+                    exito = registrosEliminados == 1 ? true : false;
+
+                    if (exito)
+                    {
+                        esEliminacion = false;
+                        return RedirectToPage("/Proveedor/mostrarProveedor", new { eliminado = true });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    mensajeError = ex.Message;
+                    return Page();
+                }
+            }
 
             if (string.IsNullOrEmpty(newProveedor.codProveedor) ||
                 string.IsNullOrEmpty(newProveedor.nombreProveedor) ||
@@ -148,36 +184,6 @@ namespace SupportHub.Pages.Proveedor
             else
             {
                 return RedirectToPage("/Proveedor/mostrarProveedor", new { intentoRealizado = true });
-            }
-        }
-
-        public int idProveedor { get; set; }
-        public IActionResult OnPostEliminar([FromBody] int idProveedor)
-        {
-            if (idProveedor <= 0)
-            {
-                return new JsonResult(new { success = false, message = "ID de proveedor no válido." });
-            }
-
-            try
-            {
-                using (var conexion = new SqlConnection(configuracion.GetConnectionString("CadenaConexion")))
-                {
-                    conexion.Open();
-                    using (var comando = new SqlCommand("sp_eliminar_proveedor", conexion))
-                    {
-                        comando.CommandType = CommandType.StoredProcedure;
-                        comando.Parameters.AddWithValue("@idProveedor", idProveedor);
-                        comando.ExecuteNonQuery();
-                    }
-                }
-
-                return new JsonResult(new { success = true });
-            }
-            catch (Exception ex)
-            {
-               
-                return new JsonResult(new { success = false, message = ex.Message });
             }
         }
     }

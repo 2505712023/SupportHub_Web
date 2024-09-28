@@ -1,62 +1,4 @@
-﻿function confirmDelete(idProveedor) {
-    const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-danger'
-        },
-        buttonsStyling: false
-    });
-
-    swalWithBootstrapButtons.fire({
-        title: '¿Está seguro que desea eliminar?',
-        text: "¡No podrá revertir esto!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar!',
-        cancelButtonText: 'No, cancelar!',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Llamada a la eliminación
-            fetch('/Proveedor/mostrarProveedor?handler=Eliminar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ idProveedor: idProveedor })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        swalWithBootstrapButtons.fire(
-                            '¡Eliminado!',
-                            'Se ha sido eliminado correctamente.',
-                            'success'
-                        ).then(() => {
-                            // Recargar la tabla o la página
-                            location.reload();
-                        });
-                    } else {
-                        swalWithBootstrapButtons.fire(
-                            'Error',
-                            'No se pudo eliminar. ' + data.message,
-                            'error'
-                        );
-                    }
-                })
-                
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            swalWithBootstrapButtons.fire(
-                'Cancelado',
-                ':)',
-                'error'
-            );
-        }
-    });
-}
-
-
-function validarFormulario() {
+﻿function validarFormulario() {
     var codigo = document.getElementById("codigo").value.trim();
     var nombre = document.getElementById("nombre").value.trim();
     var direccion = document.getElementById("direccion").value.trim();
@@ -97,8 +39,25 @@ function validarFormulario() {
     submitForm();
 }
 
+function validarFormularioEliminar() {
+    if ($(".modal#Eliminar #idProveedor").val().trim() === "") {
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "idProveedor es requerido!"
+        });
+        return false;
+    }
+    submitFormEliminar()
+}
+
 function submitForm() {
     document.getElementById("formAgregarProveedor").submit();
+}
+
+function submitFormEliminar() {
+    document.getElementById("formEliminarProveedor").submit();
 }
 
 function checkSearch(input) {
@@ -123,4 +82,19 @@ function limpiarModal() {
     $(".modal #esModificacion").val("false")
     $(".modal h1").text("Agregar Proveedor");
     $("#formAgregarProveedor")[0].reset();
+}
+
+function llenarModalEliminar(button) {
+    var tr = $(button).closest("tr");
+
+    $(".modal#Eliminar #idProveedor").val(tr.data("id"));
+    $(".modal#Eliminar #esEliminacion").val("true");
+    $("#Eliminar").on("shown.bs.modal", function () {
+        $("#btnEliminar").focus();
+    });
+}
+
+function limpiarModalEliminar() {
+    $(".modal#Eliminar #esEliminacion").val("false");
+    $("#formEliminarProveedor")[0].reset();
 }

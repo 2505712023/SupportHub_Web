@@ -118,3 +118,8 @@ h1 {
         width: 100%;
     }
 }
+
+#Eliminar p {
+    font-size: larger;
+    font-weight: bold;
+}
