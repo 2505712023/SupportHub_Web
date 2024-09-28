@@ -1,13 +1,112 @@
-﻿function checkSearch(input) {
-    if (input.value.trim() === '') {
-        input.form.submit(); // Envía el formulario si está vacío
-    }
-}
-function confirmDelete(id) {
+﻿function confirmDelete(idProveedor) {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    });
 
-    // Mostrar la ventana emergente de confirmación
-    if (confirm("¿Estás seguro de que deseas eliminar este proveedor?")) {
-        // Si el usuario confirma, redirigir a la URL de eliminación
-        window.location.href = '/Proveedor/Eliminar?id=' + id;
+    swalWithBootstrapButtons.fire({
+        title: '¿Está seguro que desea eliminar?',
+        text: "¡No podrá revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'No, cancelar!',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Llamada a la eliminación
+            fetch('/Proveedor/mostrarProveedor?handler=Eliminar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idProveedor: idProveedor })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        swalWithBootstrapButtons.fire(
+                            '¡Eliminado!',
+                            'Se ha sido eliminado correctamente.',
+                            'success'
+                        ).then(() => {
+                            // Recargar la tabla o la página
+                            location.reload();
+                        });
+                    } else {
+                        swalWithBootstrapButtons.fire(
+                            'Error',
+                            'No se pudo eliminar. ' + data.message,
+                            'error'
+                        );
+                    }
+                })
+                
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire(
+                'Cancelado',
+                ':)',
+                'error'
+            );
+        }
+    });
+}
+
+
+function validarFormulario() {
+
+    var codigo = document.getElementById("codigo").value.trim();
+    var nombre = document.getElementById("nombre").value.trim();
+    var direccion = document.getElementById("direccion").value.trim();
+    var telefono = document.getElementById("telefono").value.trim();
+
+
+    if (codigo === "" ) {
+  
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Código es requerido!"
+        });
+        return false; 
+    } else if (nombre === "") {
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Nombre es requerido!"
+        });
+        return false;
+    } else if (direccion === "") {
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Dirección es requerido!"
+        });
+        return false;
+    } else if (telefono === "") {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Teléfono es requerido!"
+        });
+        return false;
+    }
+
+
+    submitForm();
+}
+function submitForm() {
+    document.getElementById("formAgregarProveedor").submit();
+}
+function checkSearch(input) {
+    if (input.value.trim() === '') {
+        input.form.submit();
     }
 }
+
+
