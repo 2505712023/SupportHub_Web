@@ -49,7 +49,7 @@ body {
         }
 
         body.dark-mode .navbar-dark, body.dark-mode .offcanvas-start {
-            background-color: #05173B; /* Fondo de la barra de navegación y menú lateral */
+            background-color: #05173B; /* Fondo de la barra de navegaciÃ³n y menÃº lateral */
         }
 
         body.dark-mode .footer {
@@ -95,7 +95,7 @@ body {
 }
 
     .encabezado-personalizado .btn-close {
-        filter: invert(1); /* Esto hace que el botón de cerrar sea blanco */
+        filter: invert(1); /* Esto hace que el botÃ³n de cerrar sea blanco */
     }
 .modal-header.encabezado-personalizado .modal-title {
     color: white !important;

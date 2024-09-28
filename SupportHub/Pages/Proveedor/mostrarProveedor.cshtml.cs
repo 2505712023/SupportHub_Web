@@ -115,7 +115,7 @@ namespace SupportHub.Pages.Proveedor
         {
             if (idProveedor <= 0)
             {
-                return new JsonResult(new { success = false, message = "ID de proveedor no válido." });
+                return new JsonResult(new { success = false, message = "ID de proveedor no vÃ¡lido." });
             }
 
             try
@@ -139,6 +139,5 @@ namespace SupportHub.Pages.Proveedor
                 return new JsonResult(new { success = false, message = ex.Message });
             }
         }
-
     }
 }
