@@ -110,20 +110,17 @@ namespace SupportHub.Pages.Proveedor
 
             return RedirectToPage("/Proveedor/mostrarProveedor", new { exito = true });
         }
-
         public int idProveedor { get; set; }
-
-        public IActionResult OnPostEliminar()
+        public IActionResult OnPostEliminar([FromBody] int idProveedor)
         {
             if (idProveedor <= 0)
             {
-                // Manejar error, id no válido
-                return Page();
+                return new JsonResult(new { success = false, message = "ID de proveedor no válido." });
             }
 
             try
             {
-                using (var conexion = new SqlConnection("tu_cadena_de_conexion"))
+                using (var conexion = new SqlConnection(configuracion.GetConnectionString("CadenaConexion")))
                 {
                     conexion.Open();
                     using (var comando = new SqlCommand("sp_eliminar_proveedor", conexion))
@@ -133,14 +130,15 @@ namespace SupportHub.Pages.Proveedor
                         comando.ExecuteNonQuery();
                     }
                 }
+
+                return new JsonResult(new { success = true });
             }
             catch (Exception ex)
             {
-                // Manejar el error
-                return Page();
+               
+                return new JsonResult(new { success = false, message = ex.Message });
             }
-
-            return RedirectToPage("/Proveedor/mostrarProveedor", new { exito = true });
         }
+
     }
 }

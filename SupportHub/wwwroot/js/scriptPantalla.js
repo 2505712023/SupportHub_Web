@@ -1,35 +1,56 @@
 ﻿function confirmDelete(idProveedor) {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
-            confirmButton: "btn btn-success",
-            cancelButton: "btn btn-danger"
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
         },
         buttonsStyling: false
     });
 
     swalWithBootstrapButtons.fire({
-        title: "¿Está seguro que desea eliminar?",
-        text: "¡No podrás revertir esto!",
-        icon: "warning",
+        title: '¿Está seguro que desea eliminar?',
+        text: "¡No podrá revertir esto!",
+        icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: "Sí, Eliminar!",
-        cancelButtonText: "No, Cancelar!",
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'No, cancelar!',
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            // Redirige al método OnPostEliminar en mostrarProveedor.cshtml.cs
-            const form = document.createElement('form');
-            form.method = 'post';
-            form.action = '/Proveedor/mostrarProveedor'; // Cambia esta ruta según tu estructura
-            form.innerHTML = `<input type="hidden" name="idProveedor" value="${idProveedor}" />`;
-            document.body.appendChild(form);
-            form.submit();
+            // Llamada a la eliminación
+            fetch('/Proveedor/mostrarProveedor?handler=Eliminar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idProveedor: idProveedor })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        swalWithBootstrapButtons.fire(
+                            '¡Eliminado!',
+                            'Se ha sido eliminado correctamente.',
+                            'success'
+                        ).then(() => {
+                            // Recargar la tabla o la página
+                            location.reload();
+                        });
+                    } else {
+                        swalWithBootstrapButtons.fire(
+                            'Error',
+                            'No se pudo eliminar. ' + data.message,
+                            'error'
+                        );
+                    }
+                })
+                
         } else if (result.dismiss === Swal.DismissReason.cancel) {
-            swalWithBootstrapButtons.fire({
-                title: "Cancelado",
-                text: ":)",
-                icon: "error"
-            });
+            swalWithBootstrapButtons.fire(
+                'Cancelado',
+                ':)',
+                'error'
+            );
         }
     });
 }
