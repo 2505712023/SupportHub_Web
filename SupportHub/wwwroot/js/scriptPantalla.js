@@ -57,12 +57,10 @@
 
 
 function validarFormulario() {
-
     var codigo = document.getElementById("codigo").value.trim();
     var nombre = document.getElementById("nombre").value.trim();
     var direccion = document.getElementById("direccion").value.trim();
     var telefono = document.getElementById("telefono").value.trim();
-
 
     if (codigo === "" ) {
   
@@ -96,17 +94,33 @@ function validarFormulario() {
         });
         return false;
     }
-
-
     submitForm();
 }
+
 function submitForm() {
     document.getElementById("formAgregarProveedor").submit();
 }
+
 function checkSearch(input) {
     if (input.value.trim() === '') {
         input.form.submit();
     }
 }
 
+function llenarModal(button) {
+    var tr = $(button).closest("tr");
 
+    $(".modal #esModificacion").val("true")
+    $(".modal h1").text("Modificar Proveedor");
+    $(".modal #id").val(tr.data("id"));
+    $(".modal #codigo").val(tr.data("codigo"));
+    $(".modal #nombre").val(tr.data("nombre"));
+    $(".modal #direccion").val(tr.data("direccion"));
+    $(".modal #telefono").val(tr.data("telefono"));
+}
+
+function limpiarModal() {
+    $(".modal #esModificacion").val("false")
+    $(".modal h1").text("Agregar Proveedor");
+    $("#formAgregarProveedor")[0].reset();
+}
