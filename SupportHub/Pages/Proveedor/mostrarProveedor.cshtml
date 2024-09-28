@@ -40,17 +40,19 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.listaProveedor)
+                @foreach (var item in Model.listaProveedores)
                 {
-                    <tr>
+                    <tr data-codigo="@item.codProveedor" data-nombre="@item.nombreProveedor" data-direccion="@item.direccionProveedor" data-telefono="@item.telefonoProveedor" data-id="@item.idProveedor">
                         <td align="left">@item.codProveedor</td>
                         <td align="left">@item.nombreProveedor</td>
                         <td align="left">@item.direccionProveedor</td>
                         <td align="left">@item.telefonoProveedor</td>
                         <td>
-                            <a class="btn btn-edit" href="/Proveedor/modificarProveedor?codProveedor=@item.codProveedor"><i class="fas fa-pen"></i>Modificar</a>
+                            <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                                <i class="fas fa-pen"></i>Modificar
+                            </button>
                             <button type="button" class="btn btn-delete" onclick="confirmDelete(@item.idProveedor)">
-                                <i class="fas fa-trash"></i> Eliminar
+                                <i class="fas fa-trash"></i>Eliminar
                             </button>
                         </td>
                     </tr>
@@ -66,10 +68,16 @@
         <div class="modal-content">
             <div class="modal-header encabezado-personalizado">
                 <h1 class="modal-title fs-5" id="AgregarModificar">Agregar Proveedor</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" onclick="limpiarModal()" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form method="post" id="formAgregarProveedor">
+                    <!-- Campo de ID -->
+                    <input type="hidden" id="id" name="id" value="" />
+
+                    <!-- Campo de EsModificacion -->
+                    <input type="hidden" id="esModificacion" name="esModificacion" value="false" />
+
                     <!-- Campo de Código -->
                     <div class="mb-3">
                         <label for="codigo">Código:</label>
@@ -96,26 +104,38 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="validarFormulario()">Agregar</button>
+                <button type="button" class="btn btn-secondary" onclick="limpiarModal()" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="validarFormulario()">Guardar</button>
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <script src="/js/scriptPantalla.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script type="text/javascript">
         // Verifica si la operación fue exitosa
         @if (Model.exito)
         {
             <text>
                 Swal.fire({
-                    title: "¡Excelentes!",
-                    text: "El proveedor ha sido agregado correctamente.",
+                    title: "¡Excelente!",
+                    text: "El proveedor ha sido guardado correctamente.",
                     icon: "success",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+        // Verifica si la operación fue exitosa
+        @if (Model.exito == false && Model.intentoRealizado)
+        {
+            <text>
+                Swal.fire({
+                    title: "Oops...",
+                    text: "Hubo un error al guardar el registro, valide que el código o el nombre del proveedor no exista.",
+                    icon: "error",
                     confirmButtonText: "OK"
                 });
             </text>

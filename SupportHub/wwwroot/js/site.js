@@ -4,6 +4,7 @@
 
     if (darkModeEnabled) {
         document.body.classList.add('dark-mode');
+        $(".swal2-modal").addClass("dark-mode");
         var icon = document.querySelector('#toggle-theme i');
         icon.classList.replace('fa-moon', 'fa-sun');
     }
@@ -11,6 +12,7 @@
     if (toggleButton) {
         toggleButton.addEventListener('click', function () {
             var isDarkMode = document.body.classList.toggle('dark-mode');
+            $(".swal2-modal").toggleClass("dark-mode");
             localStorage.setItem('dark-mode', isDarkMode);
             var icon = document.querySelector('#toggle-theme i');
             if (isDarkMode) {

@@ -9,7 +9,7 @@ namespace SupportHub.Pages.Proveedor
     public class mostrarProveedorModel : PageModel
     {
         private readonly IConfiguration configuracion;
-        public List<Proveedores> listaProveedor = new List<Proveedores>();
+        public List<Proveedores> listaProveedores = new List<Proveedores>();
         public Proveedores newProveedor = new Proveedores();
         public String mensajeError = "";
         public String mensajeExito = "";
@@ -19,9 +19,10 @@ namespace SupportHub.Pages.Proveedor
             this.configuracion = configuration;
         }
 
-        public void OnGet(string searchQuery = null, bool exito = false)
+        public void OnGet(string searchQuery = null, bool exito = false, bool intentoRealizado = false)
         {
             this.exito = exito;
+            this.intentoRealizado = intentoRealizado;
 
             try
             {
@@ -54,7 +55,7 @@ namespace SupportHub.Pages.Proveedor
                             proveedor.nombreProveedor = lector.GetString(2);
                             proveedor.direccionProveedor = lector.GetString(3);
                             proveedor.telefonoProveedor = lector.GetString(4);
-                            listaProveedor.Add(proveedor);
+                            listaProveedores.Add(proveedor);
                         }
                     }
                 }
@@ -66,6 +67,7 @@ namespace SupportHub.Pages.Proveedor
         }
 
         public bool exito { get; set; } = false;
+        public bool intentoRealizado { get; set; } = false;
 
         public IActionResult OnPost()
         {
@@ -83,33 +85,72 @@ namespace SupportHub.Pages.Proveedor
                 return Page();
             }
 
-            try
+            if (Request.Form["esModificacion"] == "false")
             {
-                string cadena = configuracion.GetConnectionString("CadenaConexion");
-                using (SqlConnection conexion = new SqlConnection(cadena))
+                try
                 {
-                    conexion.Open();
-                    string query = "dbo.sp_crear_proveedor @codProveedor,@nombreProveedor,@direccionProveedor,@telefonoProveedor";
-                    SqlCommand comando = new SqlCommand(query, conexion);
+                    string cadena = configuracion.GetConnectionString("CadenaConexion");
+                    int registrosAgregados = 0;
+                    using (SqlConnection conexion = new SqlConnection(cadena))
+                    {
+                        conexion.Open();
+                        string query = "dbo.sp_crear_proveedor @codProveedor,@nombreProveedor,@direccionProveedor,@telefonoProveedor";
+                        SqlCommand comando = new SqlCommand(query, conexion);
 
-                    comando.Parameters.AddWithValue("@codProveedor", newProveedor.codProveedor);
-                    comando.Parameters.AddWithValue("@nombreProveedor", newProveedor.nombreProveedor);
-                    comando.Parameters.AddWithValue("@direccionProveedor", newProveedor.direccionProveedor);
-                    comando.Parameters.AddWithValue("@telefonoProveedor", newProveedor.telefonoProveedor);
+                        comando.Parameters.AddWithValue("@codProveedor", newProveedor.codProveedor);
+                        comando.Parameters.AddWithValue("@nombreProveedor", newProveedor.nombreProveedor);
+                        comando.Parameters.AddWithValue("@direccionProveedor", newProveedor.direccionProveedor);
+                        comando.Parameters.AddWithValue("@telefonoProveedor", newProveedor.telefonoProveedor);
 
-                    comando.ExecuteNonQuery();
+                        registrosAgregados = Convert.ToInt32(comando.ExecuteScalar().ToString());
+                    }
+                    exito = registrosAgregados == 1 ? true : false;
                 }
-
-                exito = true;
+                catch (Exception ex)
+                {
+                    mensajeError = ex.Message;
+                    return Page();
+                }
             }
-            catch (Exception ex)
+            else
             {
-                mensajeError = ex.Message;
-                return Page();
+                newProveedor.idProveedor = Convert.ToInt32(Request.Form["id"]);
+                try
+                {
+                    string cadena = configuracion.GetConnectionString("CadenaConexion");
+                    using (SqlConnection conexion = new SqlConnection(cadena))
+                    {
+                        conexion.Open();
+                        string query = "dbo.sp_modificar_proveedor @codProveedor,@idProveedor,@nombreProveedor,@direccionProveedor,@telefonoProveedor";
+                        SqlCommand comando = new SqlCommand(query, conexion);
+
+                        comando.Parameters.AddWithValue("@idProveedor", newProveedor.idProveedor);
+                        comando.Parameters.AddWithValue("@codProveedor", newProveedor.codProveedor);
+                        comando.Parameters.AddWithValue("@nombreProveedor", newProveedor.nombreProveedor);
+                        comando.Parameters.AddWithValue("@direccionProveedor", newProveedor.direccionProveedor);
+                        comando.Parameters.AddWithValue("@telefonoProveedor", newProveedor.telefonoProveedor);
+
+                        comando.ExecuteNonQuery();
+                    }
+                    exito = true;
+                }
+                catch (Exception ex)
+                {
+                    mensajeError = ex.Message;
+                    return Page();
+                }
             }
 
-            return RedirectToPage("/Proveedor/mostrarProveedor", new { exito = true });
+            if (exito)
+            {
+                return RedirectToPage("/Proveedor/mostrarProveedor", new { exito = true });
+            }
+            else
+            {
+                return RedirectToPage("/Proveedor/mostrarProveedor", new { intentoRealizado = true });
+            }
         }
+
         public int idProveedor { get; set; }
         public IActionResult OnPostEliminar([FromBody] int idProveedor)
         {
