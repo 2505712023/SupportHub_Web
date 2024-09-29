@@ -75,7 +75,8 @@ body {
 
         body.dark-mode .btn-add:hover,
         body.dark-mode .btn-edit:hover,
-        body.dark-mode .btn-delete:hover {
+        body.dark-mode .btn-delete:hover,
+        body.dark-mode .btn-warning:hover {
             background-color: #e0e0e0; /* Fondo de botones al pasar el cursor (cambio al color claro) */
         }
 

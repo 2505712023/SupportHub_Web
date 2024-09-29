@@ -1,0 +1,214 @@
+﻿@page
+@model SupportHub.Pages.Entregas.mostrarEntregasModel
+@{
+    ViewData["Title"] = "Entregas";
+    Layout = "_Layout";
+}
+<br />
+
+<link rel="stylesheet" href="~/css/estiloPantallas.css">
+
+<div class="content-wrapper" style="max-width: 1700px; border-radius: 20px;">
+    <h1>Gestión de Entregas</h1>
+
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <form method="get">
+                <div class="search-bar d-flex">
+                    <input type="text" name="searchQuery" class="form-control me-2" placeholder="Buscar entrega ..."
+                           value="@Request.Query["searchQuery"]" oninput="checkSearch(this)" />
+                    <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 text-end">
+            <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#AgregarModificarEntrega">
+                <i class="fas fa-plus-circle"></i>Agregar Entrega
+            </button>
+        </div>
+    </div>
+
+    <div>
+        <table class="table table-hover align-middle text-center" style="max-width: 1700px; width: 100%;">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Tipo de Entrega</th>
+                    <th>Tipo Equipo</th>
+                    <th>Marca Equipo</th>
+                    <th>Modelo Equipo</th>
+                    <th>Cantidad Entrega</th>
+                    <th>Empleado Entregó</th>
+                    <th>Empleado Recibió</th>
+                    <th>Fecha Entrega</th>
+                    <th>Fecha Devolución</th>
+                    <th>Observación Entrega</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.listaEntregas)
+                {
+                    <tr data-idEntrega="@item.idEntrega"
+                        data-codEntrega="@item.codEntrega"
+                        data-nombreTipoEntrega="@item.nombreTipoEntrega"
+                        data-tipoEquipo="@item.tipoEquipo"
+                        data-marcaEquipo="@item.marcaEquipo"
+                        data-modeloEquipo="@item.modeloEquipo"
+                        data-cantidadEntrega="@item.cantidadEntrega"
+                        data-nombreEmpleadoEntrego="@item.nombreEmpleadoEntrego"
+                        data-nombreEmpleadoRecibio="@item.nombreEmpleadoRecibio"
+                        data-fechaEntrega="@item.fechaEntrega"
+                        data-fechaDevolucion="@item.fechaDevolucion"
+                        data-observacionEntrega="@item.observacionEntrega"
+                        data-idTipoEntrega="@item.idTipoEntrega"
+                        data-idEquipo="@item.idEquipo"
+                        data-idEmpleadoEntrega="@item.idEmpleadoEntrega"
+                        data-idEmpleadoRecibe="@item.idEmpleadoRecibe">
+                        <td align="left">@item.codEntrega</td>
+                        <td align="left">@item.nombreTipoEntrega</td>
+                        <td align="left">@item.tipoEquipo</td>
+                        <td align="left">@item.marcaEquipo</td>
+                        <td align="left">@item.modeloEquipo</td>
+                        <td align="center">@item.cantidadEntrega</td>
+                        <td align="left">@item.nombreEmpleadoEntrego</td>
+                        <td align="left">@item.nombreEmpleadoRecibio</td>
+                        <td align="left">@item.fechaEntrega</td>
+                        <td align="left">@item.fechaDevolucion</td>
+                        <td align="left">@item.observacionEntrega</td>
+                        <td>
+                            <button class="btn btn-edit btn-acciones" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificarEntrega">
+                                <i class="fas fa-pen"></i> Modificar
+                            </button>
+                            <button class="btn btn-delete btn-acciones" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#EliminarEntrega">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                            <button class="btn btn- btn-acciones" onclick="" data-bs-toggle="modal" data-bs-target="#DevolucionEntrega">
+                                <i class="fas fa-rotate-left"></i> Devolución
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@* 
+<!-- Modal para agregar un nuevo proveedor -->
+<div class="modal fade" id="AgregarModificarEntrega" tabindex="-1" aria-labelledby="AgregarModificarEntrega" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header encabezado-personalizado">
+                <h1 class="modal-title fs-5" id="AgregarModificarEntrega">Agregar Proveedor</h1>
+                <button type="button" class="btn-close" onclick="limpiarModal()" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="formAgregarProveedor">
+                    <!-- Campo de ID -->
+                    <input type="hidden" id="id" name="id" value="" />
+
+                    <!-- Campo de EsModificacion -->
+                    <input type="hidden" id="esModificacion" name="esModificacion" value="false" />
+
+                    <!-- Campo de Código -->
+                    <div class="mb-3">
+                        <label for="codigo">Código:</label>
+                        <input type="text" required class="form-control" id="codigo" name="Codigo">
+                    </div>
+
+                    <!-- Campo de Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" required class="form-control" id="nombre" name="nombre">
+                    </div>
+
+                    <!-- Campo de Dirección -->
+                    <div class="mb-3">
+                        <label for="direccion">Dirección:</label>
+                        <input type="text" required class="form-control" id="direccion" name="direccion">
+                    </div>
+
+                    <!-- Campo de Teléfono -->
+                    <div class="mb-3">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="text" required class="form-control" id="telefono" name="telefono">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="limpiarModal()" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="validarFormulario()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar un proveedor -->
+<div class="modal fade" id="EliminarEntrega" tabindex="-1" aria-labelledby="EliminarEntrega" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header encabezado-personalizado">
+                <h1 class="modal-title fs-5" id="AgregarModificarEntrega">Eliminar Proveedor</h1>
+                <button type="button" class="btn-close" onclick="limpiarModalEliminar()" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Seguro que desea eliminar un proveedor?</p>
+                <form method="post" id="formEliminarEntrega">
+                    <input type="hidden" name="idProveedor" id="idProveedor" value="" />
+                    <input type="hidden" name="esEliminacion" id="esEliminacion" value="" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="limpiarModalEliminar()" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="validarFormularioEliminar()" id="btnEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        // Verifica si la operación fue exitosa
+        @if (Model.exito)
+        {
+            <text>
+                Swal.fire({
+                    title: "¡Excelente!",
+                    text: "El proveedor ha sido guardado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+            // Verifica si la operación fue exitosa
+        @if (Model.exito == false && Model.intentoRealizado)
+        {
+            <text>
+                Swal.fire({
+                    title: "Oops...",
+                    text: "Hubo un error al guardar el registro, valide que el código o el nombre del proveedor no exista.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+            // Verifica si la operación fue exitosa
+        @if (Model.eliminado == true)
+        {
+            <text>
+                Swal.fire({
+                    title: "¡Excelente!",
+                    text: "El proveedor ha sido eliminado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+} *@
