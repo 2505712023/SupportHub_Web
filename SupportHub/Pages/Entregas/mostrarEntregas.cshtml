@@ -6,17 +6,31 @@
 }
 <br />
 
-<link rel="stylesheet" href="~/css/estiloPantallas.css">
+@section Styles {
+    <link rel="stylesheet" href="~/css/estiloPantallas.css">
+}
 
 <div class="content-wrapper" style="max-width: 1700px; border-radius: 20px;">
     <h1>Gestión de Entregas</h1>
 
-    <div class="row mb-3">
+    <div class="row mb-3 align-items-center">
         <div class="col-md-8">
             <form method="get">
-                <div class="search-bar d-flex">
-                    <input type="text" name="searchQuery" class="form-control me-2" placeholder="Buscar entrega ..."
-                           value="@Request.Query["searchQuery"]" oninput="checkSearch(this)" />
+                <div class="d-flex align-items-center search-bar">
+                    <input type="text" id="busqueda" name="busqueda" class="form-control me-2" placeholder="Buscar entrega ..."/>
+                    <select class="form-select select-filtro me-2" id="filtros">
+                        <option value="0">Código</option>
+                        <option value="1">Tipo de Entrega</option>
+                        <option value="2">Tipo Equipo</option>
+                        <option value="3">Marca Equipo</option>
+                        <option value="4">Modelo Equipo</option>
+                        <option value="5">Cantidad Entrega</option>
+                        <option value="6">Empleado Entregó</option>
+                        <option value="7">Empleado Recibió</option>
+                        <option value="8">Fecha Entrega</option>
+                        <option value="9">Fecha Devolución</option>
+                        <option value="10">Observación Entrega</option>
+                    </select>
                     <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
                 </div>
             </form>
@@ -29,7 +43,7 @@
     </div>
 
     <div>
-        <table class="table table-hover align-middle text-center" style="max-width: 1700px; width: 100%;">
+        <table class="table table-hover align-middle text-center" id="tablaEntregas" style="max-width: 1700px; width: 100%;">
             <thead>
                 <tr>
                     <th>Código</th>
@@ -50,17 +64,6 @@
                 @foreach (var item in Model.listaEntregas)
                 {
                     <tr data-idEntrega="@item.idEntrega"
-                        data-codEntrega="@item.codEntrega"
-                        data-nombreTipoEntrega="@item.nombreTipoEntrega"
-                        data-tipoEquipo="@item.tipoEquipo"
-                        data-marcaEquipo="@item.marcaEquipo"
-                        data-modeloEquipo="@item.modeloEquipo"
-                        data-cantidadEntrega="@item.cantidadEntrega"
-                        data-nombreEmpleadoEntrego="@item.nombreEmpleadoEntrego"
-                        data-nombreEmpleadoRecibio="@item.nombreEmpleadoRecibio"
-                        data-fechaEntrega="@item.fechaEntrega"
-                        data-fechaDevolucion="@item.fechaDevolucion"
-                        data-observacionEntrega="@item.observacionEntrega"
                         data-idTipoEntrega="@item.idTipoEntrega"
                         data-idEquipo="@item.idEquipo"
                         data-idEmpleadoEntrega="@item.idEmpleadoEntrega"
@@ -83,7 +86,7 @@
                             <button class="btn btn-delete btn-acciones" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#EliminarEntrega">
                                 <i class="fas fa-trash"></i> Eliminar
                             </button>
-                            <button class="btn btn- btn-acciones" onclick="" data-bs-toggle="modal" data-bs-target="#DevolucionEntrega">
+                            <button class="btn btn-warning btn-acciones" onclick="" data-bs-toggle="modal" data-bs-target="#DevolucionEntrega">
                                 <i class="fas fa-rotate-left"></i> Devolución
                             </button>
                         </td>
@@ -165,9 +168,11 @@
         </div>
     </div>
 </div>
+*@
 
 @section Scripts {
-    <script type="text/javascript">
+    <script type="text/javascript" src="/js/entregas.js"></script>
+@*     <script type="text/javascript">
         // Verifica si la operación fue exitosa
         @if (Model.exito)
         {
@@ -210,5 +215,5 @@
                 });
             </text>
         }
-    </script>
-} *@
+    </script> *@
+}
