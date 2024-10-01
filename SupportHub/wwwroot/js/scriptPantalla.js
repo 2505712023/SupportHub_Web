@@ -4,14 +4,14 @@
     var direccion = document.getElementById("direccion").value.trim();
     var telefono = document.getElementById("telefono").value.trim();
 
-    if (codigo === "" ) {
-  
+    if (codigo === "") {
+
         Swal.fire({
             icon: "error",
             title: "Oops...",
             text: "Código es requerido!"
         });
-        return false; 
+        return false;
     } else if (nombre === "") {
 
         Swal.fire({
@@ -28,11 +28,26 @@
             text: "Dirección es requerido!"
         });
         return false;
-    } else if (telefono === "") {
+    } else if (direccion.length > 100) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Dirección solo permite 100 caracteres!"
+        });
+        return false;
+    }else if (telefono === "") {
         Swal.fire({
             icon: "error",
             title: "Oops...",
             text: "Teléfono es requerido!"
+        });
+        return false;
+    }
+    else if (telefono.length < 8 || telefono.length > 12) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Teléfono debe estar entre 8 y 12 caracteres!"
         });
         return false;
     }
@@ -70,18 +85,23 @@ function llenarModal(button) {
     var tr = $(button).closest("tr");
 
     $(".modal #esModificacion").val("true")
-    $(".modal h1").text("Modificar Proveedor");
+    $(".modal h1").text("Modificar Proveedores");
     $(".modal #id").val(tr.data("id"));
     $(".modal #codigo").val(tr.data("codigo"));
     $(".modal #nombre").val(tr.data("nombre"));
     $(".modal #direccion").val(tr.data("direccion"));
     $(".modal #telefono").val(tr.data("telefono"));
+
+    $(".modal #codigo").prop("readonly", true);
+
 }
 
 function limpiarModal() {
     $(".modal #esModificacion").val("false")
     $(".modal h1").text("Agregar Proveedor");
     $("#formAgregarProveedor")[0].reset();
+
+    $(".modal #codigo").prop("readonly", false);
 }
 
 function llenarModalEliminar(button) {
