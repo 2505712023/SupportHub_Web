@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SupportHub.Helpers;
 using SupportHub.Modelos;
 using System.Data;
 using System.Data.SqlClient;
@@ -184,6 +185,23 @@ namespace SupportHub.Pages.Proveedor
             else
             {
                 return RedirectToPage("/Proveedor/mostrarProveedor", new { intentoRealizado = true });
+            }
+
+        }
+        private string GetAvailableConnectionString()
+        {
+            // Intenta primero con la cadena de conexión principal
+            if (PingHelper.PingHost("100.101.36.39")) // Reemplaza con tu dirección del servidor
+            {
+                return configuracion.GetConnectionString("CadenaConexion");
+            }
+            else if (PingHelper.PingHost("25.2.143.28")) // Reemplaza con tu dirección del servidor Hamachi
+            {
+                return configuracion.GetConnectionString("CadenaConexionHamachi");
+            }
+            else
+            {
+                throw new Exception("No se puede conectar a ninguna base de datos.");
             }
         }
     }

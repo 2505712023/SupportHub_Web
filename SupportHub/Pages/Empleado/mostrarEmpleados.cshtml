@@ -1,0 +1,75 @@
+﻿@page
+@model SupportHub.Pages.Empleado.mostrarEmpleadosModel
+@{
+    ViewData["Title"] = "Empleados";
+    Layout = "_Layout";
+
+}
+<br />
+
+
+<link rel="stylesheet" href="~/css/estiloPantallas.css">
+
+<div class="content-wrapper" style="max-width: 1400px; border-radius: 20px;">
+    <h1>Gestión de Empleados</h1>
+
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <form method="get">
+                <div class="search-bar d-flex">
+                    <input type="text" name="searchQuery" class="form-control me-2" placeholder="Buscar por código, Nombre o Apellido de empleado."
+                           value="@Request.Query["searchQuery"]" oninput="checkSearch(this)" />
+                    <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 text-end">
+            <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                <i class="fas fa-plus-circle"></i>Agregar Empleados
+            </button>
+        </div>
+    </div>
+
+    <div>
+        <table class="table table-hover align-middle text-center" style="max-width: 1500px; width: 100%;">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                    <th>Cod Área</th>
+                    <th>Área</th>
+                    <th>Cod Cargo</th>
+                    <th>Cargo</th>            
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.listaEmpleado)
+                {
+                    <tr data-codigo="@item.codEmpleado" data-nombre="@item.nombreEmpleado" data-direccion="@item.apellidoEmpleado" data-telefono="@item.telefonoEmpleado" data-email="@item.emailEmpleado" data-codArea="@item.codArea" data-area="@item.nombreArea" data-codCargo="@item.codCargo" data-cargo="@item.nombreCargo" data-id="@item.idEmpleado">
+                        <td align="left">@item.codEmpleado</td>
+                        <td align="left">@item.nombreEmpleado</td>
+                        <td align="left">@item.apellidoEmpleado</td>
+                        <td align="left">@item.telefonoEmpleado</td>
+                        <td align="left">@item.emailEmpleado</td>
+                        <td align="left">@item.codArea</td>
+                        <td align="left">@item.nombreArea</td>
+                        <td align="left">@item.codCargo</td>
+                        <td align="left">@item.nombreCargo</td>
+                        <td class="actions">
+                            <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                                <i class="fas fa-pen"></i>Modificar
+                            </button>
+                            <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
+                                <i class="fas fa-trash"></i>Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

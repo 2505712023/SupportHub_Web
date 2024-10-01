@@ -14,9 +14,9 @@ table {
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    max-width: 1400px;
-    width: 100%;
-    margin: 0 auto;
+    max-width: 1800px; /* Incrementado de 1400px a 1600px */
+    width: 120%;
+    margin: 20px auto; /* Puedes ajustar el margen para dar más espacio alrededor */
 }
 
 h1 {
@@ -123,3 +123,7 @@ h1 {
     font-size: larger;
     font-weight: bold;
 }
+.actions {
+    white-space: nowrap; /* Evita que los botones se rompan en líneas separadas */
+}
+
