@@ -111,11 +111,11 @@ h1 {
     }
 
 .btn-warning {
-    background-color: mediumpurple;
+    background-color: rgb(77, 77, 77);
 }
 
     .btn-warning:hover {
-        background-color: rebeccapurple;
+        background-color: rgb(57, 57, 57);
     }
 
 .btn i {

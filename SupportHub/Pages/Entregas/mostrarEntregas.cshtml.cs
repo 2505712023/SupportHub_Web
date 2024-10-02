@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SupportHub.Helpers;
 using SupportHub.Modelos;
 using System.Data.SqlClient;
 
@@ -19,8 +20,7 @@ namespace SupportHub.Pages.Entregas
         {
             try
             {
-                string cadena = configuracion.GetConnectionString("CadenaConexion");
-                using (SqlConnection conexion = new(cadena))
+                using (SqlConnection conexion = new(GetAvailableConnectionString()))
                 {
                     conexion.Open();
                     using (SqlCommand comando = new("[dbo].[sp_obtener_entregas]", conexion))
@@ -58,5 +58,22 @@ namespace SupportHub.Pages.Entregas
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
+
+        private string GetAvailableConnectionString()
+        {
+            if (PingHelper.PingHost("100.101.36.39"))
+            {
+                return configuracion.GetConnectionString("CadenaConexion");
+            }
+            else if (PingHelper.PingHost("25.2.143.28"))
+            {
+                return configuracion.GetConnectionString("CadenaConexionHamachi");
+            }
+            else
+            {
+                throw new Exception("No se puede conectar a ninguna base de datos.");
+            }
+        }
+
     }
 }
