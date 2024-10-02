@@ -73,3 +73,81 @@
         </table>
     </div>
 </div>
+
+<!-- Modal para agregar un nuevo empleado -->
+<div class="modal fade" id="AgregarModificar" tabindex="-1" aria-labelledby="AgregarModificar" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header encabezado-personalizado">
+                <h1 class="modal-title fs-5" id="AgregarModificar">Agregar Empleados</h1>
+                <button type="button" class="btn-close" onclick="limpiarModal()" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="formAgregarProveedor">
+                    <!-- Campo de ID -->
+                    <input type="hidden" id="id" name="id" value="" />
+
+                    <!-- Campo de EsModificacion -->
+                    <input type="hidden" id="esModificacion" name="esModificacion" value="false" />
+
+                    <!-- Campo de Código -->
+                    <div class="mb-3">
+                        <label for="codigo">Código Empleado:</label>
+                        <input type="text" required class="form-control" id="codigo" name="Codigo">
+                    </div>
+
+                    <!-- Campo de Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre">Nombre Empleado:</label>
+                        <input type="text" required class="form-control" id="nombre" name="nombre">
+                    </div>
+
+
+                    <!-- Campo de Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre">Apellido Empleado:</label>
+                        <input type="text" required class="form-control" id="apellido" name="apellido">
+                    </div>
+
+                 
+                    <!-- Campo de Teléfono -->
+                    <div class="mb-3">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="text" required class="form-control" id="telefono" name="telefono">
+                    </div>
+
+                    <!-- Campo de Correo -->
+                    <div class="mb-3">
+                        <label for="direccion">Email:</label>
+                        <input type="text" required class="form-control" id="email" name="email">
+                    </div>
+
+                    <!-- Campo de Area -->
+                    <div class="mb-3">
+                        <label for="direccion">Nombre Area:</label>
+                        <div class="col-sm-6">
+                            <select class="form-select" id="cliente" name="area" asp-items="Model.Area">
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="direccion">Nombre Cargo:</label>
+                        <div class="col-sm-6">
+                            <select class="form-select" id="cliente" name="cargo" asp-items="Model.Cargo">
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                 
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="limpiarModal()" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="validarFormulario()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
