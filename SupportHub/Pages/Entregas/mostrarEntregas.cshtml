@@ -106,7 +106,25 @@
                 <button type="button" class="btn-close" onclick="limpiarModal()" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modalBody">
-                <!-- Add form or confirmation message will be inserted here via JavaScript -->
+                <select class="form-control" name="idTipoEntrega" id="idTipoEntrega">
+                    <option value="">Seleccionar tipo de entrega</option>
+                    @Html.Raw(Model.GetTiposDeEntregas())
+                </select>
+
+                <select class="form-control" name="idEmpleadoEntrega" id="idEmpleadoEntrega">
+                    <option value="">Seleccionar empleado entrega</option>
+                    @Html.Raw(Model.GetEmpleados())
+                </select>
+
+                <select class="form-control" name="idEmpleadoRecibe" id="idEmpleadoRecibe">
+                    <option value="">Seleccionar empleado recibe</option>
+                    @Html.Raw(Model.GetEmpleados())
+                </select>
+
+                <select class="form-control" name="idEquipo" id="idEquipo">
+                    <option value="">Seleccionar equipo</option>
+                    @Html.Raw(Model.GetEquipos())
+                </select>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="limpiarModal()" data-bs-dismiss="modal">Cancelar</button>
@@ -163,3 +181,4 @@
         }
     </script> *@
 }
+

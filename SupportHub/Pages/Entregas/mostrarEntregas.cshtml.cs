@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SupportHub.Helpers;
 using SupportHub.Modelos;
 using System.Data.SqlClient;
+using System.Text;
 
 namespace SupportHub.Pages.Entregas
 {
@@ -75,5 +77,106 @@ namespace SupportHub.Pages.Entregas
             }
         }
 
+        public string GetTiposDeEntregas()
+        {
+            List<SelectListItem> tiposDeEntregas = [];
+            using (SqlConnection conection = new(GetAvailableConnectionString()))
+            {
+                conection.Open();
+                using (SqlCommand comando = new("select * from dbo.TiposEntregas", conection))
+                {
+                    using (SqlDataReader lector = comando.ExecuteReader())
+                    {
+                        while (lector.Read())
+                        {
+                            tiposDeEntregas.Add(new SelectListItem
+                            {
+                                Value = lector.GetInt32(0).ToString(),
+                                Text = lector.GetString(1)
+                            });
+                        }
+                    }
+                }
+            }
+
+            var sb = new StringBuilder();
+            if (tiposDeEntregas != null)
+            {
+                foreach (var tipoEntrega in tiposDeEntregas)
+                {
+                    sb.Append($"<option value='{tipoEntrega.Value}'>{tipoEntrega.Text}</option>");
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public string GetEmpleados()
+        {
+            List<SelectListItem> empleados = [];
+            using (SqlConnection conection = new(GetAvailableConnectionString()))
+            {
+                conection.Open();
+                using (SqlCommand comando = new("select idEmpleado, codEmpleado + ' - ' + nombreEmpleado + ' ' + apellidoEmpleado from dbo.Empleados", conection))
+                {
+                    using (SqlDataReader lector = comando.ExecuteReader())
+                    {
+                        while (lector.Read())
+                        {
+                            empleados.Add(new SelectListItem
+                            {
+                                Value = lector.GetInt32(0).ToString(),
+                                Text = lector.GetString(1)
+                            });
+                        }
+                    }
+                }
+            }
+
+            var sb = new StringBuilder();
+            if (empleados != null)
+            {
+                foreach (var empleado in empleados)
+                {
+                    sb.Append($"<option value='{empleado.Value}'>{empleado.Text}</option>");
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public string GetEquipos()
+        {
+            List<SelectListItem> equipos = [];
+            using (SqlConnection conection = new(GetAvailableConnectionString()))
+            {
+                conection.Open();
+                using (SqlCommand comando = new("select idEquipo, codEquipo + ' - ' + tipoEquipo + ' ' + marcaEquipo + ' ' + modeloEquipo from dbo.Equipos", conection))
+                {
+                    using (SqlDataReader lector = comando.ExecuteReader())
+                    {
+                        while (lector.Read())
+                        {
+                            equipos.Add(new SelectListItem
+                            {
+                                Value = lector.GetInt32(0).ToString(),
+                                Text = lector.GetString(1)
+                            });
+                        }
+                    }
+                }
+            }
+
+            var sb = new StringBuilder();
+            if (equipos != null)
+            {
+                foreach (var equipo in equipos)
+                {
+                    sb.Append($"<option value='{equipo.Value}'>{equipo.Text}</option>");
+                }
+            }
+
+            return sb.ToString();
+        }
     }
 }

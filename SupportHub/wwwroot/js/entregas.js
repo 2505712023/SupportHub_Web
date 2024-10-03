@@ -22,3 +22,15 @@
         }
     });
 });
+
+function openModal(opcion, button = null) {
+    if (button === null) {
+        if (opcion === "agregar") {
+            $("#modalActionButton").text("Agregar");
+            $("select #idTipoEntrega").toggle();
+            $("select #idEmpleadoEntrega").toggle();
+            $("select #idEmpleadoRecibe").toggle();
+            $("select #idEquipo").toggle();
+        }
+    }
+}
