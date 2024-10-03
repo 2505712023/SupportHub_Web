@@ -11,11 +11,13 @@ namespace SupportHub.Pages.Entregas
     public class mostrarEntregasModel : PageModel
     {
         private readonly IConfiguration configuracion;
+        private readonly ILogger logger;
         public List<Entrega> listaEntregas = new();
 
-        public mostrarEntregasModel(IConfiguration configuracion)
+        public mostrarEntregasModel(IConfiguration configuracion, ILogger<mostrarEntregasModel> logger)
         {
             this.configuracion = configuracion;
+            this.logger = logger;
         }
 
         public void OnGet()
@@ -177,6 +179,14 @@ namespace SupportHub.Pages.Entregas
             }
 
             return sb.ToString();
+        }
+
+        public void OnPost()
+        {
+            foreach (var key in Request.Form.Keys)
+            {
+                logger.LogInformation($"Form key: {key}, value: {Request.Form[$"{key}"]}");
+            }
         }
     }
 }

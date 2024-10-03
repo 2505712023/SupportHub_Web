@@ -78,3 +78,7 @@ function openModal(opcion, button = null) {
         }
     }
 }
+
+function submitFormEntregas() {
+    $("#formEntregas").submit();
+}

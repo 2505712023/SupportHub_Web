@@ -105,32 +105,34 @@
                 <h1 class="modal-title fs-5" id="modalTitle">Agregar Entrega</h1>
                 <button type="button" class="btn-close" onclick="limpiarModal()" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="modalBody">
+            <form method="post" id="formEntregas">
+                <div class="modal-body" id="modalBody">
 
-                <select class="form-select" name="idTipoEntrega" id="idTipoEntrega">
-                    <option value="">-- Seleccione tipo de entrega --</option>
-                    @Html.Raw(Model.GetTiposDeEntregas())
-                </select>
+                    <select class="form-select" name="idTipoEntrega" id="idTipoEntrega">
+                        <option value="">-- Seleccione tipo de entrega --</option>
+                        @Html.Raw(Model.GetTiposDeEntregas())
+                    </select>
 
-                <select class="form-select" name="idEmpleadoEntrega" id="idEmpleadoEntrega">
-                    <option value="">-- Seleccione empleado que entrega --</option>
-                    @Html.Raw(Model.GetEmpleados())
-                </select>
+                    <select class="form-select" name="idEmpleadoEntrega" id="idEmpleadoEntrega">
+                        <option value="">-- Seleccione empleado que entrega --</option>
+                        @Html.Raw(Model.GetEmpleados())
+                    </select>
 
-                <select class="form-select" name="idEmpleadoRecibe" id="idEmpleadoRecibe">
-                    <option value="">-- Seleccione empleado que recibe --</option>
-                    @Html.Raw(Model.GetEmpleados())
-                </select>
+                    <select class="form-select" name="idEmpleadoRecibe" id="idEmpleadoRecibe">
+                        <option value="">-- Seleccione empleado que recibe --</option>
+                        @Html.Raw(Model.GetEmpleados())
+                    </select>
 
-                <select class="form-select" name="idEquipo" id="idEquipo">
-                    <option value="">-- Seleccione equipo --</option>
-                    @Html.Raw(Model.GetEquipos())
-                </select>
-                
-            </div>
+                    <select class="form-select" name="idEquipo" id="idEquipo">
+                        <option value="">-- Seleccione equipo --</option>
+                        @Html.Raw(Model.GetEquipos())
+                    </select>
+
+                </div>
+            </form>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="limpiarModal()" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" id="modalActionButton">Guardar</button>
+                <button type="submit" class="btn btn-primary" id="modalActionButton" onclick="submitFormEntregas()">Guardar</button>
             </div>
         </div>
     </div>
