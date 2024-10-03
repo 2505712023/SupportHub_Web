@@ -36,7 +36,7 @@
             </form>
         </div>
         <div class="col-md-4 text-end">
-            <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#AgregarModificarEntrega">
+            <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#modalEntregas" onclick="openModal('agregar')">
                 <i class="fas fa-plus-circle"></i>Agregar Entrega
             </button>
         </div>
@@ -76,17 +76,17 @@
                         <td align="center">@item.cantidadEntrega</td>
                         <td align="left">@item.nombreEmpleadoEntrego</td>
                         <td align="left">@item.nombreEmpleadoRecibio</td>
-                        <td align="left">@item.fechaEntrega</td>
-                        <td align="left">@item.fechaDevolucion</td>
+                        <td align="left" style="white-space: nowrap;">@item.fechaEntrega</td>
+                        <td align="left" style="white-space: nowrap;" id="fechaDevolucion">@item.fechaDevolucion</td>
                         <td align="left">@item.observacionEntrega</td>
                         <td>
-                            <button class="btn btn-edit btn-acciones" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificarEntrega">
+                            <button class="btn btn-edit btn-acciones" onclick="openModal('modificar', this)" data-bs-toggle="modal" data-bs-target="#modalEntregas">
                                 <i class="fas fa-pen"></i> Modificar
                             </button>
-                            <button class="btn btn-delete btn-acciones" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#EliminarEntrega">
+                            <button class="btn btn-delete btn-acciones" onclick="openModal('eliminar', this)" data-bs-toggle="modal" data-bs-target="#modalEntregas">
                                 <i class="fas fa-trash"></i> Eliminar
                             </button>
-                            <button class="btn btn-warning btn-acciones" onclick="" data-bs-toggle="modal" data-bs-target="#DevolucionEntrega">
+                            <button class="btn btn-warning btn-acciones" id="devolucion" data-bs-toggle="modal" data-bs-target="#modalEntregas">
                                 <i class="fas fa-rotate-left"></i> Devolución
                             </button>
                         </td>
@@ -96,79 +96,25 @@
         </table>
     </div>
 </div>
-@* 
-<!-- Modal para agregar un nuevo proveedor -->
-<div class="modal fade" id="AgregarModificarEntrega" tabindex="-1" aria-labelledby="AgregarModificarEntrega" aria-hidden="true">
+
+<!-- Modal para adicionar, modificar, confirmar eliminación, agregar devolución o eliminar devolución de entregas -->
+<div class="modal fade" id="modalEntregas" tabindex="-1" aria-labelledby="modalEntregasLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header encabezado-personalizado">
-                <h1 class="modal-title fs-5" id="AgregarModificarEntrega">Agregar Proveedor</h1>
+                <h1 class="modal-title fs-5" id="modalTitle">Agregar Entrega</h1>
                 <button type="button" class="btn-close" onclick="limpiarModal()" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form method="post" id="formAgregarProveedor">
-                    <!-- Campo de ID -->
-                    <input type="hidden" id="id" name="id" value="" />
-
-                    <!-- Campo de EsModificacion -->
-                    <input type="hidden" id="esModificacion" name="esModificacion" value="false" />
-
-                    <!-- Campo de Código -->
-                    <div class="mb-3">
-                        <label for="codigo">Código:</label>
-                        <input type="text" required class="form-control" id="codigo" name="Codigo">
-                    </div>
-
-                    <!-- Campo de Nombre -->
-                    <div class="mb-3">
-                        <label for="nombre">Nombre:</label>
-                        <input type="text" required class="form-control" id="nombre" name="nombre">
-                    </div>
-
-                    <!-- Campo de Dirección -->
-                    <div class="mb-3">
-                        <label for="direccion">Dirección:</label>
-                        <input type="text" required class="form-control" id="direccion" name="direccion">
-                    </div>
-
-                    <!-- Campo de Teléfono -->
-                    <div class="mb-3">
-                        <label for="telefono">Teléfono:</label>
-                        <input type="text" required class="form-control" id="telefono" name="telefono">
-                    </div>
-                </form>
+            <div class="modal-body" id="modalBody">
+                <!-- Add form or confirmation message will be inserted here via JavaScript -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="limpiarModal()" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="validarFormulario()">Guardar</button>
+                <button type="button" class="btn btn-primary" id="modalActionButton">Guardar</button>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Modal para eliminar un proveedor -->
-<div class="modal fade" id="EliminarEntrega" tabindex="-1" aria-labelledby="EliminarEntrega" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header encabezado-personalizado">
-                <h1 class="modal-title fs-5" id="AgregarModificarEntrega">Eliminar Proveedor</h1>
-                <button type="button" class="btn-close" onclick="limpiarModalEliminar()" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>¿Seguro que desea eliminar un proveedor?</p>
-                <form method="post" id="formEliminarEntrega">
-                    <input type="hidden" name="idProveedor" id="idProveedor" value="" />
-                    <input type="hidden" name="esEliminacion" id="esEliminacion" value="" />
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="limpiarModalEliminar()" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" onclick="validarFormularioEliminar()" id="btnEliminar">Eliminar</button>
-            </div>
-        </div>
-    </div>
-</div>
-*@
 
 @section Scripts {
     <script type="text/javascript" src="/js/entregas.js"></script>

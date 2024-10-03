@@ -9,4 +9,16 @@
             $(this).toggle(textoColumna.indexOf(valorAFiltrar) > -1);
         });
     });
+
+    $('tr[data-idEntrega]').each(function () {
+        var row = $(this);
+        var fechaDevolucion = row.find('#fechaDevolucion');
+        var devolucion = row.find('#devolucion');
+
+        if (fechaDevolucion.text().trim() === "") {
+            devolucion.attr('onclick', "openModal('agregarDevolucion', this)");
+        } else {
+            devolucion.attr('onclick', "openModal('eliminarDevolucion', this)");
+        }
+    });
 });
