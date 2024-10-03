@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SupportHub.Helpers;
 using SupportHub.Modelos;
 using System.Data;
 using System.Data.SqlClient;
@@ -19,8 +18,8 @@ namespace SupportHub.Pages.Proveedor
         {
             this.configuracion = configuration;
         }
-
-        public void OnGet(string searchQuery = null, bool exito = false, bool intentoRealizado = false, bool esEliminacion = false, bool eliminado = false)
+		
+		public void OnGet(string searchQuery = null, bool exito = false, bool intentoRealizado = false, bool esEliminacion = false, bool eliminado = false)
         {
             this.exito = exito;
             this.intentoRealizado = intentoRealizado;
@@ -68,11 +67,18 @@ namespace SupportHub.Pages.Proveedor
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
-
+        /*la propiedad [TempData] almacena temporalmente el valor de la variable durante la redirección. Cuando la vista
+        lee el valor de la variable, TempData se encarga de eliminarlo de sí misma, lo que hace que al recargar la página
+        la variable vuelva a tomar el valor que le hemos asignado. */
+        [TempData]
         public bool exito { get; set; } = false;
+        [TempData]
         public bool intentoRealizado { get; set; } = false;
         public bool esEliminacion { get; set; } = false;
+        [TempData]
         public bool eliminado { get; set; } = false;
+        public int coincidencia { get; set; } = 0;
+
 
         public IActionResult OnPost(bool esEliminacion = false)
         {
@@ -81,6 +87,7 @@ namespace SupportHub.Pages.Proveedor
             newProveedor.nombreProveedor = Request.Form["nombre"];
             newProveedor.direccionProveedor = Request.Form["direccion"];
             newProveedor.telefonoProveedor = Request.Form["telefono"];
+            //newProveedor.idProveedor = Convert.ToInt32(Request.Form["id"]);
 
             if (esEliminacion)
             {
@@ -103,7 +110,8 @@ namespace SupportHub.Pages.Proveedor
                     if (exito)
                     {
                         esEliminacion = false;
-                        return RedirectToPage("/Proveedor/mostrarProveedor", new { eliminado = true });
+                        eliminado = true;
+                        return RedirectToPage("/Proveedor/mostrarProveedor");
                     }
                 }
                 catch (Exception ex)
@@ -141,8 +149,8 @@ namespace SupportHub.Pages.Proveedor
 
                         registrosAgregados = Convert.ToInt32(comando.ExecuteScalar().ToString());
                     }
-                    exito = registrosAgregados == 1 ? true : false;
-                }
+                    exito = (registrosAgregados == 1) ? true : false; intentoRealizado = true;
+                                   }
                 catch (Exception ex)
                 {
                     mensajeError = ex.Message;
@@ -151,25 +159,75 @@ namespace SupportHub.Pages.Proveedor
             }
             else
             {
-                newProveedor.idProveedor = Convert.ToInt32(Request.Form["id"]);
+               newProveedor.idProveedor = Convert.ToInt32(Request.Form["id"]);
                 try
                 {
+                    #region validar coincidencias
+                    //voy a obtener algunos campos de los proveedores para hacer algunas comparaciones
+
+                    List<Proveedores> nombreYCodigoProveedores = new List<Proveedores>();
+
                     string cadena = configuracion.GetConnectionString("CadenaConexion");
                     using (SqlConnection conexion = new SqlConnection(cadena))
                     {
                         conexion.Open();
-                        string query = "dbo.sp_modificar_proveedor @codProveedor,@idProveedor,@nombreProveedor,@direccionProveedor,@telefonoProveedor";
-                        SqlCommand comando = new SqlCommand(query, conexion);
+                        SqlCommand comando = new SqlCommand("sp_obtener_proveedores_general", conexion);
+                        comando.CommandType = System.Data.CommandType.StoredProcedure;
 
-                        comando.Parameters.AddWithValue("@idProveedor", newProveedor.idProveedor);
-                        comando.Parameters.AddWithValue("@codProveedor", newProveedor.codProveedor);
-                        comando.Parameters.AddWithValue("@nombreProveedor", newProveedor.nombreProveedor);
-                        comando.Parameters.AddWithValue("@direccionProveedor", newProveedor.direccionProveedor);
-                        comando.Parameters.AddWithValue("@telefonoProveedor", newProveedor.telefonoProveedor);
+                        using (SqlDataReader lector = comando.ExecuteReader())
+                        {
+                            while (lector.Read())
+                            {
+                                Proveedores proveedor = new Proveedores();
+                                proveedor.codProveedor = lector.GetString(1);
+                                proveedor.nombreProveedor = lector.GetString(2);
 
-                        comando.ExecuteNonQuery();
+                                nombreYCodigoProveedores.Add(proveedor);
+                            }
+                        }
                     }
-                    exito = true;
+                    //recorriendo la lista para ver si el nuevo nombre que estamos asignando al proveedor ya está 
+                    //asignado a alguien más 
+                    foreach (var i in nombreYCodigoProveedores)
+                    {
+                        //si tienen el mismo código y nombre, significa que quiere cambiar un campo distinto al nombre
+                        if (i.codProveedor == newProveedor.codProveedor && i.nombreProveedor == newProveedor.nombreProveedor)
+                        {
+                            break;                      
+                        }//si tienen distinto código y mismo nombre significa que quiere asignar un nombre que ya está ocupado
+                        else if (i.codProveedor != newProveedor.codProveedor && i.nombreProveedor == newProveedor.nombreProveedor)
+                        {
+                            coincidencia += 1;
+                            break;
+                        }
+                    }
+                    
+                    #endregion
+                    
+                    if (coincidencia == 0) {
+                        //string cadena = configuracion.GetConnectionString("CadenaConexion");
+                        using (SqlConnection conexion = new SqlConnection(cadena))
+                        {
+                            conexion.Open();
+                            string query = "dbo.sp_modificar_proveedor @codProveedor,@idProveedor,@nombreProveedor,@direccionProveedor,@telefonoProveedor";
+                            SqlCommand comando = new SqlCommand(query, conexion);
+
+                            comando.Parameters.AddWithValue("@idProveedor", newProveedor.idProveedor);
+                            comando.Parameters.AddWithValue("@codProveedor", newProveedor.codProveedor);
+                            comando.Parameters.AddWithValue("@nombreProveedor", newProveedor.nombreProveedor);
+                            comando.Parameters.AddWithValue("@direccionProveedor", newProveedor.direccionProveedor);
+                            comando.Parameters.AddWithValue("@telefonoProveedor", newProveedor.telefonoProveedor);
+
+                            comando.ExecuteNonQuery();
+                        }
+                        exito = true;
+                    }
+                    else
+                    {
+                        exito = false; 
+                        intentoRealizado = true;
+                    } 
+                       
                 }
                 catch (Exception ex)
                 {
@@ -178,31 +236,10 @@ namespace SupportHub.Pages.Proveedor
                 }
             }
 
-            if (exito)
-            {
-                return RedirectToPage("/Proveedor/mostrarProveedor", new { exito = true });
-            }
-            else
-            {
-                return RedirectToPage("/Proveedor/mostrarProveedor", new { intentoRealizado = true });
-            }
-
-        }
-        private string GetAvailableConnectionString()
-        {
-            // Intenta primero con la cadena de conexión principal
-            if (PingHelper.PingHost("100.101.36.39")) // Reemplaza con tu dirección del servidor
-            {
-                return configuracion.GetConnectionString("CadenaConexion");
-            }
-            else if (PingHelper.PingHost("25.2.143.28")) // Reemplaza con tu dirección del servidor Hamachi
-            {
-                return configuracion.GetConnectionString("CadenaConexionHamachi");
-            }
-            else
-            {
-                throw new Exception("No se puede conectar a ninguna base de datos.");
-            }
+            //ya no es necesario validar si exito es true o false porque de igual manera vamos a redirigirnos a la misma
+           // página sin enviar objetos adicionales como new exito = true; porque tempData se encarda de enviar esos datos 
+            return RedirectToPage("/Proveedor/mostrarProveedor");
+     
         }
     }
 }

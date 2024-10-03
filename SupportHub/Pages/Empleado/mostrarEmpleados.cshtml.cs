@@ -14,6 +14,8 @@ namespace SupportHub.Pages.Empleado
         public Empleados newEmpleado = new Empleados();
         public List<SelectListItem> Area = new List<SelectListItem>();
         public List<SelectListItem> Cargo = new List<SelectListItem>();
+        public String mensajeError = "";
+        public String mensajeExito = "";
         public mostrarEmpleadosModel(IConfiguration configuration) {
             this.configuracion = configuration;
         }
@@ -138,127 +140,53 @@ namespace SupportHub.Pages.Empleado
         public bool eliminado { get; set; } = false;
         public int coincidencia { get; set; } = 0;
 
-      //  public IActionResult OnPost(bool esEliminacion = false)
-     //   {
+        public IActionResult OnPost(bool esEliminacion = false)
+        {
+
+
+
+
+            if (Request.Form["esModificacion"] == "false")
+            {
+                try
+                {
+                    string cadena = configuracion.GetConnectionString("CadenaConexion");
+                    int registrosAgregados = 0;
+                    using (SqlConnection conexion = new SqlConnection(cadena))
+                    {
+                        conexion.Open();
+                        string query = "sp_crear_empleado";
+                        SqlCommand comando = new SqlCommand(query, conexion);
+                        comando.CommandType = CommandType.StoredProcedure;
+                        comando.Parameters.AddWithValue("@nombreEmpleado", newEmpleado.nombreEmpleado);
+                        comando.Parameters.AddWithValue("@apellidoEmpleado", newEmpleado.apellidoEmpleado);
+                        comando.Parameters.AddWithValue("@telefonoEmpleado", newEmpleado.telefonoEmpleado);
+                        comando.Parameters.AddWithValue("@emailEmpleado", newEmpleado.emailEmpleado);
+                        comando.Parameters.AddWithValue("@IdArea", newEmpleado.codArea);
+                        comando.Parameters.AddWithValue("@IdCargo", newEmpleado.codCargo);
+
+
+                        registrosAgregados = Convert.ToInt32(comando.ExecuteScalar().ToString());
+                    }
+                    exito = (registrosAgregados == 1) ? true : false; intentoRealizado = true;
+                }
+                catch (Exception ex)
+                {
+                    mensajeError = ex.Message;
+                    return Page();
+                }
+            
        
+            }
 
-           
+            //ya no es necesario validar si exito es true o false porque de igual manera vamos a redirigirnos a la misma
+            // página sin enviar objetos adicionales como new exito = true; porque tempData se encarda de enviar esos datos 
+            return RedirectToPage("/Empleado/mostrarEmpleado");
 
-            //if (Request.Form["esModificacion"] == "false")
-            //{
-            //    try
-            //    {
-            //        string cadena = configuracion.GetConnectionString("CadenaConexion");
-            //        int registrosAgregados = 0;
-            //        using (SqlConnection conexion = new SqlConnection(cadena))
-            //        {
-            //            conexion.Open();
-            //            string query = "sp_crear_empleado @codProveedor,@nombreProveedor,@direccionProveedor,@telefonoProveedor";
-            //            SqlCommand comando = new SqlCommand(query, conexion);
+       }
 
-            //            comando.Parameters.AddWithValue("@codProveedor", newEmpleado.codProveedor);
-            //            comando.Parameters.AddWithValue("@nombreProveedor", newEmpleado.nombreProveedor);
-            //            comando.Parameters.AddWithValue("@direccionProveedor", newEmpleado.direccionProveedor);
-            //            comando.Parameters.AddWithValue("@telefonoProveedor", newEmpleado.telefonoProveedor);
 
-            //            registrosAgregados = Convert.ToInt32(comando.ExecuteScalar().ToString());
-            //        }
-            //        exito = (registrosAgregados == 1) ? true : false; intentoRealizado = true;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        mensajeError = ex.Message;
-            //        return Page();
-            //    }
-            //}
-            //else
-            //{
-            //    newProveedor.idProveedor = Convert.ToInt32(Request.Form["id"]);
-            //    try
-            //    {
-            //        #region validar coincidencias
-            //        //voy a obtener algunos campos de los proveedores para hacer algunas comparaciones
-
-            //        List<Proveedores> nombreYCodigoProveedores = new List<Proveedores>();
-
-            //        string cadena = configuracion.GetConnectionString("CadenaConexion");
-            //        using (SqlConnection conexion = new SqlConnection(cadena))
-            //        {
-            //            conexion.Open();
-            //            SqlCommand comando = new SqlCommand("sp_obtener_proveedores_general", conexion);
-            //            comando.CommandType = System.Data.CommandType.StoredProcedure;
-
-            //            using (SqlDataReader lector = comando.ExecuteReader())
-            //            {
-            //                while (lector.Read())
-            //                {
-            //                    Proveedores proveedor = new Proveedores();
-            //                    proveedor.codProveedor = lector.GetString(1);
-            //                    proveedor.nombreProveedor = lector.GetString(2);
-
-            //                    nombreYCodigoProveedores.Add(proveedor);
-            //                }
-            //            }
-            //        }
-            //        //recorriendo la lista para ver si el nuevo nombre que estamos asignando al proveedor ya está 
-            //        //asignado a alguien más 
-            //        foreach (var i in nombreYCodigoProveedores)
-            //        {
-            //            //si tienen el mismo código y nombre, significa que quiere cambiar un campo distinto al nombre
-            //            if (i.codProveedor == newProveedor.codProveedor && i.nombreProveedor == newProveedor.nombreProveedor)
-            //            {
-            //                break;
-            //            }//si tienen distinto código y mismo nombre significa que quiere asignar un nombre que ya está ocupado
-            //            else if (i.codProveedor != newProveedor.codProveedor && i.nombreProveedor == newProveedor.nombreProveedor)
-            //            {
-            //                coincidencia += 1;
-            //                break;
-            //            }
-            //        }
-
-            //        #endregion
-
-            //        if (coincidencia == 0)
-            //        {
-            //            //string cadena = configuracion.GetConnectionString("CadenaConexion");
-            //            using (SqlConnection conexion = new SqlConnection(cadena))
-            //            {
-            //                conexion.Open();
-            //                string query = "dbo.sp_modificar_proveedor @codProveedor,@idProveedor,@nombreProveedor,@direccionProveedor,@telefonoProveedor";
-            //                SqlCommand comando = new SqlCommand(query, conexion);
-
-            //                comando.Parameters.AddWithValue("@idProveedor", newProveedor.idProveedor);
-            //                comando.Parameters.AddWithValue("@codProveedor", newProveedor.codProveedor);
-            //                comando.Parameters.AddWithValue("@nombreProveedor", newProveedor.nombreProveedor);
-            //                comando.Parameters.AddWithValue("@direccionProveedor", newProveedor.direccionProveedor);
-            //                comando.Parameters.AddWithValue("@telefonoProveedor", newProveedor.telefonoProveedor);
-
-            //                comando.ExecuteNonQuery();
-            //            }
-            //            exito = true;
-            //        }
-            //        else
-            //        {
-            //            exito = false;
-            //            intentoRealizado = true;
-            //        }
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        mensajeError = ex.Message;
-            //        return Page();
-            //    }
-            //}
-
-            ////ya no es necesario validar si exito es true o false porque de igual manera vamos a redirigirnos a la misma
-            //// página sin enviar objetos adicionales como new exito = true; porque tempData se encarda de enviar esos datos 
-            //return RedirectToPage("/Proveedor/mostrarProveedor");
-
-     //   }
-    
-
-private string GetAvailableConnectionString()
+        private string GetAvailableConnectionString()
         {
 
             if (PingHelper.PingHost("100.101.36.39"))
@@ -274,6 +202,8 @@ private string GetAvailableConnectionString()
                 throw new Exception("No se puede conectar a ninguna base de datos.");
             }
         }
-
     }
 }
+
+
+

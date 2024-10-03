@@ -83,18 +83,13 @@
                 <button type="button" class="btn-close" onclick="limpiarModal()" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" id="formAgregarProveedor">
+                <form method="post" id="formAgregarEmpleado">
                     <!-- Campo de ID -->
                     <input type="hidden" id="id" name="id" value="" />
 
                     <!-- Campo de EsModificacion -->
                     <input type="hidden" id="esModificacion" name="esModificacion" value="false" />
 
-                    <!-- Campo de Código -->
-                    <div class="mb-3">
-                        <label for="codigo">Código Empleado:</label>
-                        <input type="text" required class="form-control" id="codigo" name="Codigo">
-                    </div>
 
                     <!-- Campo de Nombre -->
                     <div class="mb-3">
@@ -151,3 +146,51 @@
         </div>
     </div>
 </div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        // Verifica si la operación fue exitosa
+        @if (Model.exito)
+        {
+            <text>
+                Swal.fire({
+                    title: "¡Excelente!",
+                    text: "El proveedor ha sido guardado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+            // Verifica si la operación fue exitosa
+        @if (Model.exito == false && Model.intentoRealizado)
+        {
+            <text>
+                Swal.fire({
+                    title: "Oops...",
+                    text: "Hubo un error al guardar el registro, valide que el código o el nombre del proveedor no exista.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+            // Verifica si la operación fue exitosa
+        @if (Model.eliminado == true)
+        {
+            <text>
+                Swal.fire({
+                    title: "¡Excelente!",
+                    text: "El proveedor ha sido eliminado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+}
