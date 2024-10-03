@@ -152,3 +152,7 @@ h1 {
         transition: background-color 0.5s ease;
         color: white;
     }
+
+.modal-entregas {
+    width: auto;
+}
