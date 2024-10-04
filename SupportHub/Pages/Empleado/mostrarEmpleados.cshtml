@@ -42,7 +42,7 @@
                     <th>Cod Área</th>
                     <th>Área</th>
                     <th>Cod Cargo</th>
-                    <th>Cargo</th>            
+                    <th>Cargo</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -80,7 +80,7 @@
         <div class="modal-content">
             <div class="modal-header encabezado-personalizado">
                 <h1 class="modal-title fs-5" id="AgregarModificar">Agregar Empleados</h1>
-                <button type="button" class="btn-close" onclick="limpiarModal()" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" onclick="limpiarModalEmpleado()" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form method="post" id="formAgregarEmpleado">
@@ -90,7 +90,7 @@
                     <!-- Campo de EsModificacion -->
                     <input type="hidden" id="esModificacion" name="esModificacion" value="false" />
 
-
+                    <!-- Campo de Código -->
                     <!-- Campo de Nombre -->
                     <div class="mb-3">
                         <label for="nombre">Nombre Empleado:</label>
@@ -104,7 +104,7 @@
                         <input type="text" required class="form-control" id="apellido" name="apellido">
                     </div>
 
-                 
+
                     <!-- Campo de Teléfono -->
                     <div class="mb-3">
                         <label for="telefono">Teléfono:</label>
@@ -114,14 +114,14 @@
                     <!-- Campo de Correo -->
                     <div class="mb-3">
                         <label for="direccion">Email:</label>
-                        <input type="text" required class="form-control" id="email" name="email">
+                        <input type="email" required class="form-control" id="email" name="email">
                     </div>
 
                     <!-- Campo de Area -->
                     <div class="mb-3">
                         <label for="direccion">Nombre Area:</label>
                         <div class="col-sm-6">
-                            <select class="form-select" id="cliente" name="area" asp-items="Model.Area">
+                            <select class="form-select" id="area" name="area" asp-items="Model.Area">
                                 <option value="">-- Seleccione --</option>
                             </select>
                         </div>
@@ -129,29 +129,32 @@
                     <div class="mb-3">
                         <label for="direccion">Nombre Cargo:</label>
                         <div class="col-sm-6">
-                            <select class="form-select" id="cliente" name="cargo" asp-items="Model.Cargo">
+                            <select class="form-select" id="area" name="cargo" asp-items="Model.Cargo">
                                 <option value="">-- Seleccione --</option>
                             </select>
                         </div>
                     </div>
 
-                 
-                    
+
+
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="limpiarModal()" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="validarFormulario()">Guardar</button>
+                <button type="button" class="btn btn-primary" onclick="validarFormularioEmpleado()">Guardar</button>
             </div>
         </div>
     </div>
 </div>
 
 
+
 @section Scripts {
     <script type="text/javascript">
         // Verifica si la operación fue exitosa
-        @if (Model.exito)
+        //validar que exito no sea nulo y que sea true, también que no se haya eliminado a nadie
+        // para que no se confunda y no muestre el alert de Eliminado correctamente
+        @if (TempData["exito"] != null && (bool)TempData["exito"] && TempData["eliminado"] != null && (bool)TempData["eliminado"] == false)
         {
             <text>
                 Swal.fire({
@@ -161,12 +164,14 @@
                     confirmButtonText: "OK"
                 });
             </text>
+            Model.exito = false;
         }
     </script>
 
     <script type="text/javascript">
             // Verifica si la operación fue exitosa
-        @if (Model.exito == false && Model.intentoRealizado)
+            //validar que exito no sea nulo y que sea falso, también que intentoRealizado no sea nulo y que sea verdadero
+        @if (TempData["exito"] != null && (bool)TempData["exito"] == false && TempData["intentoRealizado"] != null && (bool)TempData["intentoRealizado"])
         {
             <text>
                 Swal.fire({
@@ -181,7 +186,8 @@
 
     <script type="text/javascript">
             // Verifica si la operación fue exitosa
-        @if (Model.eliminado == true)
+            //validar que exito no sea nulo y que sea true, también que eliminado no sea nulo y que sea verdadero
+        @if (TempData["exito"] != null && (bool)TempData["exito"] == true && TempData["eliminado"] != null && (bool)TempData["eliminado"])
         {
             <text>
                 Swal.fire({
@@ -193,4 +199,5 @@
             </text>
         }
     </script>
+
 }

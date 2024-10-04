@@ -12,11 +12,11 @@ namespace SupportHub.Pages.Empleado
         private readonly IConfiguration configuracion;
         public List<Empleados> listaEmpleado = new List<Empleados>();
         public Empleados newEmpleado = new Empleados();
+        public String mensajeError = "";
         public List<SelectListItem> Area = new List<SelectListItem>();
         public List<SelectListItem> Cargo = new List<SelectListItem>();
-        public String mensajeError = "";
-        public String mensajeExito = "";
-        public mostrarEmpleadosModel(IConfiguration configuration) {
+        public mostrarEmpleadosModel(IConfiguration configuration)
+        {
             this.configuracion = configuration;
         }
 
@@ -26,7 +26,8 @@ namespace SupportHub.Pages.Empleado
 
             try
             {
-                using (SqlConnection conexion = new SqlConnection(cadena)) {
+                using (SqlConnection conexion = new SqlConnection(cadena))
+                {
                     conexion.Open();
                     SqlCommand comando;
                     if (!string.IsNullOrEmpty(searchQuery))
@@ -146,44 +147,41 @@ namespace SupportHub.Pages.Empleado
 
 
 
-            if (Request.Form["esModificacion"] == "false")
+
+            try
             {
-                try
+                string cadena = configuracion.GetConnectionString("CadenaConexion");
+                int registrosAgregados = 0;
+                using (SqlConnection conexion = new SqlConnection(cadena))
                 {
-                    string cadena = configuracion.GetConnectionString("CadenaConexion");
-                    int registrosAgregados = 0;
-                    using (SqlConnection conexion = new SqlConnection(cadena))
-                    {
-                        conexion.Open();
-                        string query = "sp_crear_empleado";
-                        SqlCommand comando = new SqlCommand(query, conexion);
-                        comando.CommandType = CommandType.StoredProcedure;
-                        comando.Parameters.AddWithValue("@nombreEmpleado", newEmpleado.nombreEmpleado);
-                        comando.Parameters.AddWithValue("@apellidoEmpleado", newEmpleado.apellidoEmpleado);
-                        comando.Parameters.AddWithValue("@telefonoEmpleado", newEmpleado.telefonoEmpleado);
-                        comando.Parameters.AddWithValue("@emailEmpleado", newEmpleado.emailEmpleado);
-                        comando.Parameters.AddWithValue("@IdArea", newEmpleado.codArea);
-                        comando.Parameters.AddWithValue("@IdCargo", newEmpleado.codCargo);
+                    conexion.Open();
+                    string query = "sp_crear_empleado @nombreEmpleado, @apellidoEmpleado, @telefonoEmpleado, @emailEmpleado, @IdArea, @IdCargo ";
+                    SqlCommand comando = new SqlCommand(query, conexion);
+
+                    comando.Parameters.AddWithValue("@nombreEmpleado", newEmpleado.nombreEmpleado);
+                    comando.Parameters.AddWithValue("@apellidoEmpleado", newEmpleado.apellidoEmpleado);
+                    comando.Parameters.AddWithValue("@telefonoEmpleado", newEmpleado.telefonoEmpleado);
+                    comando.Parameters.AddWithValue("@emailEmpleado", newEmpleado.emailEmpleado);
+                    comando.Parameters.AddWithValue("@IdArea", newEmpleado.codArea);
+                    comando.Parameters.AddWithValue("@IdCargo", newEmpleado.codCargo);
 
 
-                        registrosAgregados = Convert.ToInt32(comando.ExecuteScalar().ToString());
-                    }
-                    exito = (registrosAgregados == 1) ? true : false; intentoRealizado = true;
+                    registrosAgregados = Convert.ToInt32(comando.ExecuteScalar().ToString());
                 }
-                catch (Exception ex)
-                {
-                    mensajeError = ex.Message;
-                    return Page();
-                }
-            
-       
+                exito = (registrosAgregados == 1) ? true : false; intentoRealizado = true;
+            }
+            catch (Exception ex)
+            {
+                mensajeError = ex.Message;
+                return Page();
             }
 
             //ya no es necesario validar si exito es true o false porque de igual manera vamos a redirigirnos a la misma
             // página sin enviar objetos adicionales como new exito = true; porque tempData se encarda de enviar esos datos 
-            return RedirectToPage("/Empleado/mostrarEmpleado");
+            return RedirectToPage("/Empleado/formAgregarEmpleado");
 
-       }
+
+        }
 
 
         private string GetAvailableConnectionString()
@@ -203,7 +201,9 @@ namespace SupportHub.Pages.Empleado
             }
         }
     }
+
+
+
+
 }
-
-
 
