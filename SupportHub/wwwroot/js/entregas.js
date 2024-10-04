@@ -1,4 +1,6 @@
 ﻿$(document).ready(function () {
+    console.log("Document ready!");
+
     $("#busqueda").on("keyup", function () {
         var filtroSeleccionado = $("#filtros").val();
         var valorAFiltrar = $(this).val().toLowerCase();
@@ -21,20 +23,39 @@
             devolucion.attr('onclick', "openModal('eliminarDevolucion', this)");
         }
     });
+
+});
+
+$(document).on('input', '#formCantidadEntrega', function () {
+
+    var equipoSeleccionado = $("#formIdEquipo option:selected");
+    var disponible = parseInt(equipoSeleccionado.data("disponible"));
+    var cantidad = parseInt($("#formCantidadEntrega").val());
+
+    console.log(equipoSeleccionado + ' ' + disponible + ' ' + cantidad)
+
+    if (!isNaN(cantidad) && disponible < cantidad) {
+        $("#alertaCantidadDisponible").show();
+        $("#modalActionButton").attr("disabled", true);
+    } else {
+        $("#alertaCantidadDisponible").hide();
+        $("#modalActionButton").attr("disabled", false);
+    }
+
 });
 
 function openModal(opcion, button = null) {
     // Guardamos los selects del modal
-    var selectIdTipoEntrega = $("#idTipoEntrega").closest("select").prop("outerHTML");
-    var selectIdEmpleadoEntrega = $("#idEmpleadoEntrega").closest("select").prop("outerHTML");
-    var selectIdEmpleadoRecibe = $("#idEmpleadoRecibe").closest("select").prop("outerHTML");
-    var selectIdEquipo = $("#idEquipo").closest("select").prop("outerHTML");
+    var selectIdTipoEntrega = $("#formIdTipoEntrega").closest("select").prop("outerHTML");
+    var selectIdEmpleadoEntrega = $("#formIdEmpleadoEntrega").closest("select").prop("outerHTML");
+    var selectIdEmpleadoRecibe = $("#formIdEmpleadoRecibe").closest("select").prop("outerHTML");
+    var selectIdEquipo = $("#formIdEquipo").closest("select").prop("outerHTML");
 
     //Eliminamos los selects del modal ya que los vamos a insertar nuevamente pero en diferente orden
-    $("#idTipoEntrega").closest("select").remove();
-    $("#idEmpleadoEntrega").closest("select").remove();
-    $("#idEmpleadoRecibe").closest("select").remove();
-    $("#idEquipo").closest("select").remove();
+    $("#formIdTipoEntrega").closest("select").remove();
+    $("#formIdEmpleadoEntrega").closest("select").remove();
+    $("#formIdEmpleadoRecibe").closest("select").remove();
+    $("#formIdEquipo").closest("select").remove();
 
     if (button === null) {
         if (opcion === "agregar") {
@@ -52,12 +73,16 @@ function openModal(opcion, button = null) {
 
                 <label class="col-sm-12 col-form-label">Cantidad:</label>
                 <div class="col-sm-12">
-                    <input type="number" class="form-control" name="cantidadEntrega" placeholder="0" />
+                    <input type="number" class="form-control" name="cantidadEntrega" placeholder="0" id="formCantidadEntrega" />
+                </div>
+
+                <div class="alert alert-danger mt-3" role="alert" id="alertaCantidadDisponible" style="display: none;">
+                        <i class="bi bi-exclamation-diamond-fill"></i> No hay suficiente cantidad disponible de ese equipo!
                 </div>
 
                 <label class="col-sm-12 col-form-label">Fecha:</label>
                 <div class="col-sm-12">
-                    <input type="date" class="form-control" name="fechaEntrega" />
+                    <input type="date" class="form-control" name="fechaEntrega" id="formFechaEntrega" />
                 </div>
 
                 <label class="col-sm-12 col-form-label">Empleado entrega:</label>
@@ -72,7 +97,7 @@ function openModal(opcion, button = null) {
 
                 <label class="col-sm-12 col-form-label">Observaciones:</label>
                 <div class="col-sm-12">
-                    <textarea class="form-control" name="observacionEntrega" placeholder="Agregar observación (opcional)..."></textarea>
+                    <textarea class="form-control" name="observacionEntrega" placeholder="Agregar observación (opcional)..." id="formObservacionEntrega" ></textarea>
                 </div>
             `);
         }
@@ -80,5 +105,58 @@ function openModal(opcion, button = null) {
 }
 
 function submitFormEntregas() {
+    if ($("#formIdTipoEntrega").val().trim() === "") {
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Tipo de entrega es requerido!"
+        });
+        return false;
+
+    } else if ($("#formIdEquipo").val().trim() === "") {
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Equipo es requerido!"
+        });
+        return false;
+
+    } else if ($("#formCantidadEntrega").val() <= 0) {
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Cantidad debe ser mayor a 0!"
+        });
+        return false;
+
+    } else if ($("#formFechaEntrega").val().trim() === "") {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Fecha entrega es requerido!"
+        });
+        return false;
+
+    } else if ($("#formIdEmpleadoEntrega").val().trim() === "") {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Empleado entrega es requerido!"
+        });
+        return false;
+
+    } else if ($("#formIdEmpleadoRecibe").val().trim() === "") {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Empleado recibe es requerido!"
+        });
+        return false;
+
+    }
+
     $("#formEntregas").submit();
 }

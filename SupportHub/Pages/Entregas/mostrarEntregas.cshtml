@@ -37,7 +37,7 @@
         </div>
         <div class="col-md-4 text-end">
             <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#modalEntregas" onclick="openModal('agregar')">
-                <i class="fas fa-plus-circle"></i>Agregar Entrega
+                <i class="fas fa-plus-circle"></i> Agregar Entrega
             </button>
         </div>
     </div>
@@ -108,22 +108,22 @@
             <form method="post" id="formEntregas">
                 <div class="modal-body" id="modalBody">
 
-                    <select class="form-select" name="idTipoEntrega" id="idTipoEntrega">
+                    <select class="form-select" name="idTipoEntrega" id="formIdTipoEntrega">
                         <option value="">-- Seleccione tipo de entrega --</option>
                         @Html.Raw(Model.GetTiposDeEntregas())
                     </select>
 
-                    <select class="form-select" name="idEmpleadoEntrega" id="idEmpleadoEntrega">
+                    <select class="form-select" name="idEmpleadoEntrega" id="formIdEmpleadoEntrega">
                         <option value="">-- Seleccione empleado que entrega --</option>
                         @Html.Raw(Model.GetEmpleados())
                     </select>
 
-                    <select class="form-select" name="idEmpleadoRecibe" id="idEmpleadoRecibe">
+                    <select class="form-select" name="idEmpleadoRecibe" id="formIdEmpleadoRecibe">
                         <option value="">-- Seleccione empleado que recibe --</option>
                         @Html.Raw(Model.GetEmpleados())
                     </select>
 
-                    <select class="form-select" name="idEquipo" id="idEquipo">
+                    <select class="form-select" name="idEquipo" id="formIdEquipo">
                         <option value="">-- Seleccione equipo --</option>
                         @Html.Raw(Model.GetEquipos())
                     </select>

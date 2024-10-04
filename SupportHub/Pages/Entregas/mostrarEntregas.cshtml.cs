@@ -149,32 +149,19 @@ namespace SupportHub.Pages.Entregas
 
         public string GetEquipos()
         {
-            List<SelectListItem> equipos = [];
+            var sb = new StringBuilder();
             using (SqlConnection conection = new(GetAvailableConnectionString()))
             {
                 conection.Open();
-                using (SqlCommand comando = new("select idEquipo, codEquipo + ' - ' + tipoEquipo + ' ' + marcaEquipo + ' ' + modeloEquipo from dbo.Equipos", conection))
+                using (SqlCommand comando = new("select E.idEquipo, E.codEquipo + ' - ' + E.tipoEquipo + ' ' + E.marcaEquipo + ' ' + E.modeloEquipo, ED.cantidadDisponible from dbo.Equipos E inner join dbo.vwCantidadEquiposDisponibles ED on E.idEquipo = ED.idEquipo", conection))
                 {
                     using (SqlDataReader lector = comando.ExecuteReader())
                     {
                         while (lector.Read())
                         {
-                            equipos.Add(new SelectListItem
-                            {
-                                Value = lector.GetInt32(0).ToString(),
-                                Text = lector.GetString(1)
-                            });
+                            sb.Append($"<option data-disponible='{lector.GetInt32(2)}' value='{lector.GetInt32(0)}'>{lector.GetString(1)}</option>");
                         }
                     }
-                }
-            }
-
-            var sb = new StringBuilder();
-            if (equipos != null)
-            {
-                foreach (var equipo in equipos)
-                {
-                    sb.Append($"<option value='{equipo.Value}'>{equipo.Text}</option>");
                 }
             }
 
