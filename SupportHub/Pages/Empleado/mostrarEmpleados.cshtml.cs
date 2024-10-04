@@ -143,10 +143,25 @@ namespace SupportHub.Pages.Empleado
 
         public IActionResult OnPost(bool esEliminacion = false)
         {
+            newEmpleado.nombreEmpleado = Request.Form["nombre"];
+            newEmpleado.apellidoEmpleado = Request.Form["apellido"];
+            newEmpleado.telefonoEmpleado = Request.Form["telefono"];
+            newEmpleado.emailEmpleado = Request.Form["email"];
+            newEmpleado.codArea = Request.Form["area"];
+            newEmpleado.codCargo = Request.Form["cargo"];
 
+            if (string.IsNullOrEmpty(newEmpleado.nombreCargo)||
+                string.IsNullOrEmpty(newEmpleado.apellidoEmpleado) ||
+                string.IsNullOrEmpty(newEmpleado.telefonoEmpleado) ||
+                string.IsNullOrEmpty(newEmpleado.emailEmpleado) ||
+                string.IsNullOrEmpty(newEmpleado.codArea) ||
+                string.IsNullOrEmpty(newEmpleado.codCargo) ) 
+                {
 
+                mensajeError = "Todos los campos son requeridos";
+                return Page();
 
-
+            }
 
             try
             {
@@ -178,7 +193,7 @@ namespace SupportHub.Pages.Empleado
 
             //ya no es necesario validar si exito es true o false porque de igual manera vamos a redirigirnos a la misma
             // página sin enviar objetos adicionales como new exito = true; porque tempData se encarda de enviar esos datos 
-            return RedirectToPage("/Empleado/formAgregarEmpleado");
+            return RedirectToPage("/Empleado/mostrarEmpleados");
 
 
         }
