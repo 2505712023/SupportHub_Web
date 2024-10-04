@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupportHub.Modelos;
+using SupportHub.Helpers;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -25,10 +26,11 @@ namespace SupportHub.Pages.Proveedor
             this.intentoRealizado = intentoRealizado;
             this.esEliminacion = esEliminacion;
             this.eliminado = eliminado;
+            string cadena = GetAvailableConnectionString();
 
             try
             {
-                string cadena = configuracion.GetConnectionString("CadenaConexion");
+               
                 using (SqlConnection conexion = new SqlConnection(cadena))
                 {
                     conexion.Open();
@@ -95,7 +97,7 @@ namespace SupportHub.Pages.Proveedor
                 int registrosEliminados = 0;
                 try
                 {
-                    using (var conexion = new SqlConnection(configuracion.GetConnectionString("CadenaConexion")))
+                    using (var conexion = new SqlConnection(GetAvailableConnectionString()))
                     {
                         conexion.Open();
                         using (var comando = new SqlCommand("sp_eliminar_proveedor", conexion))
@@ -134,7 +136,7 @@ namespace SupportHub.Pages.Proveedor
             {
                 try
                 {
-                    string cadena = configuracion.GetConnectionString("CadenaConexion");
+                    string cadena = GetAvailableConnectionString();
                     int registrosAgregados = 0;
                     using (SqlConnection conexion = new SqlConnection(cadena))
                     {
@@ -167,7 +169,7 @@ namespace SupportHub.Pages.Proveedor
 
                     List<Proveedores> nombreYCodigoProveedores = new List<Proveedores>();
 
-                    string cadena = configuracion.GetConnectionString("CadenaConexion");
+                    string cadena = GetAvailableConnectionString();
                     using (SqlConnection conexion = new SqlConnection(cadena))
                     {
                         conexion.Open();
@@ -240,6 +242,24 @@ namespace SupportHub.Pages.Proveedor
            // página sin enviar objetos adicionales como new exito = true; porque tempData se encarda de enviar esos datos 
             return RedirectToPage("/Proveedor/mostrarProveedor");
      
+        }
+
+
+        private string GetAvailableConnectionString()
+        {
+            // Intenta primero con la cadena de conexión principal
+            if (PingHelper.PingHost("100.101.36.39")) // Reemplaza con tu dirección del servidor
+            {
+                return configuracion.GetConnectionString("CadenaConexion");
+            }
+            else if (PingHelper.PingHost("25.2.143.28")) // Reemplaza con tu dirección del servidor Hamachi
+            {
+                return configuracion.GetConnectionString("CadenaConexionHamachi");
+            }
+            else
+            {
+                throw new Exception("No se puede conectar a ninguna base de datos.");
+            }
         }
     }
 }

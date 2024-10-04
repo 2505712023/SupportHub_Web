@@ -150,7 +150,7 @@ namespace SupportHub.Pages.Empleado
 
             try
             {
-                string cadena = configuracion.GetConnectionString("CadenaConexion");
+                string cadena = GetAvailableConnectionString();
                 int registrosAgregados = 0;
                 using (SqlConnection conexion = new SqlConnection(cadena))
                 {
