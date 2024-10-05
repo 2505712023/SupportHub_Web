@@ -96,6 +96,7 @@ function llenarModal(button) {
 
 }
 
+
 function limpiarModal() {
     $(".modal #esModificacion").val("false")
     $(".modal h1").text("Agregar Proveedor");

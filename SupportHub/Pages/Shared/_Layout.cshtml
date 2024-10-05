@@ -15,8 +15,7 @@
 <body>
     <!-- Barra superior fija -->
     <nav class="navbar navbar-dark fixed-top">
-        <div class="container-fluid">
-
+        <div class="container-fluid">            
             <!-- Menú hamburguesa a la izquierda -->
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -25,35 +24,27 @@
             <a class="navbar-brand" asp-area="" asp-page="/Index">
                 <img src="/imagenes/logoSupportHub1.png" alt="SupportHub Logo">
             </a>
-            <!-- acordeón para mostrar los datos de Mi Información -->
-            <div style ="width:25px;margin:1px;">
-                 <div class="dropdown custom-dropdown" >
-                <!-- Botón que actúa como el select -->
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                </button>
 
-                <!-- Lista de opciones del select simulado -->
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 25px;">
-                    <!-- Opciones con etiquetas <i> e iconos -->
-                    <li class="dropdown-item">
-                        <a href="/Usuario/mi_informacion">
-                            <i class="bi bi-info-circle" title="Información"></i>
-                        </a>
-                    </li>
-                    <li class="dropdown-item">
-                        <a href="#configuracion">
-                            <i class="bi bi-gear" title="Configuración"></i>
-                        </a>
-                    </li>
-                    <li class="dropdown-item">
-                        <a href="#mensajes">
-                            <i class="bi bi-envelope" title="Mensajes"></i>
-                        </a>
-                    </li>
-                </ul>
+            <!-- acordeón para mostrar los datos de Mi Información -->
+            <div style="position: relative; ">
+                <div class="dropdown custom-dropdown" >
+                    <!-- Botón que actúa como el select -->
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" >
+                    </button>
+
+                    <!-- Lista de opciones del select simulado -->
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+                        <!-- Opciones con iconos -->
+                        <li class="dropdown-item" style="padding: 1px;">
+                            <a href="/Usuario/mi_informacion" class="bi bi-info-circle" title="Información" style="width: 100%; text-decoration:none"> Información</a>
+                        </li>
+                        <li class="dropdown-item" style="padding: 1px;">
+                            <a href="#configuracion" class="bi bi-gear" title="Configuración" style="width: 100%; text-decoration:none"> Configuración</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            </div>
-            <div class="ms-auto d-flex align-items-center">
+            <div class="ms-auto d-flex align-items-center" style="margin-left: 15px;">
                 <a href="#" id="toggle-theme" class="btn btn-outline-light ms-2">
                     <i class="fas fa-moon"></i>
                 </a>

@@ -20,26 +20,14 @@
         background-color: #061B46;
     }
 
-.navbar{
-    height:80px;
-    position: relative;
-}
-.accordion-button {
-    padding: 1px;
+
+#dropdownMenuButton{
+    background-color: green;
     height: 40px;
+    
+    padding: 0;
 }
-.accordion-collapse{
-    position: absolute;
-    top: 100%;
-    z-index: 1000;
-    overflow: visible;
-}
-.icon-container{
-    display: flex;
-    height: 30px;
-    justify-content: space-around;
-    align-items: center;
-}
+
 .navbar-dark {
     background-color: #05173B;
 }
