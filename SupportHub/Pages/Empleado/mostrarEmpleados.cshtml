@@ -83,7 +83,7 @@
                 <button type="button" class="btn-close" onclick="limpiarModalEmpleado()" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" id="formAgregarEmpleado">
+                <form method="post" asp-page-handler="GuardarEmpleado" id="formAgregarEmpleado">
                     <!-- Campo de ID -->
                     <input type="hidden" id="id" name="id" value="" />
 
@@ -117,17 +117,17 @@
 
                     <!-- Campo de Area -->
                     <div class="mb-3">
-                        <label for="direccion">Nombre Area:</label>
+                        <label for="area">Nombre Área:</label>
                         <div class="col-sm-6">
-                            <select class="form-select" id="area" name="area" asp-items="Model.Area">
+                            <select class="form-select" id="area" name="IdArea" asp-items="Model.Area">
                                 <option value="">-- Seleccione --</option>
                             </select>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="direccion">Nombre Cargo:</label>
+                        <label for="cargo">Nombre Cargo:</label>
                         <div class="col-sm-6">
-                            <select class="form-select" id="area" name="cargo" asp-items="Model.Cargo">
+                            <select class="form-select" id="cargo" name="IdCargo" asp-items="Model.Cargo">
                                 <option value="">-- Seleccione --</option>
                             </select>
                         </div>
@@ -148,6 +148,9 @@
 
 
 @section Scripts {
+
+    <script src="~/js/scriptEmpleados.js"></script>
+
     <script type="text/javascript">
         // Verifica si la operación fue exitosa
         //validar que exito no sea nulo y que sea true, también que no se haya eliminado a nadie

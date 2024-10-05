@@ -141,45 +141,42 @@ namespace SupportHub.Pages.Empleado
         public bool eliminado { get; set; } = false;
         public int coincidencia { get; set; } = 0;
 
-        public IActionResult OnPost(bool esEliminacion = false)
+        public IActionResult OnPost()
         {
             newEmpleado.nombreEmpleado = Request.Form["nombre"];
             newEmpleado.apellidoEmpleado = Request.Form["apellido"];
             newEmpleado.telefonoEmpleado = Request.Form["telefono"];
             newEmpleado.emailEmpleado = Request.Form["email"];
-            newEmpleado.codArea = Request.Form["area"];
-            newEmpleado.codCargo = Request.Form["cargo"];
-
-            if (string.IsNullOrEmpty(newEmpleado.nombreCargo)||
-                string.IsNullOrEmpty(newEmpleado.apellidoEmpleado) ||
-                string.IsNullOrEmpty(newEmpleado.telefonoEmpleado) ||
-                string.IsNullOrEmpty(newEmpleado.emailEmpleado) ||
-                string.IsNullOrEmpty(newEmpleado.codArea) ||
-                string.IsNullOrEmpty(newEmpleado.codCargo) ) 
-                {
-
-                mensajeError = "Todos los campos son requeridos";
+            newEmpleado.IdArea = int.Parse(Request.Form["IdArea"]);
+            newEmpleado.IdCargo = int.Parse(Request.Form["IdCargo"]);
+            // Verificamos si el modelo es válido
+            if (!ModelState.IsValid)
+            {
+                mensajeError = "Todos los campos son requeridos.";
                 return Page();
-
             }
 
+           
+
+            // Agregar un nuevo empleado
             try
             {
+                // Obtenemos la cadena de conexión
                 string cadena = GetAvailableConnectionString();
                 int registrosAgregados = 0;
                 using (SqlConnection conexion = new SqlConnection(cadena))
                 {
                     conexion.Open();
-                    string query = "sp_crear_empleado @nombreEmpleado, @apellidoEmpleado, @telefonoEmpleado, @emailEmpleado, @IdArea, @IdCargo ";
+                    string query = "sp_crear_empleado @nombreEmpleado, @apellidoEmpleado, @telefonoEmpleado, @emailEmpleado, @IdCargo, @IdArea";
                     SqlCommand comando = new SqlCommand(query, conexion);
 
+                    // Asignamos los parámetros
                     comando.Parameters.AddWithValue("@nombreEmpleado", newEmpleado.nombreEmpleado);
                     comando.Parameters.AddWithValue("@apellidoEmpleado", newEmpleado.apellidoEmpleado);
                     comando.Parameters.AddWithValue("@telefonoEmpleado", newEmpleado.telefonoEmpleado);
                     comando.Parameters.AddWithValue("@emailEmpleado", newEmpleado.emailEmpleado);
-                    comando.Parameters.AddWithValue("@IdArea", newEmpleado.codArea);
-                    comando.Parameters.AddWithValue("@IdCargo", newEmpleado.codCargo);
-
+                    comando.Parameters.AddWithValue("@IdArea", newEmpleado.IdArea);
+                    comando.Parameters.AddWithValue("@IdCargo", newEmpleado.IdCargo);
 
                     registrosAgregados = Convert.ToInt32(comando.ExecuteScalar().ToString());
                 }
@@ -190,13 +187,10 @@ namespace SupportHub.Pages.Empleado
                 mensajeError = ex.Message;
                 return Page();
             }
-
-            //ya no es necesario validar si exito es true o false porque de igual manera vamos a redirigirnos a la misma
-            // página sin enviar objetos adicionales como new exito = true; porque tempData se encarda de enviar esos datos 
             return RedirectToPage("/Empleado/mostrarEmpleados");
-
-
         }
+
+
 
 
         private string GetAvailableConnectionString()
