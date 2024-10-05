@@ -29,6 +29,7 @@ namespace SupportHub.Pages.Welcome
             {
 
                 HttpContext.Session.SetString("usuario",Username);
+                HttpContext.Session.SetString("contra",Password);
 
                 Response.Redirect("/Index");
             }

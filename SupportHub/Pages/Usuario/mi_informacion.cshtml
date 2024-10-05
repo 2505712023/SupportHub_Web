@@ -54,11 +54,10 @@
                 <button type="button" class="btn-close" onclick="limpiarModalMUsuario()" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" id="ModificarUsuario">
+                    <form method="post" id="ModificarinfoUsuario">
                         <!-- Campo de ID -->
-                        <input type="hidden" id="id" name="id" value="" />
-
-                        
+                        <input type="text" id="id" name="id" />
+                      
                         <!-- Campo de usuario -->
                         <div class="mb-3">
                             <label for="usuario">Usuario:</label>
@@ -98,7 +97,7 @@
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="limpiarModalMUsuario()" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="validarFormulario()">Modificar</button>
+                <button type="button" class="btn btn-primary" onclick="validarIformacionUsuario()">Modificar</button>
                 </div>
             </div>
         </div>
@@ -115,13 +114,15 @@
             $("#usuario").val(tr.data("usuario"));
             $("#nombre").val(tr.data("nombre"));
             $("#apellido").val(tr.data("apellido"));
-            $("#id").prop("readonly", true);
+            $("#usuario").prop("readonly", true);
         }
 
         function limpiarModalMUsuario() {
            
             $("#ModificarUsuario")[0].reset();
         }
+
+        sessionStorage.setItem("contra", '@HttpContext.Session.GetString("contra")');
     </script>
 
 

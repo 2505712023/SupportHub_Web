@@ -54,6 +54,7 @@
     submitForm();
 }
 
+
 function validarFormularioEliminar() {
     if ($(".modal#Eliminar #idProveedor").val().trim() === "") {
 
@@ -65,6 +66,40 @@ function validarFormularioEliminar() {
         return false;
     }
     submitFormEliminar()
+}
+
+function validarIformacionUsuario() {
+    var nombre = document.getElementById("nombre").value.trim();
+    var apellido = document.getElementById("apellido").value.trim();
+    var contra = document.getElementById("contraA").value.trim();   
+    var contraLogueada = sessionStorage.getItem("contra");
+    if (nombre === "") {
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "El nombre no puede estar vacío!"
+        });
+        return false;
+    } else if (apellido === "") {
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "El apellido no puede estar vacío!"
+        });
+        return false;
+    }
+    else if (contra != contraLogueada) {
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "La contraseña actual es incorrecta!"
+        });
+        return false;
+    }
+    document.getElementById("ModificarinfoUsuario").submit();
 }
 
 function submitForm() {

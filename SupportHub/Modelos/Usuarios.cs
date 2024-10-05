@@ -6,5 +6,6 @@
         public string nombreUsuario { get; set; }
         public string apellidoUsuario { get;  set; }
         public string loginUsuario { get; set; }
+        public string ClaveUsuario { get; set; }
     }
 }
