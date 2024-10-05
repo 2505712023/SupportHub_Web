@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupportHub.Modelos;
+using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
 
@@ -54,8 +55,10 @@ namespace SupportHub.Pages.Usuario
             }
 
         }
-        
-        public void OnPost()
+
+        [TempData]
+        public bool exito { get; set; } = false;
+        public IActionResult OnPost()
         {
             Usuarios setUsuario = new Usuarios();
             string contraseñaActual = Request.Form["contraA"];
@@ -65,61 +68,65 @@ namespace SupportHub.Pages.Usuario
             setUsuario.nombreUsuario = Request.Form["nombre"];
             setUsuario.apellidoUsuario = Request.Form["apellido"];
             setUsuario.loginUsuario = Request.Form["usuario"];
-
-            try
+            int registrosModificados = 0;
+            
+            if (!exito)
             {
-                if(nuevaContraseña == ConfirmarNuevaContra)
+                try
                 {
-                    setUsuario.ClaveUsuario = ConfirmarNuevaContra;
-                }
-
-                string cadena = configuracion.GetConnectionString("CadenaConexion");
-                string consulta1 = "UPDATE Usuarios SET nombreUsuario = @nombre, apellidoUsuario = @apellido, where idUsuario = @idUsuario; ";
-                string consulta2 = "update Usuarios " +
-                    "set claveUsuario = ENCRYPTBYPASSPHRASE('rhpn1aHA1q8CkyEMELw6eynB4OOVOGVg', @clave)" +
-                    "nombreUsuario = @nombre, apellidoUsuario = @apellido, where idUsuario = @idUsuario; ";
-                       
-
-                using (SqlConnection conexion = new SqlConnection(cadena))
-                {
-                    conexion.Open();
-
-                    if (setUsuario.ClaveUsuario == null)
+                    if (nuevaContraseña == ConfirmarNuevaContra)
                     {
-                        using (SqlCommand comando = new SqlCommand(consulta1,conexion))
-                        {
-                            comando.Parameters.AddWithValue("@nombre",setUsuario.nombreUsuario);
-                            comando.Parameters.AddWithValue("@apellido",setUsuario.apellidoUsuario);
-                            comando.Parameters.AddWithValue("@idUsuario",setUsuario.idUsuario);
-                           
-                            comando.ExecuteNonQuery();
-                        }
-                    }
-                    else
-                    {
-                        using (SqlCommand comando = new SqlCommand(consulta2, conexion))
-                        {
-                            comando.Parameters.AddWithValue("@nombre", setUsuario.nombreUsuario);
-                            comando.Parameters.AddWithValue("@apellido", setUsuario.apellidoUsuario);
-                            comando.Parameters.AddWithValue("@idUsuario", setUsuario.idUsuario);
-                            comando.Parameters.AddWithValue("@clave",setUsuario.ClaveUsuario);
-
-                            comando.ExecuteNonQuery();
-                        }
+                        setUsuario.ClaveUsuario = ConfirmarNuevaContra;
                     }
 
+                    string cadena = configuracion.GetConnectionString("CadenaConexion");
+                    string consulta1 = "UPDATE Usuarios SET nombreUsuario = @nombre, apellidoUsuario = @apellido where idUsuario = @idUsuario; ";
+                    string consulta2 = "update Usuarios " +
+                        "set claveUsuario = ENCRYPTBYPASSPHRASE('rhpn1aHA1q8CkyEMELw6eynB4OOVOGVg', @clave), " +
+                        "nombreUsuario = @nombre, apellidoUsuario = @apellido where idUsuario = @idUsuario; ";
 
+                    using (SqlConnection conexion = new SqlConnection(cadena))
+                    {
+                        conexion.Open();
 
+                        if (setUsuario.ClaveUsuario == null)
+                        {
+                            using (SqlCommand comando = new SqlCommand(consulta1, conexion))
+                            {
+                                comando.Parameters.AddWithValue("@nombre", setUsuario.nombreUsuario);
+                                comando.Parameters.AddWithValue("@apellido", setUsuario.apellidoUsuario);
+                                comando.Parameters.AddWithValue("@idUsuario", setUsuario.idUsuario);
 
+                                comando.ExecuteNonQuery();
+                            }
+                            exito =  true;                           
+                        }
+                        else
+                        {
+                            using (SqlCommand comando = new SqlCommand(consulta2, conexion))
+                            {
+                                comando.Parameters.AddWithValue("@nombre", setUsuario.nombreUsuario);
+                                comando.Parameters.AddWithValue("@apellido", setUsuario.apellidoUsuario);
+                                comando.Parameters.AddWithValue("@idUsuario", setUsuario.idUsuario);
+                                comando.Parameters.AddWithValue("@clave", setUsuario.ClaveUsuario);
+
+                                comando.ExecuteNonQuery();
+                            }
+                            exito =  true;                                                      
+                        }
+                        if (exito)
+                        {
+                            return RedirectToPage("/Usuario/mi_informacion");
+                        }
+                    }
                 }
-
-
+                catch (Exception ex)
+                {
+                    Console.WriteLine("error " + ex);
+                    return Page();
+                }
             }
-            catch(Exception ex)
-            {
-                Console.WriteLine("error "+ ex);
-            }
-           
+            return RedirectToPage("/Usuario/mi_informacion");
         }
     }
 }

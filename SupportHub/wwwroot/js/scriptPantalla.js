@@ -73,6 +73,8 @@ function validarIformacionUsuario() {
     var apellido = document.getElementById("apellido").value.trim();
     var contra = document.getElementById("contraA").value.trim();   
     var contraLogueada = sessionStorage.getItem("contra");
+    var nuevaContra = document.getElementById("nContra").value.trim();
+    var confirmarNuevaContra = document.getElementById("CnContra").value.trim();
     if (nombre === "") {
 
         Swal.fire({
@@ -89,8 +91,7 @@ function validarIformacionUsuario() {
             text: "El apellido no puede estar vacío!"
         });
         return false;
-    }
-    else if (contra != contraLogueada) {
+    }else if (contra != contraLogueada) {
 
         Swal.fire({
             icon: "error",
@@ -98,7 +99,19 @@ function validarIformacionUsuario() {
             text: "La contraseña actual es incorrecta!"
         });
         return false;
+    } else if (nuevaContra != confirmarNuevaContra) {
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "La nueva contraseña no coincide!"
+        });
+        return false;
     }
+    submitFormModificarInfoUsuario();
+}
+
+function submitFormModificarInfoUsuario() {
     document.getElementById("ModificarinfoUsuario").submit();
 }
 
