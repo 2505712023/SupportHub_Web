@@ -118,10 +118,6 @@ h1 {
         background-color: rgb(57, 57, 57);
     }
 
-.btn i {
-    margin-right: 5px;
-}
-
 .table-hover tbody tr:hover {
     background-color: #f8f9fa;
     transition: background-color 0.3s ease;
@@ -155,4 +151,19 @@ h1 {
 
 .modal-entregas {
     width: auto;
+}
+
+#btn-limpiar-filtro {
+    width: 60px;
+    height: 40px;
+    display: none;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 7px;
+    border-radius: 50%;
+}
+
+#btn-limpiar-filtro i {
+    padding: 0px;
+    margin: 0px
 }

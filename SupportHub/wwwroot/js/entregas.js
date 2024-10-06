@@ -1,15 +1,21 @@
 ﻿$(document).ready(function () {
     console.log("Document ready!");
+    $("#busqueda").focus().select();
+
+    if (localStorage.getItem("filtro-entregas") != null) {
+        $("#filtros").val(localStorage.getItem("filtro-entregas"));
+    }
 
     $("#busqueda").on("keyup", function () {
-        var filtroSeleccionado = $("#filtros").val();
-        var valorAFiltrar = $(this).val().toLowerCase();
-        console.log("Entra al evento keyup.")
-        $("#tablaEntregas tbody tr").filter(function () {
-            var textoColumna = $(this).find('td').eq(filtroSeleccionado).text().toLowerCase();
+        ejecutarBusqueda();
+    });
 
-            $(this).toggle(textoColumna.indexOf(valorAFiltrar) > -1);
-        });
+    $("#busqueda").on("input", function () {
+        if ($("#busqueda").val() === '') {
+            $("#btn-limpiar-filtro").hide();
+        } else {
+            $("#btn-limpiar-filtro").show();
+        }
     });
 
     $('tr[data-idEntrega]').each(function () {
@@ -23,8 +29,24 @@
             devolucion.attr('onclick', "openModal('eliminarDevolucion', this)");
         }
     });
+    
+    $("#filtros").on("change", function () {
+        localStorage.setItem("filtro-entregas", $("#filtros").val());
+        $("#busqueda").focus().select();
+        ejecutarBusqueda();
+    });
 
 });
+
+function ejecutarBusqueda() {
+    var filtroSeleccionado = $("#filtros").val();
+    var valorAFiltrar = $("#busqueda").val().toLowerCase();
+    $("#tablaEntregas tbody tr").filter(function () {
+        var textoColumna = $(this).find('td').eq(filtroSeleccionado).text().toLowerCase();
+
+        $(this).toggle(textoColumna.indexOf(valorAFiltrar) > -1);
+    });
+}
 
 $(document).on('input', '#formCantidadEntrega', function () {
 
@@ -159,4 +181,11 @@ function submitFormEntregas() {
     }
 
     $("#formEntregas").submit();
+}
+
+function limpiarFiltroEntregas() {
+    $("#busqueda").val("");
+    $("#tablaEntregas tbody tr").show();
+    $("#btn-limpiar-filtro").hide();
+    $("#busqueda").focus().select();
 }
