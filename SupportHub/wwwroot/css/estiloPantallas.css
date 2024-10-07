@@ -5,10 +5,35 @@ body {
 
 table {
     width: 100%;
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
+    table-layout: fixed;
+    border-collapse: collapse;
 }
-
+.contenedor-tabla {
+    overflow-x: auto;
+    max-width: 1250px;
+    width: 100%;
+}
+.table th, .table td {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width:200px;
+}
+.acciones {
+    min-width: 200px;
+    white-space: normal;
+    width: 200px;
+}
+.botones{
+    display: flex;
+    gap: 1px;
+}
+.botones button{
+    white-space: nowrap;
+}
 .content-wrapper {
     background-color: #ffffff;
     border-radius: 20px;
@@ -70,6 +95,7 @@ h1 {
 
     .btn-add:hover {
         background-color: #0056b3;
+        color: white;
     }
 
 .table th {
@@ -82,17 +108,19 @@ h1 {
     padding: 15px;
 }
 
-.btn-edit, .btn-delete {
+.btn-edit, .btn-delete, .btn-warning {
     border: none;
     border-radius: 50px;
     padding: 5px 10px;
     transition: all 0.3s;
     font-size: 14px;
+    color: white;
+    width: 115px;
+    margin-bottom: 5px;
 }
 
 .btn-edit {
     background-color: #37A668;
-    color: white;
 }
 
     .btn-edit:hover {
@@ -101,11 +129,18 @@ h1 {
 
 .btn-delete {
     background-color: #DC3545;
-    color: white;
 }
 
     .btn-delete:hover {
         background-color: #c82333;
+    }
+
+.btn-warning {
+    background-color: rgb(77, 77, 77);
+}
+
+    .btn-warning:hover {
+        background-color: rgb(57, 57, 57);
     }
 
 .table-hover tbody tr:hover {
@@ -123,7 +158,37 @@ h1 {
     font-size: larger;
     font-weight: bold;
 }
-.actions {
-    white-space: nowrap; /* Evita que los botones se rompan en líneas separadas */
+
+.select-filtro {
+    border-radius: 50px !important;
+    height: 45px !important;
+    max-width: 195px !important;
+    border: 2px solid;
+    border-color: #007BFF;
+    color: #007BFF;
 }
 
+    .select-filtro:hover {
+        background-color: #007BFF;
+        transition: background-color 0.5s ease;
+        color: white;
+    }
+
+.modal-entregas {
+    width: auto;
+}
+
+#btn-limpiar-filtro {
+    width: 60px;
+    height: 40px;
+    display: none;
+    padding: 0px;
+    margin: 0px;
+    margin-right: 7px;
+    border-radius: 50%;
+}
+
+#btn-limpiar-filtro i {
+    padding: 0px;
+    margin: 0px
+}
