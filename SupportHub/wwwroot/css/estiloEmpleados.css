@@ -5,36 +5,15 @@ body {
 
 table {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    table-layout: fixed;
-    border-collapse: collapse;
 }
 
 .contenedor-tabla {
     overflow-x: auto;
-    max-width: 1250px;
-    width: 100%;
+    max-width: 1350px;
+    width: 190%;
 }
-
-.table th, .table td {
-    max-width: 300px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 200px;
-}
-
-
-
-.botones {
-    display: flex;
-    gap: 1px;
-}
-
-    .botones button {
-        white-space: nowrap;
-    }
 
 .content-wrapper {
     background-color: #ffffff;
@@ -194,3 +173,7 @@ h1 {
         padding: 0px;
         margin: 0px
     }
+
+.actions {
+    white-space: nowrap; /* Evita que los botones se rompan en líneas separadas */
+}
