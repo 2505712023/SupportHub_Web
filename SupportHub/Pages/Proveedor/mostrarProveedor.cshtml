@@ -7,6 +7,9 @@
 <br />
 
 <link rel="stylesheet" href="~/css/estiloPantallas.css">
+<!-- CSS de intl-tel-input -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/css/intlTelInput.css" />
+
 
 <div class="content-wrapper" style="max-width: 1300px; border-radius: 20px;">
     <h1>Gestión de Proveedores</h1>
@@ -28,15 +31,15 @@
         </div>
     </div>
 
-    <div>
-        <table class="table table-hover align-middle text-center" style="max-width: 1300px; width: 100%;">
+    <div class="contenedor-tabla">
+        <table class="table table-hover align-middle text-center" style="max-width: 1200px; width: 100%;">
             <thead>
                 <tr>
                     <th>Código</th>
-                    <th>Nombre</th>
-                    <th>Dirección</th>
+                    <th class="text-truncate col-nombre">Nombre</th>
+                    <th class="text-truncate col-direccion">Dirección</th>
                     <th>Teléfono</th>
-                    <th>Acciones</th>
+                    <th class="acciones">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,15 +48,17 @@
                     <tr data-codigo="@item.codProveedor" data-nombre="@item.nombreProveedor" data-direccion="@item.direccionProveedor" data-telefono="@item.telefonoProveedor" data-id="@item.idProveedor">
                         <td align="left">@item.codProveedor</td>
                         <td align="left">@item.nombreProveedor</td>
-                        <td align="left">@item.direccionProveedor</td>
+                        <td style="max-width: 20%" align="left">@item.direccionProveedor</td>
                         <td align="left">@item.telefonoProveedor</td>
-                        <td>
-                            <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
-                                <i class="fas fa-pen"></i>Modificar
-                            </button>
-                            <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
-                                <i class="fas fa-trash"></i>Eliminar
-                            </button>
+                        <td class="acciones">
+                            <div class="botones">
+                                <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                                 <i class="fas fa-pen"></i>Modificar
+                                </button>
+                                <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
+                                    <i class="fas fa-trash"></i>Eliminar
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -81,7 +86,7 @@
                     <!-- Campo de Código -->
                     <div class="mb-3">
                         <label for="codigo">Código:</label>
-                        <input type="text" required class="form-control" id="codigo" name="Codigo">
+                        <input type="text" required class="form-control" id="codigo" name="Codigo" >
                     </div>
 
                     <!-- Campo de Nombre -->
@@ -95,7 +100,7 @@
                         <label for="direccion">Dirección:</label>
                         <input type="text" required class="form-control" id="direccion" name="direccion">
                     </div>
-
+                   
                     <!-- Campo de Teléfono -->
                     <div class="mb-3">
                         <label for="telefono">Teléfono:</label>
@@ -137,22 +142,26 @@
 @section Scripts {
     <script type="text/javascript">
         // Verifica si la operación fue exitosa
-        @if (Model.exito)
+       //validar que exito no sea nulo y que sea true, también que no se haya eliminado a nadie 
+      // para que no se confunda y no muestre el alert de Eliminado correctamente
+        @if (TempData["exito"] != null && (bool)TempData["exito"] && TempData["eliminado"] != null && (bool)TempData["eliminado"] == false)
         {
             <text>
                 Swal.fire({
-                    title: "¡Excelente!",
-                    text: "El proveedor ha sido guardado correctamente.",
-                    icon: "success",
-                    confirmButtonText: "OK"
+                title: "¡Excelente!",
+                text: "El proveedor ha sido guardado correctamente.",
+                icon: "success",
+                confirmButtonText: "OK"
                 });
             </text>
+            Model.exito = false;
         }
     </script>
 
     <script type="text/javascript">
         // Verifica si la operación fue exitosa
-        @if (Model.exito == false && Model.intentoRealizado)
+        //validar que exito no sea nulo y que sea falso, también que intentoRealizado no sea nulo y que sea verdadero
+    @if (TempData["exito"] != null && (bool)TempData["exito"] == false && TempData["intentoRealizado"]!= null && (bool)TempData["intentoRealizado"])
         {
             <text>
                 Swal.fire({
@@ -167,7 +176,8 @@
 
     <script type="text/javascript">
             // Verifica si la operación fue exitosa
-        @if (Model.eliminado == true)
+            //validar que exito no sea nulo y que sea true, también que eliminado no sea nulo y que sea verdadero
+        @if (TempData["exito"] != null && (bool)TempData["exito"] == true && TempData["eliminado"] != null && (bool)TempData["eliminado"])
         {
             <text>
                 Swal.fire({
@@ -179,4 +189,37 @@
             </text>
         }
     </script>
+
+     <!--Script de intl-tel-input-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/intlTelInput.min.js"></script>
+
+    <script type="text/javascript">
+         var iti;
+
+        // Ejecuta el código solo cuando el DOM esté completamente cargado
+        document.addEventListener("DOMContentLoaded", function () {
+            // Selecciona el input de teléfono
+            var input = document.querySelector("#telefono");
+            iti = window.intlTelInput(input, {
+                onlyCountries: ["us", "cn", "jp", "de", "kr", "il", "in", "sg", "nl", "se", "ch", "fi", "sv","cr","pa","es","mx"],  // Lista de países exportadores de tecnología
+                preferredCountries: ["us", "cn", "jp","de","kr"], // Lista de países que se mostrarán a la cabecera siempre
+                separateDialCode: true,  // Muestra el código del país por separado
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/utils.js",  // Script adicional para funciones de validación y formato
+            });
+        
+        //este evento es para darle formato al número de teléfono cuando el input pierda el foco
+        input.addEventListener("blur", function () {
+            getFormattedNumber();
+        });
+        });
+
+        //Función para obtener el número formateado
+        function getFormattedNumber() {
+            if (iti) {
+                var numeroFormateado = iti.getNumber(); // Obtiene el número en formato internacional
+                document.querySelector("#telefono").value = numeroFormateado; // Asigna el número formateado al input de teléfono
+            }
+        }
+    </script> 
+
 }
