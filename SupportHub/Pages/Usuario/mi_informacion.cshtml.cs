@@ -89,7 +89,7 @@ namespace SupportHub.Pages.Usuario
                     {
                         conexion.Open();
 
-                        if (setUsuario.ClaveUsuario == null)
+                        if (setUsuario.ClaveUsuario == "")
                         {
                             using (SqlCommand comando = new SqlCommand(consulta1, conexion))
                             {
@@ -103,12 +103,11 @@ namespace SupportHub.Pages.Usuario
                         }
                         else
                         {
-                            using (SqlCommand comando = new SqlCommand(consulta2, conexion))
+                            using (SqlCommand comando = new SqlCommand("sp_modificar_contraseña", conexion))
                             {
-                                comando.Parameters.AddWithValue("@nombre", setUsuario.nombreUsuario);
-                                comando.Parameters.AddWithValue("@apellido", setUsuario.apellidoUsuario);
+                                comando.CommandType = CommandType.StoredProcedure;
                                 comando.Parameters.AddWithValue("@idUsuario", setUsuario.idUsuario);
-                                comando.Parameters.AddWithValue("@clave", setUsuario.ClaveUsuario);
+                                comando.Parameters.AddWithValue("@claveUsuario", setUsuario.ClaveUsuario);
 
                                 comando.ExecuteNonQuery();
                             }

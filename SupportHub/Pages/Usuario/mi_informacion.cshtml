@@ -37,7 +37,8 @@
 						<label>@i.apellidoUsuario</label>
 					</td>
 					<td>
-                        <button type="button" class="btn btn-primary" onclick="ModalModificarUsuario(this)" data-bs-toggle="modal" data-bs-target="#Modificar">EDITAR</button>
+                        <button type="button" class="btn btn-edit btnTexto" onclick="ModalModificarUsuario(this)" data-bs-toggle="modal" data-bs-target="#Modificar"><span class="texto-editar">EDITAR</span></button>
+                        <button type="button" class="btn btn-edit btnClave" onclick="ModalModificarContraseña(this)" data-bs-toggle="modal" data-bs-target="#Modificar"><span class="texto-clave">CLAVE</span></button>
 					</td>
 				</tr>
 			}
@@ -56,7 +57,7 @@
                 <div class="modal-body">
                     <form method="post" id="ModificarinfoUsuario">
                         <!-- Campo de ID -->
-                        <input type="text" id="id" name="id" />
+                        <input type="hidden" id="id" name="id" />
                       
                         <!-- Campo de usuario -->
                         <div class="mb-3">
@@ -78,20 +79,20 @@
 
                          <!-- Campo de contraseña actual -->
                         <div class="mb-3">
-                            <label for="nContra">Contraseña actual:</label>
+                        <label for="contraA">Contraseña actual:</label>
                         <input type="text" required class="form-control" id="contraA" name="contraA">
                         </div>
 
                         <!-- Campo de Nueva contra -->
                         <div class="mb-3">
                             <label for="nContra">Nueva Contraseña:</label>
-                        <input type="text" required class="form-control" id="nContra" name="nContra">
+                        <input type="password" required class="form-control" id="nContra" name="nContra">
                         </div>
 
                     <!-- Campo de confirmar Nueva contra -->
                     <div class="mb-3">
                         <label for="CnContra">Confirmar Contraseña:</label>
-                        <input type="text" required class="form-control" id="CnContra" name="CnContra">
+                        <input type="password" required class="form-control" id="CnContra" name="CnContra">
                     </div>
                     </form>
                 </div>
@@ -105,16 +106,10 @@
 
 @section Scripts {
     <script type="text/javascript">
-        function ModalModificarUsuario(button) {
-            var tr = $(button).closest("tr");
+        
 
-            $(".modal h1").text("Modificar Usuarioooooss");
-            $("#id").val(tr.data("id"));
-            $("#usuario").val(tr.data("usuario"));
-            $("#nombre").val(tr.data("nombre"));
-            $("#apellido").val(tr.data("apellido"));
-            $("#usuario").prop("readonly", true);
-        }
+        
+
         function limpiarModalMUsuario() {
            
                 $("#ModificarinfoUsuario")[0].reset();

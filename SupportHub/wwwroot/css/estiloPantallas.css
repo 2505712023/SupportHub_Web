@@ -44,6 +44,34 @@ table {
     margin: 0 auto;
 }
 
+/* estilos para mi_información*/
+#dropdownMenuButton {
+    background-color: green;
+    height: 40px;
+    padding: 0;
+}
+
+.btnTexto {
+    position: relative;
+    padding: 1px 2px; /* Espaciado interior */
+    font-size: 5px; /* Tamaño de fuente */
+
+    cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+    transition: height 0.3s ease; /* Transición suave para la altura */
+    overflow: hidden; /* Ocultar el contenido que excede */
+    height: 40px;
+}
+
+.texto-editar, .texto-clave {
+    display: block; /* Hacer que ocupe el espacio completo */
+    transition: opacity 0.3s ease; /* Transición de opacidad */
+}
+
+.btnTexto:hover {
+    height: 60px; /* Aumentar la altura del botón al pasar el mouse */
+}
+
+
 h1 {
     text-align: center;
     font-weight: 700;

@@ -54,7 +54,6 @@
     submitForm();
 }
 
-
 function validarFormularioEliminar() {
     if ($(".modal#Eliminar #idProveedor").val().trim() === "") {
 
@@ -67,53 +66,107 @@ function validarFormularioEliminar() {
     }
     submitFormEliminar()
 }
+//funciones de la página mi_informacion
+//asegurarse que las funciones se carguen cuando el html esté completamente cargado
+$(function () {
+    function ModalModificarContraseña(button) {
+        var tr = $(button).closest("tr");
 
-function validarIformacionUsuario() {
-    var nombre = document.getElementById("nombre").value.trim();
-    var apellido = document.getElementById("apellido").value.trim();
-    var contra = document.getElementById("contraA").value.trim();   
-    var contraLogueada = sessionStorage.getItem("contra");
-    var nuevaContra = document.getElementById("nContra").value.trim();
-    var confirmarNuevaContra = document.getElementById("CnContra").value.trim();
-    if (nombre === "") {
+        $(".modal h1").text("Modificar Contraseña");
+        $("#id").val(tr.data("id"));
+        $("#usuario").val(tr.data("usuario"));
+        $("#nombre").val(tr.data("nombre"));
+        $("#apellido").val(tr.data("apellido"));
 
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "El nombre no puede estar vacío!"
-        });
-        return false;
-    } else if (apellido === "") {
-
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "El apellido no puede estar vacío!"
-        });
-        return false;
-    }else if (contra != contraLogueada) {
-
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "La contraseña actual es incorrecta!"
-        });
-        return false;
-    } else if (nuevaContra != confirmarNuevaContra) {
-
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "La nueva contraseña no coincide!"
-        });
-        return false;
+        $("#usuario").prop("readonly", true);
+        //ocultando los input y label que no se van a usar en esta operación
+        $("#nombre").attr("type", "hidden");
+        $("#apellido").attr("type", "hidden");
+        $('label[for="nombre"]').hide();
+        $('label[for="apellido"]').hide();
+        //mostrando los campos que sí se van a usar
+        $("#nContra").attr("type", "password");
+        $("#CnContra").attr("type", "password");
+        $('label[for="nContra"]').show();
+        $('label[for="CnContra"]').show();
     }
-    submitFormModificarInfoUsuario();
-}
 
-function submitFormModificarInfoUsuario() {
-    document.getElementById("ModificarinfoUsuario").submit();
-}
+    function ModalModificarUsuario(button) {
+        var tr = $(button).closest("tr");
+
+        $(".modal h1").text("Modificar Info");
+        $("#id").val(tr.data("id"));
+        $("#usuario").val(tr.data("usuario"));
+        $("#nombre").val(tr.data("nombre"));
+        $("#apellido").val(tr.data("apellido"));
+
+        $("#usuario").prop("readonly", true);
+        //ocultando los input y label que no se van a usar en esta operación
+        $("#nContra").attr("type", "hidden");
+        $("#CnContra").attr("type", "hidden");
+        $('label[for="nContra"]').hide();
+        $('label[for="CnContra"]').hide();
+        //mostrando los campos que sí se van a usar
+        $("#nombre").attr("type", "text");
+        $("#apellido").attr("type", "text");
+        $('label[for="nombre"]').show();
+        $('label[for="apellido"]').show();
+    }
+
+    function validarIformacionUsuario() {
+        var nombre = document.getElementById("nombre").value.trim();
+        var apellido = document.getElementById("apellido").value.trim();
+        var contra = document.getElementById("contraA").value.trim();
+        var contraLogueada = sessionStorage.getItem("contra");
+        var nuevaContra = document.getElementById("nContra").value.trim();
+        var confirmarNuevaContra = document.getElementById("CnContra").value.trim();
+        if (nombre === "") {
+
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "El nombre no puede estar vacío!"
+            });
+            return false;
+        } else if (apellido === "") {
+
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "El apellido no puede estar vacío!"
+            });
+            return false;
+        } else if (contra != contraLogueada) {
+
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "La contraseña actual es incorrecta!"
+            });
+            return false;
+        } else if (nuevaContra != confirmarNuevaContra) {
+
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "La nueva contraseña no coincide!"
+            });
+            return false;
+        }
+        submitFormModificarInfoUsuario();
+    }
+
+    function submitFormModificarInfoUsuario() {
+        document.getElementById("ModificarinfoUsuario").submit();
+    }
+
+    //asegurarse que las funciones estén disponibles de manera global
+    window.ModalModificarContraseña = ModalModificarContraseña;
+    window.ModalModificarUsuario = ModalModificarUsuario;
+    window.validarIformacionUsuario = validarIformacionUsuario;
+    window.submitFormModificarInfoUsuario = submitFormModificarInfoUsuario;
+});
+
 
 function submitForm() {
     document.getElementById("formAgregarProveedor").submit();
