@@ -5,6 +5,8 @@
     Layout = "_LayoutWelcome";
 }
 <script src="https://kit.fontawesome.com/52428cdec5.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <section>
     <div class="contenedor">
         <div class="formulario">
@@ -67,3 +69,14 @@
         </div>
     </div>
 </section>
+@if (Model.ErrorMessage != null)
+{
+    <script>
+        Swal.fire({
+            title: "Oops...",
+            text: "@Html.Raw(Model.ErrorMessage)",  // 
+            icon: "error",
+            confirmButtonText: "OK"
+        });
+    </script>
+}

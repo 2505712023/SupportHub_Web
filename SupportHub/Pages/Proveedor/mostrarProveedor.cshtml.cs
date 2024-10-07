@@ -4,9 +4,10 @@ using SupportHub.Modelos;
 using SupportHub.Helpers;
 using System.Data;
 using System.Data.SqlClient;
-
+using Microsoft.AspNetCore.Authorization;
 namespace SupportHub.Pages.Proveedor
 {
+    [Authorize]
     public class mostrarProveedorModel : PageModel
     {
         private readonly IConfiguration configuracion;

@@ -5,8 +5,10 @@ using SupportHub.Modelos;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 namespace SupportHub.Pages.Empleado
 {
+    [Authorize]
     public class mostrarEmpleadosModel : PageModel
     {
         private readonly IConfiguration configuracion;
