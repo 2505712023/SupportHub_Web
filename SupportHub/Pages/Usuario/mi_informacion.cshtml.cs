@@ -9,6 +9,8 @@ namespace SupportHub.Pages.Usuario
 {
     public class mi_informacionModel : PageModel
     {
+        [TempData]
+        public bool exito { get; set; } = false;
         public readonly IConfiguration configuracion;
         public List<Usuarios> Usuario = new List<Usuarios>();
         public mi_informacionModel(IConfiguration configuracion)
@@ -56,8 +58,7 @@ namespace SupportHub.Pages.Usuario
 
         }
 
-        [TempData]
-        public bool exito { get; set; } = false;
+
         public IActionResult OnPost()
         {
             Usuarios setUsuario = new Usuarios();
@@ -68,10 +69,9 @@ namespace SupportHub.Pages.Usuario
             setUsuario.nombreUsuario = Request.Form["nombre"];
             setUsuario.apellidoUsuario = Request.Form["apellido"];
             setUsuario.loginUsuario = Request.Form["usuario"];
-            int registrosModificados = 0;
             
-            if (!exito)
-            {
+            
+            
                 try
                 {
                     if (nuevaContraseña == ConfirmarNuevaContra)
@@ -80,17 +80,16 @@ namespace SupportHub.Pages.Usuario
                     }
 
                     string cadena = configuracion.GetConnectionString("CadenaConexion");
-                    string consulta1 = "UPDATE Usuarios SET nombreUsuario = @nombre, apellidoUsuario = @apellido where idUsuario = @idUsuario; ";
-                    string consulta2 = "update Usuarios " +
-                        "set claveUsuario = ENCRYPTBYPASSPHRASE('rhpn1aHA1q8CkyEMELw6eynB4OOVOGVg', @clave), " +
-                        "nombreUsuario = @nombre, apellidoUsuario = @apellido where idUsuario = @idUsuario; ";
+                    string consulta1 = "UPDATE Usuarios SET nombreUsuario = @nombre, apellidoUsuario = @apellido" +
+                        " where idUsuario = @idUsuario; ";
 
                     using (SqlConnection conexion = new SqlConnection(cadena))
                     {
                         conexion.Open();
-
+                        
                         if (setUsuario.ClaveUsuario == "")
                         {
+                            //si la clave de usuario está vacía significa que solo ha modificado nombre o apellido
                             using (SqlCommand comando = new SqlCommand(consulta1, conexion))
                             {
                                 comando.Parameters.AddWithValue("@nombre", setUsuario.nombreUsuario);
@@ -124,7 +123,7 @@ namespace SupportHub.Pages.Usuario
                     Console.WriteLine("error " + ex);
                     return Page();
                 }
-            }
+            
             return RedirectToPage("/Usuario/mi_informacion");
         }
     }

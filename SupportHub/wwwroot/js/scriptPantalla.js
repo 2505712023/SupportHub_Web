@@ -144,12 +144,25 @@ $(function () {
                 text: "La contraseña actual es incorrecta!"
             });
             return false;
-        } else if (nuevaContra != confirmarNuevaContra) {
-
+        } else  if (nuevaContra === "" || confirmarNuevaContra === "") {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Por favor, complete ambos campos de nueva contraseña."
+                });
+                return false;
+        } else if (nuevaContra !== confirmarNuevaContra) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "La nueva contraseña no coincide!"
+                });
+                return false;
+        } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(nuevaContra)) {
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
-                text: "La nueva contraseña no coincide!"
+                text: "La nueva contraseña debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y caracteres especiales."
             });
             return false;
         }
