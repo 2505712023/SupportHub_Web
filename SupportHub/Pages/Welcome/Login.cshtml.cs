@@ -25,7 +25,7 @@ namespace SupportHub.Pages.Welcome
         public IActionResult OnPost()
         {
          
-            if (Username == "a" || Username =="aalvarez" && Password == "a") 
+            if (Username == "a"  && Password == "a") 
             {
 
                 HttpContext.Session.SetString("usuario",Username);
