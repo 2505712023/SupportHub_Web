@@ -5,6 +5,8 @@ using SupportHub.Helpers;
 using SupportHub.Modelos;
 using System.Data.SqlClient;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace SupportHub.Pages.Entregas
 {
@@ -13,6 +15,8 @@ namespace SupportHub.Pages.Entregas
         private readonly IConfiguration configuracion;
         private readonly ILogger logger;
         public List<Entrega> listaEntregas = new();
+        [TempData]
+        public string mensajeError { get; set; } = string.Empty;
 
         public mostrarEntregasModel(IConfiguration configuracion, ILogger<mostrarEntregasModel> logger)
         {
@@ -168,12 +172,39 @@ namespace SupportHub.Pages.Entregas
             return sb.ToString();
         }
 
-        public void OnPost()
+        public IActionResult OnPost()
         {
             foreach (var key in Request.Form.Keys)
             {
                 logger.LogInformation($"Form key: {key}, value: {Request.Form[$"{key}"]}");
             }
+
+            //try
+            //{
+            //    string cadena = configuracion.GetConnectionString("CadenaConexion");
+            //    int registrosAgregados = 0;
+            //    using (SqlConnection conexion = new SqlConnection(cadena))
+            //    {
+            //        conexion.Open();
+            //        string query = "dbo.sp_crear_proveedor @codProveedor,@nombreProveedor,@direccionProveedor,@telefonoProveedor";
+            //        SqlCommand comando = new SqlCommand(query, conexion);
+
+            //        comando.Parameters.AddWithValue("@codProveedor", newProveedor.codProveedor);
+            //        comando.Parameters.AddWithValue("@nombreProveedor", newProveedor.nombreProveedor);
+            //        comando.Parameters.AddWithValue("@direccionProveedor", newProveedor.direccionProveedor);
+            //        comando.Parameters.AddWithValue("@telefonoProveedor", newProveedor.telefonoProveedor);
+
+            //        registrosAgregados = Convert.ToInt32(comando.ExecuteScalar().ToString());
+            //    }
+            //    exito = registrosAgregados == 1 ? true : false;
+            //}
+            //catch (Exception ex)
+            //{
+            //    mensajeError = $"Ocurrió el siguiente error al momento de agregar una nueva entrega: {ex.Message}.";
+            //    return Page();
+            //}
+
+            return RedirectToPage("/Entregas/mostrarEntregas");
         }
     }
 }

@@ -104,7 +104,7 @@
         <div class="modal-content">
             <div class="modal-header encabezado-personalizado">
                 <h1 class="modal-title fs-5" id="modalTitle">Agregar Entrega</h1>
-                <button type="button" class="btn-close" onclick="limpiarModal()" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" onclick="limpiarModalEntregas()" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" id="formEntregas">
                 <div class="modal-body" id="modalBody">
@@ -132,7 +132,7 @@
                 </div>
             </form>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="limpiarModal()" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary" onclick="limpiarModalEntregas()" data-bs-dismiss="modal">Cancelar</button>
                 <button type="submit" class="btn btn-primary" id="modalActionButton" onclick="submitFormEntregas()">Guardar</button>
             </div>
         </div>
@@ -186,4 +186,3 @@
         }
     </script> *@
 }
-

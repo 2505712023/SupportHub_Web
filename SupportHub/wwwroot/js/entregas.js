@@ -54,8 +54,6 @@ $(document).on('input', '#formCantidadEntrega', function () {
     var disponible = parseInt(equipoSeleccionado.data("disponible"));
     var cantidad = parseInt($("#formCantidadEntrega").val());
 
-    console.log(equipoSeleccionado + ' ' + disponible + ' ' + cantidad)
-
     if (!isNaN(cantidad) && disponible < cantidad) {
         $("#alertaCantidadDisponible").show();
         $("#modalActionButton").attr("disabled", true);
@@ -98,7 +96,7 @@ function openModal(opcion, button = null) {
                     <input type="number" class="form-control" name="cantidadEntrega" placeholder="0" id="formCantidadEntrega" />
                 </div>
 
-                <div class="alert alert-danger mt-3" role="alert" id="alertaCantidadDisponible" style="display: none;">
+                <div class="alert alert-danger mt-3 mb-0" role="alert" id="alertaCantidadDisponible" style="display: none;">
                         <i class="bi bi-exclamation-diamond-fill"></i> No hay suficiente cantidad disponible de ese equipo!
                 </div>
 
@@ -119,7 +117,7 @@ function openModal(opcion, button = null) {
 
                 <label class="col-sm-12 col-form-label">Observaciones:</label>
                 <div class="col-sm-12">
-                    <textarea class="form-control" name="observacionEntrega" placeholder="Agregar observación (opcional)..." id="formObservacionEntrega" ></textarea>
+                    <textarea class="form-control" name="observacionEntrega" placeholder="Agregar observación (opcional)..." id="formObservacionEntrega" rows="3" ></textarea>
                 </div>
             `);
         }
@@ -188,4 +186,9 @@ function limpiarFiltroEntregas() {
     $("#tablaEntregas tbody tr").show();
     $("#btn-limpiar-filtro").hide();
     $("#busqueda").focus().select();
+}
+
+function limpiarModalEntregas() {
+    $("#modalEntregas h1").text("Agregar Entrega");
+    $("#formEntregas")[0].reset();
 }
