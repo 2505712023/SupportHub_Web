@@ -1,0 +1,188 @@
+﻿@page
+@model SupportHub.Pages.Entregas.mostrarEntregasModel
+@{
+    ViewData["Title"] = "Entregas";
+    Layout = "_Layout";
+}
+<br />
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/estiloPantallas.css">
+}
+
+<div class="content-wrapper" style="max-width: 1700px; border-radius: 20px;">
+    <h1>Gestión de Entregas</h1>
+
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-8">
+            <form method="get">
+                <div class="d-flex align-items-center search-bar">
+                    <input type="text" id="busqueda" name="busqueda" class="form-control me-2" placeholder="Buscar entrega ..."/>
+                    <button type="button" class="btn" onclick="limpiarFiltroEntregas()" id="btn-limpiar-filtro"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    <select class="form-select select-filtro me-2" id="filtros">
+                        <option value="0">Código</option>
+                        <option value="1">Tipo de Entrega</option>
+                        <option value="2">Tipo Equipo</option>
+                        <option value="3">Marca Equipo</option>
+                        <option value="4">Modelo Equipo</option>
+                        <option value="5">Cantidad Entrega</option>
+                        <option value="6">Empleado Entregó</option>
+                        <option value="7">Empleado Recibió</option>
+                        <option value="8">Fecha Entrega</option>
+                        <option value="9">Fecha Devolución</option>
+                        <option value="10">Observación Entrega</option>
+                    </select>
+                    <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 text-end">
+            <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#modalEntregas" onclick="openModal('agregar')">
+                <i class="fas fa-plus-circle"></i> Agregar Entrega
+            </button>
+        </div>
+    </div>
+
+    <div>
+        <table class="table table-hover align-middle text-center" id="tablaEntregas" style="max-width: 1700px; width: 100%;">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Tipo de Entrega</th>
+                    <th>Tipo Equipo</th>
+                    <th>Marca Equipo</th>
+                    <th>Modelo Equipo</th>
+                    <th>Cantidad Entrega</th>
+                    <th>Empleado Entregó</th>
+                    <th>Empleado Recibió</th>
+                    <th>Fecha Entrega</th>
+                    <th>Fecha Devolución</th>
+                    <th>Observación Entrega</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.listaEntregas)
+                {
+                    <tr data-idEntrega="@item.idEntrega"
+                        data-idTipoEntrega="@item.idTipoEntrega"
+                        data-idEquipo="@item.idEquipo"
+                        data-idEmpleadoEntrega="@item.idEmpleadoEntrega"
+                        data-idEmpleadoRecibe="@item.idEmpleadoRecibe">
+                        <td align="left">@item.codEntrega</td>
+                        <td align="left">@item.nombreTipoEntrega</td>
+                        <td align="left">@item.tipoEquipo</td>
+                        <td align="left">@item.marcaEquipo</td>
+                        <td align="left">@item.modeloEquipo</td>
+                        <td align="center">@item.cantidadEntrega</td>
+                        <td align="left">@item.nombreEmpleadoEntrego</td>
+                        <td align="left">@item.nombreEmpleadoRecibio</td>
+                        <td align="left" style="white-space: nowrap;">@item.fechaEntrega</td>
+                        <td align="left" style="white-space: nowrap;" id="fechaDevolucion">@item.fechaDevolucion</td>
+                        <td align="left">@item.observacionEntrega</td>
+                        <td>
+                            <button class="btn btn-edit btn-acciones" onclick="openModal('modificar', this)" data-bs-toggle="modal" data-bs-target="#modalEntregas">
+                                <i class="fas fa-pen"></i> Modificar
+                            </button>
+                            <button class="btn btn-delete btn-acciones" onclick="openModal('eliminar', this)" data-bs-toggle="modal" data-bs-target="#modalEntregas">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                            <button class="btn btn-warning btn-acciones" id="devolucion" data-bs-toggle="modal" data-bs-target="#modalEntregas">
+                                <i class="fas fa-rotate-left"></i> Devolución
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para adicionar, modificar, confirmar eliminación, agregar devolución o eliminar devolución de entregas -->
+<div class="modal fade" id="modalEntregas" tabindex="-1" aria-labelledby="modalEntregasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-entregas">
+        <div class="modal-content">
+            <div class="modal-header encabezado-personalizado">
+                <h1 class="modal-title fs-5" id="modalTitle">Agregar Entrega</h1>
+                <button type="button" class="btn-close" onclick="limpiarModalEntregas()" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="formEntregas">
+                <div class="modal-body" id="modalBody">
+
+                    <select class="form-select" name="idTipoEntrega" id="formIdTipoEntrega">
+                        <option value="">-- Seleccione tipo de entrega --</option>
+                        @Html.Raw(Model.GetTiposDeEntregas())
+                    </select>
+
+                    <select class="form-select" name="idEmpleadoEntrega" id="formIdEmpleadoEntrega">
+                        <option value="">-- Seleccione empleado que entrega --</option>
+                        @Html.Raw(Model.GetEmpleados())
+                    </select>
+
+                    <select class="form-select" name="idEmpleadoRecibe" id="formIdEmpleadoRecibe">
+                        <option value="">-- Seleccione empleado que recibe --</option>
+                        @Html.Raw(Model.GetEmpleados())
+                    </select>
+
+                    <select class="form-select" name="idEquipo" id="formIdEquipo">
+                        <option value="">-- Seleccione equipo --</option>
+                        @Html.Raw(Model.GetEquipos())
+                    </select>
+
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="limpiarModalEntregas()" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="modalActionButton" onclick="submitFormEntregas()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="/js/entregas.js"></script>
+@*     <script type="text/javascript">
+        // Verifica si la operación fue exitosa
+        @if (Model.exito)
+        {
+            <text>
+                Swal.fire({
+                    title: "¡Excelente!",
+                    text: "El proveedor ha sido guardado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+            // Verifica si la operación fue exitosa
+        @if (Model.exito == false && Model.intentoRealizado)
+        {
+            <text>
+                Swal.fire({
+                    title: "Oops...",
+                    text: "Hubo un error al guardar el registro, valide que el código o el nombre del proveedor no exista.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+            // Verifica si la operación fue exitosa
+        @if (Model.eliminado == true)
+        {
+            <text>
+                Swal.fire({
+                    title: "¡Excelente!",
+                    text: "El proveedor ha sido eliminado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script> *@
+}
