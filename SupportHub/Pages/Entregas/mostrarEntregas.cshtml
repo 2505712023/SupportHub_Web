@@ -141,14 +141,14 @@
 
 @section Scripts {
     <script type="text/javascript" src="/js/entregas.js"></script>
-@*     <script type="text/javascript">
+    <script type="text/javascript">
         // Verifica si la operación fue exitosa
         @if (Model.exito)
         {
             <text>
                 Swal.fire({
                     title: "¡Excelente!",
-                    text: "El proveedor ha sido guardado correctamente.",
+                    text: "La entrega se ha guardado correctamente.",
                     icon: "success",
                     confirmButtonText: "OK"
                 });
@@ -158,12 +158,12 @@
 
     <script type="text/javascript">
             // Verifica si la operación fue exitosa
-        @if (Model.exito == false && Model.intentoRealizado)
+        @if (!string.IsNullOrEmpty(Model.mensajeError))
         {
             <text>
                 Swal.fire({
                     title: "Oops...",
-                    text: "Hubo un error al guardar el registro, valide que el código o el nombre del proveedor no exista.",
+                    text: @Model.mensajeError,
                     icon: "error",
                     confirmButtonText: "OK"
                 });
@@ -171,7 +171,7 @@
         }
     </script>
 
-    <script type="text/javascript">
+@*     <script type="text/javascript">
             // Verifica si la operación fue exitosa
         @if (Model.eliminado == true)
         {
