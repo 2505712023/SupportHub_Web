@@ -5,10 +5,9 @@ body {
 
 table {
     width: 100%;
-    max-width: 1500px;
+    max-width: 1800px;
     margin: 0 auto;
     table-layout: fixed;
-    border-collapse: collapse;
 }
 
 .contenedor-tabla {
