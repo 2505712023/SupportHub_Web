@@ -177,3 +177,38 @@ h1 {
 .actions {
     white-space: nowrap; /* Evita que los botones se rompan en líneas separadas */
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-dot {
+    width: 20px; /* Tamaño aumentado */
+    height: 20px; /* Tamaño aumentado */
+    border-radius: 50%;
+    background-color: transparent; /* Fondo transparente */
+    border: 2px solid #007bff; /* Color del borde */
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .page-dot.active {
+        background-color: #05173B; /* Color cuando está activo */
+    }
+
+    .page-dot:hover {
+        background-color: rgba(0, 123, 255, 0.2); /* Efecto hover más ligero */
+    }

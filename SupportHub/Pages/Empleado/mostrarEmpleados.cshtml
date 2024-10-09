@@ -3,10 +3,8 @@
 @{
     ViewData["Title"] = "Empleados";
     Layout = "_Layout";
-
 }
 <br />
-
 
 <link rel="stylesheet" href="~/css/estiloEmpleados.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/css/intlTelInput.css" />
@@ -31,7 +29,7 @@
     </div>
 
     <div class="contenedor-tabla">
-        <table class="table table-hover align-middle text-center" style="max-width: 1500px; width: 100%;">
+        <table class="table table-hover align-middle text-center" style="max-width: 1500px; width: 100%;" id="empleadosTable">
             <thead>
                 <tr>
                     <th>Código</th>
@@ -46,7 +44,7 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="empleadosBody">
                 @foreach (var item in Model.listaEmpleado)
                 {
                     <tr data-codigo="@item.codEmpleado" data-nombre="@item.nombreEmpleado" data-direccion="@item.apellidoEmpleado" data-telefono="@item.telefonoEmpleado" data-email="@item.emailEmpleado" data-codArea="@item.codArea" data-area="@item.nombreArea" data-codCargo="@item.codCargo" data-cargo="@item.nombreCargo" data-id="@item.idEmpleado">
@@ -71,6 +69,11 @@
                 }
             </tbody>
         </table>
+    </div>
+
+    <!-- Paginación -->
+    <div id="pagination" class="pagination">
+        <ul class="pagination-list"></ul>
     </div>
 </div>
 
