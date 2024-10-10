@@ -65,6 +65,8 @@ $(document).on('input', '#formCantidadEntrega', function () {
 });
 
 function openModal(opcion, button = null) {
+    console.log(button);
+
     // Guardamos los selects del modal
     var selectIdTipoEntrega = $("#formIdTipoEntrega").closest("select").prop("outerHTML");
     var selectIdEmpleadoEntrega = $("#formIdEmpleadoEntrega").closest("select").prop("outerHTML");
@@ -120,65 +122,157 @@ function openModal(opcion, button = null) {
                     <textarea class="form-control" name="observacionEntrega" placeholder="Agregar observación (opcional)..." id="formObservacionEntrega" rows="3" ></textarea>
                 </div>
             `);
+            mostrarSelects();
+        }
+    } else {
+        if (opcion === "modificar") {
+
+            $("#modalActionButton").text("Guardar");
+            $("#modalBody").html(`
+                <input type="hidden" id="idEntrega" name="idEntrega" value="" />
+
+                <input type="hidden" id="esModificacion" name="esModificacion" value="true" />
+
+                <label class="col-sm-12 col-form-label">Código:</label>
+                <div class="col-sm-12">
+                    <input type="text" class="form-control" id="codEntrega" name="codEntrega" >
+                </div>
+
+                <label class="col-sm-12 col-form-label">Tipo de entrega:</label>
+                <div class="col-sm-12">
+                    ${selectIdTipoEntrega}
+                </div>
+
+                <label class="col-sm-12 col-form-label">Equipo:</label>
+                <div class="col-sm-12">
+                    ${selectIdEquipo}
+                </div>
+
+                <label class="col-sm-12 col-form-label">Cantidad:</label>
+                <div class="col-sm-12">
+                    <input type="number" class="form-control" name="cantidadEntrega" placeholder="0" id="formCantidadEntrega" />
+                </div>
+
+                <div class="alert alert-danger mt-3 mb-0" role="alert" id="alertaCantidadDisponible" style="display: none;">
+                        <i class="bi bi-exclamation-diamond-fill"></i> No hay suficiente cantidad disponible de ese equipo!
+                </div>
+
+                <label class="col-sm-12 col-form-label">Fecha:</label>
+                <div class="col-sm-12">
+                    <input type="date" class="form-control" name="fechaEntrega" id="formFechaEntrega" />
+                </div>
+
+                <label class="col-sm-12 col-form-label">Empleado entrega:</label>
+                <div class="col-sm-12">
+                    ${selectIdEmpleadoEntrega}
+                </div>
+
+                <label class="col-sm-12 col-form-label">Empleado recibe:</label>
+                <div class="col-sm-12">
+                    ${selectIdEmpleadoRecibe}
+                </div>
+
+                <label class="col-sm-12 col-form-label">Observaciones:</label>
+                <div class="col-sm-12">
+                    <textarea class="form-control" name="observacionEntrega" placeholder="Agregar observación (opcional)..." id="formObservacionEntrega" rows="3" ></textarea>
+                </div>
+            `);
+            mostrarSelects();
+
+            var tr = $(button).closest("tr");
+            console.log(tr.data());
+            $(".modal h1").text("Modificar Entrega");
+            $(".modal #idEntrega").val(tr.data("idEntrega"));
+            $(".modal #codEntrega").val(tr.data("codEntrega"));
+            $(".modal #codEntrega").prop("readonly", true);
+            $(".modal #formIdTipoEntrega").val(tr.data("idTipoEntrega"));
+            $(".modal #formIdEquipo").val(tr.data("idEquipo"));
+            $(".modal #formCantidadEntrega").val(tr.data("cantidadEntrega"));
+            $(".modal #formFechaEntrega").val(tr.data("fechaEntrega"));
+            $(".modal #formIdEmpleadoEntrega").val(tr.data("idEmpleadoEntrega"));
+            $(".modal #formIdEmpleadoRecibe").val(tr.data("idEmpleadoRecibe"));
+            $(".modal #formObservacionEntrega").val(tr.data("observacionEntrega"));
+
+        } else if (opcion === "eliminar") {
+            $("#modalActionButton").text("Eliminar");
+            $("#modalActionButton").removeClass("btn-primary");
+            $("#modalActionButton").addClass("btn-danger");
+            $("#modalBody").html(`
+                <p>¿Seguro que desea eliminar una entrega?</p>
+                <input type="hidden" name="codEntrega" id="codEntrega" value="" />
+                <input type="hidden" name="esEliminacion" id="esEliminacion" value="true" />
+                ${selectIdTipoEntrega}
+                ${selectIdEquipo}
+                ${selectIdEmpleadoEntrega}
+                ${selectIdEmpleadoRecibe}
+            `);
+
+            var tr = $(button).closest("tr");
+            console.log(tr.data());
+            $(".modal h1").text("Eliminar Entrega");
+            $(".modal #codEntrega").val(tr.data("codEntrega"));
+            ocultarSelects();
         }
     }
 }
 
 function submitFormEntregas() {
-    if ($("#formIdTipoEntrega").val().trim() === "") {
+    if ($(".modal #esEliminacion").val() === "true") {
+        $("#formEntregas").submit();
+    } else {
+        if ($("#formIdTipoEntrega").val().trim() === "") {
 
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Tipo de entrega es requerido!"
-        });
-        return false;
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Tipo de entrega es requerido!"
+            });
+            return false;
 
-    } else if ($("#formIdEquipo").val().trim() === "") {
+        } else if ($("#formIdEquipo").val().trim() === "") {
 
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Equipo es requerido!"
-        });
-        return false;
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Equipo es requerido!"
+            });
+            return false;
 
-    } else if ($("#formCantidadEntrega").val() <= 0) {
+        } else if ($("#formCantidadEntrega").val() <= 0) {
 
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Cantidad debe ser mayor a 0!"
-        });
-        return false;
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Cantidad debe ser mayor a 0!"
+            });
+            return false;
 
-    } else if ($("#formFechaEntrega").val().trim() === "") {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Fecha entrega es requerido!"
-        });
-        return false;
+        } else if ($("#formFechaEntrega").val().trim() === "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Fecha entrega es requerido!"
+            });
+            return false;
 
-    } else if ($("#formIdEmpleadoEntrega").val().trim() === "") {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Empleado entrega es requerido!"
-        });
-        return false;
+        } else if ($("#formIdEmpleadoEntrega").val().trim() === "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Empleado entrega es requerido!"
+            });
+            return false;
 
-    } else if ($("#formIdEmpleadoRecibe").val().trim() === "") {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Empleado recibe es requerido!"
-        });
-        return false;
-
+        } else if ($("#formIdEmpleadoRecibe").val().trim() === "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Empleado recibe es requerido!"
+            });
+            return false;
+        }
+        $("#formEntregas").submit();
     }
-
-    $("#formEntregas").submit();
 }
 
 function limpiarFiltroEntregas() {
@@ -189,6 +283,25 @@ function limpiarFiltroEntregas() {
 }
 
 function limpiarModalEntregas() {
+    if ($(".modal #esEliminacion").val() === "true") {
+        $("#modalActionButton").removeClass("btn-danger");
+        $("#modalActionButton").addClass("btn-primary");
+    }
+
     $("#modalEntregas h1").text("Agregar Entrega");
     $("#formEntregas")[0].reset();
+}
+
+function mostrarSelects() {
+    $(".modal #formIdTipoEntrega").show();
+    $(".modal #formIdEquipo").show();
+    $(".modal #formIdEmpleadoEntrega").show();
+    $(".modal #formIdEmpleadoRecibe").show();
+}
+
+function ocultarSelects() {
+    $(".modal #formIdTipoEntrega").hide();
+    $(".modal #formIdEquipo").hide();
+    $(".modal #formIdEmpleadoEntrega").hide();
+    $(".modal #formIdEmpleadoRecibe").hide();
 }

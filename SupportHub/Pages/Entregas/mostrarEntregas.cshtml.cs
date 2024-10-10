@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Reflection.Metadata.Ecma335;
+using System.Globalization;
 
 namespace SupportHub.Pages.Entregas
 {
@@ -21,6 +22,8 @@ namespace SupportHub.Pages.Entregas
         public string mensajeError { get; set; } = string.Empty;
         [TempData]
         public bool exito { get; set; } = false;
+        [TempData]
+        public bool eliminada { get; set; } = false;
 
         public mostrarEntregasModel(IConfiguration configuracion, ILogger<mostrarEntregasModel> logger)
         {
@@ -183,33 +186,74 @@ namespace SupportHub.Pages.Entregas
                 logger.LogInformation($"Form key: {key}, value: {Request.Form[$"{key}"]}");
             }
 
-            newEntrega.idTipoEntrega = Convert.ToInt32(Request.Form["idTipoEntrega"]);
-            newEntrega.fechaEntrega = Convert.ToDateTime(Request.Form["fechaEntrega"]).ToString("yyyy-MM-dd");
-            newEntrega.idEmpleadoEntrega = Convert.ToInt32(Request.Form["idEmpleadoEntrega"]);
-            newEntrega.idEmpleadoRecibe = Convert.ToInt32(Request.Form["idEmpleadoRecibe"]);
-            newEntrega.idEquipo = Convert.ToInt32(Request.Form["idEquipo"]);
-            newEntrega.cantidadEntrega = Convert.ToInt32(Request.Form["cantidadEntrega"]);
-            newEntrega.observacionEntrega = Request.Form["observacionEntrega"].ToString();
+            newEntrega.codEntrega = Request.Form["codEntrega"].ToString();
 
             try
             {
-                int registrosAgregados = 0;
-                using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                int registrosAlterados = 0;
+                int registrosEliminados = 0;
+                if (Request.Form["esEliminacion"] == "true")
                 {
-                    conexion.Open();
-                    SqlCommand comando = new("dbo.sp_crear_entrega @idTipoEntrega, @fechaEntrega, @idEmpleadoEntrega, @idEmpleadoRecibe, @idEquipo, @cantidadEntrega, @observacionEntrega", conexion);
+                    using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                    {
+                        conexion.Open();
+                        SqlCommand comando = new("dbo.sp_eliminar_entrega @codEntrega", conexion);
 
-                    comando.Parameters.AddWithValue("@idTipoEntrega", newEntrega.idTipoEntrega);
-                    comando.Parameters.AddWithValue("@fechaEntrega", newEntrega.fechaEntrega);
-                    comando.Parameters.AddWithValue("@idEmpleadoEntrega", newEntrega.idEmpleadoEntrega);
-                    comando.Parameters.AddWithValue("@idEmpleadoRecibe", newEntrega.idEmpleadoRecibe);
-                    comando.Parameters.AddWithValue("@idEquipo", newEntrega.idEquipo);
-                    comando.Parameters.AddWithValue("@cantidadEntrega", newEntrega.cantidadEntrega);
-                    comando.Parameters.AddWithValue("@observacionEntrega", newEntrega.observacionEntrega);
+                        comando.Parameters.AddWithValue("@codEntrega", newEntrega.codEntrega);
 
-                    registrosAgregados = Convert.ToInt32(comando.ExecuteScalar().ToString());
+                        registrosEliminados = Convert.ToInt32(comando.ExecuteScalar().ToString());
+                    }
                 }
-                exito = registrosAgregados == 1;
+                else
+                {
+                    newEntrega.idTipoEntrega = Convert.ToInt32(Request.Form["idTipoEntrega"]);
+                    //newEntrega.fechaEntrega = Convert.ToDateTime(Request.Form["fechaEntrega"]).ToString("yyyy-MM-dd");
+                    DateTime fechaEntrega = DateTime.ParseExact(Request.Form["fechaEntrega"], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    newEntrega.idEmpleadoEntrega = Convert.ToInt32(Request.Form["idEmpleadoEntrega"]);
+                    newEntrega.idEmpleadoRecibe = Convert.ToInt32(Request.Form["idEmpleadoRecibe"]);
+                    newEntrega.idEquipo = Convert.ToInt32(Request.Form["idEquipo"]);
+                    newEntrega.cantidadEntrega = Convert.ToInt32(Request.Form["cantidadEntrega"]);
+                    newEntrega.observacionEntrega = Request.Form["observacionEntrega"].ToString();
+                    if (Request.Form["esModificacion"] == "true")
+                    {
+                        using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                        {
+                            conexion.Open();
+                            SqlCommand comando = new("dbo.sp_modificar_entrega @codEntrega, @idTipoEntrega, @cantidadEntrega, @fechaEntrega, @observacionEntrega, @idEmpleadoEntrega, @idEmpleadoRecibe, @idEquipo", conexion);
+
+                            comando.Parameters.AddWithValue("@codEntrega", newEntrega.codEntrega);
+                            comando.Parameters.AddWithValue("@idTipoEntrega", newEntrega.idTipoEntrega);
+                            comando.Parameters.AddWithValue("@fechaEntrega", fechaEntrega);
+                            comando.Parameters.AddWithValue("@idEmpleadoEntrega", newEntrega.idEmpleadoEntrega);
+                            comando.Parameters.AddWithValue("@idEmpleadoRecibe", newEntrega.idEmpleadoRecibe);
+                            comando.Parameters.AddWithValue("@idEquipo", newEntrega.idEquipo);
+                            comando.Parameters.AddWithValue("@cantidadEntrega", newEntrega.cantidadEntrega);
+                            comando.Parameters.AddWithValue("@observacionEntrega", newEntrega.observacionEntrega);
+
+                            registrosAlterados = Convert.ToInt32(comando.ExecuteScalar().ToString());
+                        }
+                    }
+                    else
+                    {
+                        using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                        {
+                            conexion.Open();
+                            SqlCommand comando = new("dbo.sp_crear_entrega @idTipoEntrega, @fechaEntrega, @idEmpleadoEntrega, @idEmpleadoRecibe, @idEquipo, @cantidadEntrega, @observacionEntrega", conexion);
+
+                            comando.Parameters.AddWithValue("@idTipoEntrega", newEntrega.idTipoEntrega);
+                            comando.Parameters.AddWithValue("@cantidadEntrega", newEntrega.cantidadEntrega);
+                            comando.Parameters.AddWithValue("@fechaEntrega", fechaEntrega);
+                            comando.Parameters.AddWithValue("@observacionEntrega", newEntrega.observacionEntrega);
+                            comando.Parameters.AddWithValue("@idEmpleadoEntrega", newEntrega.idEmpleadoEntrega);
+                            comando.Parameters.AddWithValue("@idEmpleadoRecibe", newEntrega.idEmpleadoRecibe);
+                            comando.Parameters.AddWithValue("@idEquipo", newEntrega.idEquipo);
+
+                            registrosAlterados = Convert.ToInt32(comando.ExecuteScalar().ToString());
+                        }
+                    }
+                }
+                exito = registrosAlterados == 1;
+                eliminada = registrosEliminados == 1;
             }
             catch (Exception ex)
             {

@@ -64,11 +64,15 @@
             <tbody>
                 @foreach (var item in Model.listaEntregas)
                 {
-                    <tr data-idEntrega="@item.idEntrega"
-                        data-idTipoEntrega="@item.idTipoEntrega"
-                        data-idEquipo="@item.idEquipo"
-                        data-idEmpleadoEntrega="@item.idEmpleadoEntrega"
-                        data-idEmpleadoRecibe="@item.idEmpleadoRecibe">
+                    <tr data-id-entrega="@item.idEntrega"
+                        data-cod-entrega="@item.codEntrega"
+                        data-id-tipo-entrega="@item.idTipoEntrega"
+                        data-id-equipo="@item.idEquipo"
+                        data-cantidad-entrega="@item.cantidadEntrega"
+                        data-id-empleado-entrega="@item.idEmpleadoEntrega"
+                        data-id-empleado-recibe="@item.idEmpleadoRecibe"
+                        data-fecha-entrega="@(Convert.ToDateTime(item.fechaEntrega).ToString("yyyy-MM-dd"))"
+                        data-observacion-entrega="@item.observacionEntrega">
                         <td align="left">@item.codEntrega</td>
                         <td align="left">@item.nombreTipoEntrega</td>
                         <td align="left">@item.tipoEquipo</td>
@@ -171,18 +175,18 @@
         }
     </script>
 
-@*     <script type="text/javascript">
+    <script type="text/javascript">
             // Verifica si la operación fue exitosa
-        @if (Model.eliminado == true)
+        @if (Model.eliminada == true)
         {
             <text>
                 Swal.fire({
                     title: "¡Excelente!",
-                    text: "El proveedor ha sido eliminado correctamente.",
+                    text: "La entrega se ha eliminado correctamente.",
                     icon: "success",
                     confirmButtonText: "OK"
                 });
             </text>
         }
-    </script> *@
+    </script>
 }
