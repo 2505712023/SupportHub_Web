@@ -1,0 +1,65 @@
+﻿@page
+@model SupportHub.Pages.Usuarios.mostrarUsuariosModel
+@{
+	ViewData["Title"] = "Usuarios";
+}
+<link rel="stylesheet" href="~/css/estiloPantallas.css">
+<!-- CSS de intl-tel-input -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/css/intlTelInput.css" />
+
+
+<div class="content-wrapper" style="max-width: 1300px; border-radius: 20px;">
+    <h1>Usuarios</h1>
+
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <form method="get">
+                <div class="search-bar d-flex">
+                    <input type="text" name="searchQuery" class="form-control me-2" placeholder="Buscar por código o nombre de usuario..."
+                           value="@Request.Query["searchQuery"]" oninput="checkSearch(this)" />
+                    <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 text-end">
+            <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                <i class="fas fa-plus-circle"></i>Agregar usuario
+            </button>
+        </div>
+    </div>
+
+    <div class="contenedor-tabla">
+        <table class="table table-hover align-middle text-center" style="max-width: 1200px; width: 100%;">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th class="text-truncate col-nombre">Nombre</th>
+                    <th class="text-truncate col-apellido">Apellidos</th>
+                    <th class="text-truncate" col-codempleado>Código de empleado</th>
+                    <th class="acciones">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.listaUsuarios)
+                {
+                    <tr data-LoginUsuario="@item.LoginUsuario" data-nombre="@item.NombreUsuario" data-apellido="@item.ApellidoUsuario" data-CodEmpleado="@item.CodEmpleado" data-id="@item.IDEmpleado">
+                        <td align="left">@item.LoginUsuario</td>
+                        <td align="left">@item.NombreUsuario</td>
+                        <td  align="left">@item.ApellidoUsuario</td>
+                        <td align="left">@item.CodEmpleado</td>
+                        <td class="acciones">
+                            <div class="botones">
+                                <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                                    <i class="fas fa-pen"></i>Modificar
+                                </button>
+                                <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
+                                    <i class="fas fa-trash"></i>Eliminar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
