@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupportHub.Modelos;
+using SupportHub.Helpers;
 using System.Data;
 using System.Data.SqlClient;
-
+using Microsoft.AspNetCore.Authorization;
 namespace SupportHub.Pages.Proveedor
 {
+    [Authorize]
     public class mostrarProveedorModel : PageModel
     {
         private readonly IConfiguration configuracion;
@@ -25,10 +27,11 @@ namespace SupportHub.Pages.Proveedor
             this.intentoRealizado = intentoRealizado;
             this.esEliminacion = esEliminacion;
             this.eliminado = eliminado;
+            string cadena = GetAvailableConnectionString();
 
             try
             {
-                string cadena = configuracion.GetConnectionString("CadenaConexion");
+               
                 using (SqlConnection conexion = new SqlConnection(cadena))
                 {
                     conexion.Open();
@@ -67,8 +70,8 @@ namespace SupportHub.Pages.Proveedor
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
-        /*la propiedad [TempData] almacena temporalmente el valor de la variable durante la redirecciÛn. Cuando la vista
-        lee el valor de la variable, TempData se encarga de eliminarlo de sÌ misma, lo que hace que al recargar la p·gina
+        /*la propiedad [TempData] almacena temporalmente el valor de la variable durante la redirecci√≥n. Cuando la vista
+        lee el valor de la variable, TempData se encarga de eliminarlo de s√≠ misma, lo que hace que al recargar la p√°gina
         la variable vuelva a tomar el valor que le hemos asignado. */
         [TempData]
         public bool exito { get; set; } = false;
@@ -95,7 +98,7 @@ namespace SupportHub.Pages.Proveedor
                 int registrosEliminados = 0;
                 try
                 {
-                    using (var conexion = new SqlConnection(configuracion.GetConnectionString("CadenaConexion")))
+                    using (var conexion = new SqlConnection(GetAvailableConnectionString()))
                     {
                         conexion.Open();
                         using (var comando = new SqlCommand("sp_eliminar_proveedor", conexion))
@@ -134,7 +137,7 @@ namespace SupportHub.Pages.Proveedor
             {
                 try
                 {
-                    string cadena = configuracion.GetConnectionString("CadenaConexion");
+                    string cadena = GetAvailableConnectionString();
                     int registrosAgregados = 0;
                     using (SqlConnection conexion = new SqlConnection(cadena))
                     {
@@ -167,7 +170,7 @@ namespace SupportHub.Pages.Proveedor
 
                     List<Proveedores> nombreYCodigoProveedores = new List<Proveedores>();
 
-                    string cadena = configuracion.GetConnectionString("CadenaConexion");
+                    string cadena = GetAvailableConnectionString();
                     using (SqlConnection conexion = new SqlConnection(cadena))
                     {
                         conexion.Open();
@@ -186,15 +189,15 @@ namespace SupportHub.Pages.Proveedor
                             }
                         }
                     }
-                    //recorriendo la lista para ver si el nuevo nombre que estamos asignando al proveedor ya est· 
-                    //asignado a alguien m·s 
+                    //recorriendo la lista para ver si el nuevo nombre que estamos asignando al proveedor ya est√° 
+                    //asignado a alguien m√°s 
                     foreach (var i in nombreYCodigoProveedores)
                     {
-                        //si tienen el mismo cÛdigo y nombre, significa que quiere cambiar un campo distinto al nombre
+                        //si tienen el mismo c√≥digo y nombre, significa que quiere cambiar un campo distinto al nombre
                         if (i.codProveedor == newProveedor.codProveedor && i.nombreProveedor == newProveedor.nombreProveedor)
                         {
                             break;                      
-                        }//si tienen distinto cÛdigo y mismo nombre significa que quiere asignar un nombre que ya est· ocupado
+                        }//si tienen distinto c√≥digo y mismo nombre significa que quiere asignar un nombre que ya est√° ocupado
                         else if (i.codProveedor != newProveedor.codProveedor && i.nombreProveedor == newProveedor.nombreProveedor)
                         {
                             coincidencia += 1;
@@ -237,9 +240,25 @@ namespace SupportHub.Pages.Proveedor
             }
 
             //ya no es necesario validar si exito es true o false porque de igual manera vamos a redirigirnos a la misma
-           // p·gina sin enviar objetos adicionales como new exito = true; porque tempData se encarda de enviar esos datos 
+           // p√°gina sin enviar objetos adicionales como new exito = true; porque tempData se encarda de enviar esos datos 
             return RedirectToPage("/Proveedor/mostrarProveedor");
-     
+        }
+        
+        private string GetAvailableConnectionString()
+        {
+            // Intenta primero con la cadena de conexi√≥n principal
+            if (PingHelper.PingHost("100.101.36.39")) // Reemplaza con tu direcci√≥n del servidor
+            {
+                return configuracion.GetConnectionString("CadenaConexion");
+            }
+            else if (PingHelper.PingHost("25.2.143.28")) // Reemplaza con tu direcci√≥n del servidor Hamachi
+            {
+                return configuracion.GetConnectionString("CadenaConexionHamachi");
+            }
+            else
+            {
+                throw new Exception("No se puede conectar a ninguna base de datos.");
+            }
         }
     }
 }

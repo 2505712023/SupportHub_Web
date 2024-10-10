@@ -35,19 +35,11 @@
             text: "Dirección solo permite 100 caracteres!"
         });
         return false;
-    }else if (telefono === "") {
+    } else if (iti && !iti.isValidNumber()) {
         Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: "Teléfono es requerido!"
-        });
-        return false;
-    }
-    else if (telefono.length < 8 || telefono.length > 12) {
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Teléfono debe estar entre 8 y 12 caracteres!"
+            text: "Teléfono es incorrecto!"
         });
         return false;
     }

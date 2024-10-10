@@ -1,17 +1,28 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configura los servicios
 builder.Services.AddRazorPages();
-//a�ade el servicio de sesiones 
+
+//añade el servicio de sesiones 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(5); //la sesi�n durar� 5 minutos
-    options.Cookie.HttpOnly = true; //evita que la cookie de sesi�n sea accesible desde JavaScrip en el cliente
-    options.Cookie.IsEssential = true; //marca la sesi�n como escencial para que no sea bloqueada
+    options.IdleTimeout = TimeSpan.FromMinutes(5); //la sesión durará 5 minutos
+    options.Cookie.HttpOnly = true; //evita que la cookie de sesión sea accesible desde JavaScrip en el cliente
+    options.Cookie.IsEssential = true; //marca la sesión como escencial para que no sea bloqueada
 });
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Welcome/Login"; // Ruta para la página de inicio de sesión
+        options.LogoutPath = "/Welcome/Logout"; // Ruta para la página de logout
+    });
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configura el middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -20,9 +31,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // Asegúrate de que este middleware está aquí
 app.UseAuthorization();
 
-// Define a route for the default home page
 app.MapGet("/", (context) =>
 {
     context.Response.Redirect("/Welcome/Login");
@@ -30,6 +41,7 @@ app.MapGet("/", (context) =>
 });
 
 app.UseSession();
+
 // Map Razor Pages
 app.MapRazorPages();
 
