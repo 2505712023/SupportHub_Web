@@ -40,8 +40,9 @@ namespace SupportHub.Pages.Usuarios
                     {
                         comando = new SqlCommand("sp_obtener_usuario", conexion);
                         comando.CommandType = System.Data.CommandType.StoredProcedure;
-                        comando.Parameters.AddWithValue("@idUsuario ", searchQuery);
-                        
+                        comando.Parameters.AddWithValue("@LoginUsuario ", searchQuery);
+                        comando.Parameters.AddWithValue("@codEmpleado ", searchQuery);
+
                     }
                     else
                     {

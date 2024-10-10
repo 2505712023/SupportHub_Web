@@ -39,9 +39,9 @@ table {
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    max-width: 1800px; /* Incrementado de 1400px a 1600px */
-    width: 120%;
-    margin: 20px auto; /* Puedes ajustar el margen para dar más espacio alrededor */
+    max-width: 1300px; /* Incrementado de 1400px a 1600px */
+    width: 100%;
+    margin: 0 auto; /* Puedes ajustar el margen para dar más espacio alrededor */
 }
 
 h1 {

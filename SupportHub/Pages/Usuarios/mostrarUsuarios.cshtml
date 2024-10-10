@@ -2,6 +2,7 @@
 @model SupportHub.Pages.Usuarios.mostrarUsuariosModel
 @{
 	ViewData["Title"] = "Usuarios";
+    Layout = "_Layout";
 }
 <link rel="stylesheet" href="~/css/estiloPantallas.css">
 <!-- CSS de intl-tel-input -->
@@ -32,7 +33,7 @@
         <table class="table table-hover align-middle text-center" style="max-width: 1200px; width: 100%;">
             <thead>
                 <tr>
-                    <th>Código</th>
+                    <th>Usuario</th>
                     <th class="text-truncate col-nombre">Nombre</th>
                     <th class="text-truncate col-apellido">Apellidos</th>
                     <th class="text-truncate" col-codempleado>Código de empleado</th>
