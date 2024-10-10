@@ -51,7 +51,7 @@ function ejecutarBusqueda() {
 $(document).on('input', '#formCantidadEntrega', function () {
 
     var cantidad = parseInt($("#formCantidadEntrega").val());
-    console.log(parseInt($("#formIdEquipo option:selected").data("disponible")));
+    console.log("Cantidad disponible según el modal: " + parseInt($("#formIdEquipo option:selected").data("disponible")));
 
     if (!isNaN(cantidad) && parseInt($("#formIdEquipo option:selected").data("disponible")) < cantidad) {
         $("#alertaCantidadDisponible").show();
@@ -64,7 +64,7 @@ $(document).on('input', '#formCantidadEntrega', function () {
 });
 
 function openModal(opcion, button = null) {
-    console.log(button);
+    //console.log(button);
 
     // Guardamos los selects del modal
     var selectIdTipoEntrega = $("#formIdTipoEntrega").closest("select").prop("outerHTML");
@@ -179,7 +179,7 @@ function openModal(opcion, button = null) {
             mostrarSelects();
 
             var tr = $(button).closest("tr");
-            console.log(tr.data());
+            //console.log(tr.data());
             $(".modal h1").text("Modificar Entrega");
             $(".modal #idEntrega").val(tr.data("idEntrega"));
             $(".modal #codEntrega").val(tr.data("codEntrega"));
@@ -195,13 +195,13 @@ function openModal(opcion, button = null) {
             // Obteniendo la cantidad anterior y actualizando el nuevo disponible
             var equipoSeleccionado = $(".modal #formIdEquipo option:selected");
             var cantidadAnterior = parseInt($(".modal #formCantidadEntrega").val(), 10) || 0;
-            console.log(cantidadAnterior);
+            console.log("Cantidad entrega antes de comenzar la modificación: " + cantidadAnterior);
 
             var cantidadDisponibleActual = parseInt(equipoSeleccionado.data("disponible"), 10) || 0;
-            console.log(cantidadDisponibleActual);
+            console.log("Cantidad de data-disponible obtenida del option:selected al cargar el modal: " + cantidadDisponibleActual);
 
             var nuevaCantidad = cantidadAnterior + cantidadDisponibleActual;
-            console.log(nuevaCantidad);
+            console.log("Nueva cantidad disponible calculada a partir de la cantidad de entrega antes de modificar y la cantidad de data-disponible en el option:selected: " + nuevaCantidad);
 
             // Obteniendo el texto anterior y actualizando el nuevo texto
             var textoAnterior = $(".modal #formIdEquipo option:selected").text();
@@ -214,8 +214,8 @@ function openModal(opcion, button = null) {
             // Guardando cambios en localStorage por si se necesitan revertir posteriormente sin guardar una modificación de entrega
             localStorage.setItem('cantidadEntregaAntesDeModificar', cantidadAnterior);
             localStorage.setItem('textoEquipoAntesDeModificar', textoAnterior);
-            console.log(cantidadAnterior);
-            console.log(textoAnterior);
+            console.log("Cantidad anterior que se guardó en el localStorage: " + cantidadAnterior);
+            console.log("Texto anterior que se guardó en el localStorage: " + textoAnterior); 
 
         } else if (opcion === "eliminar") {
             $("#modalActionButton").text("Eliminar");
@@ -232,7 +232,7 @@ function openModal(opcion, button = null) {
             `);
 
             var tr = $(button).closest("tr");
-            console.log(tr.data());
+            //console.log(tr.data());
             $(".modal h1").text("Eliminar Entrega");
             $(".modal #codEntrega").val(tr.data("codEntrega"));
             ocultarSelects();
@@ -316,19 +316,24 @@ function limpiarModalEntregas() {
     if ($(".modal #esModificacion").val() === "true") {
         // Buscamos los valores que se guardaron en localStorage
         cantidadAnterior = localStorage.getItem("cantidadEntregaAntesDeModificar");
+        console.log("Cantidad guardada en localStorage y se asigna denuevo al cerrar el modal: " + localStorage.getItem("cantidadEntregaAntesDeModificar"));
         textoAnterior = localStorage.getItem("textoEquipoAntesDeModificar");
+        console.log("Texto guardado en localStorage y se asigna denuevo al cerrar el modal: " + localStorage.getItem("textoEquipoAntesDeModificar"));
 
-        // Asignamos nuevamente estos valores en los campos que corresponden
-        console.log($(".modal #formIdEquipo option:selected").attr("data-disponible"));
-        console.log($(".modal #formIdEquipo option:selected").text());
-        $(".modal #formIdEquipo option:selected").attr("data-disponible", cantidadAnterior);
-        $(".modal #formIdEquipo option:selected").data("disponible", cantidadAnterior);
-        $(".modal #formIdEquipo option:selected").text(textoAnterior);
-        $(".modal #formIdEquipo").trigger('change');
-        $(".modal #formIdEquipo").hide().show();
-        console.log($(".modal #formIdEquipo option:selected").attr("data-disponible"));
-        console.log($(".modal #formIdEquipo option:selected").data("disponible"));
-        console.log($(".modal #formIdEquipo option:selected").text());
+        // Guardamos el option:selected
+        var opcionSeleccionada = $(".modal #formIdEquipo option:selected");
+
+        // Creamos una nueva opción modificada en base a lo anterior
+        let opcionNueva = $('<option>')
+            .attr("value", opcionSeleccionada.val())  // Copia el valor original
+            .attr("data-disponible", cantidadAnterior)  // Actualiza data-disponible
+            .text(textoAnterior);  // Actualiza el texto
+
+        // Intercambiamos la opción seleccionada por la nueva opción
+        opcionSeleccionada.replaceWith(opcionNueva);
+
+        // Detonamos el refresco de la UI
+        $(".modal #formIdEquipo").val(opcionNueva.val()).trigger("change");
     }
 
     $("#modalEntregas h1").text("Agregar Entrega");
