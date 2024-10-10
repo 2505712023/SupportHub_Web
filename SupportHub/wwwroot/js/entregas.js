@@ -50,11 +50,10 @@ function ejecutarBusqueda() {
 
 $(document).on('input', '#formCantidadEntrega', function () {
 
-    var equipoSeleccionado = $("#formIdEquipo option:selected");
-    var disponible = parseInt(equipoSeleccionado.data("disponible"));
     var cantidad = parseInt($("#formCantidadEntrega").val());
+    console.log(parseInt($("#formIdEquipo option:selected").data("disponible")));
 
-    if (!isNaN(cantidad) && disponible < cantidad) {
+    if (!isNaN(cantidad) && parseInt($("#formIdEquipo option:selected").data("disponible")) < cantidad) {
         $("#alertaCantidadDisponible").show();
         $("#modalActionButton").attr("disabled", true);
     } else {
@@ -193,6 +192,31 @@ function openModal(opcion, button = null) {
             $(".modal #formIdEmpleadoRecibe").val(tr.data("idEmpleadoRecibe"));
             $(".modal #formObservacionEntrega").val(tr.data("observacionEntrega"));
 
+            // Obteniendo la cantidad anterior y actualizando el nuevo disponible
+            var equipoSeleccionado = $(".modal #formIdEquipo option:selected");
+            var cantidadAnterior = parseInt($(".modal #formCantidadEntrega").val(), 10) || 0;
+            console.log(cantidadAnterior);
+
+            var cantidadDisponibleActual = parseInt(equipoSeleccionado.data("disponible"), 10) || 0;
+            console.log(cantidadDisponibleActual);
+
+            var nuevaCantidad = cantidadAnterior + cantidadDisponibleActual;
+            console.log(nuevaCantidad);
+
+            // Obteniendo el texto anterior y actualizando el nuevo texto
+            var textoAnterior = $(".modal #formIdEquipo option:selected").text();
+            var nuevoTexto = textoAnterior.replace(/\(\d+ disponibles\)/, '(' + nuevaCantidad + ' disponibles)');
+
+            // Actualizando valores del select luego de haber calculado la nueva cantidad y haber definido el nuevo texto
+            $(".modal #formIdEquipo option:selected").attr("data-disponible", nuevaCantidad).data("disponible", nuevaCantidad);
+            $(".modal #formIdEquipo option:selected").text(nuevoTexto);
+
+            // Guardando cambios en localStorage por si se necesitan revertir posteriormente sin guardar una modificación de entrega
+            localStorage.setItem('cantidadEntregaAntesDeModificar', cantidadAnterior);
+            localStorage.setItem('textoEquipoAntesDeModificar', textoAnterior);
+            console.log(cantidadAnterior);
+            console.log(textoAnterior);
+
         } else if (opcion === "eliminar") {
             $("#modalActionButton").text("Eliminar");
             $("#modalActionButton").removeClass("btn-primary");
@@ -271,6 +295,7 @@ function submitFormEntregas() {
             });
             return false;
         }
+
         $("#formEntregas").submit();
     }
 }
@@ -286,6 +311,24 @@ function limpiarModalEntregas() {
     if ($(".modal #esEliminacion").val() === "true") {
         $("#modalActionButton").removeClass("btn-danger");
         $("#modalActionButton").addClass("btn-primary");
+    }
+
+    if ($(".modal #esModificacion").val() === "true") {
+        // Buscamos los valores que se guardaron en localStorage
+        cantidadAnterior = localStorage.getItem("cantidadEntregaAntesDeModificar");
+        textoAnterior = localStorage.getItem("textoEquipoAntesDeModificar");
+
+        // Asignamos nuevamente estos valores en los campos que corresponden
+        console.log($(".modal #formIdEquipo option:selected").attr("data-disponible"));
+        console.log($(".modal #formIdEquipo option:selected").text());
+        $(".modal #formIdEquipo option:selected").attr("data-disponible", cantidadAnterior);
+        $(".modal #formIdEquipo option:selected").data("disponible", cantidadAnterior);
+        $(".modal #formIdEquipo option:selected").text(textoAnterior);
+        $(".modal #formIdEquipo").trigger('change');
+        $(".modal #formIdEquipo").hide().show();
+        console.log($(".modal #formIdEquipo option:selected").attr("data-disponible"));
+        console.log($(".modal #formIdEquipo option:selected").data("disponible"));
+        console.log($(".modal #formIdEquipo option:selected").text());
     }
 
     $("#modalEntregas h1").text("Agregar Entrega");
