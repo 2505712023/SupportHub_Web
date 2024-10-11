@@ -60,6 +60,7 @@ namespace SupportHub.Pages.Usuarios
                             Usuario.ApellidoUsuario = lector.GetString(2);
                             Usuario.CodEmpleado = lector.GetString(3);
                             Usuario.IDEmpleado= lector.GetInt32(4);
+                            Usuario.ActivoUsuario = lector.GetBoolean(5);
                             listaUsuarios.Add(Usuario);
                         }
                     }
@@ -79,6 +80,109 @@ namespace SupportHub.Pages.Usuarios
         [TempData]
         public bool eliminado { get; set; } = false;
         public int coincidencia { get; set; } = 0;
+
+        public IActionResult OnPost()
+        {
+            newUsuario.LoginUsuario = Request.Form["usuario"];
+            newUsuario.NombreUsuario = Request.Form["nombre"];
+            newUsuario.ApellidoUsuario = Request.Form["apellido"];
+            newUsuario.CodEmpleado = Request.Form["codEmpleado"];
+            newUsuario.ActivoUsuario =Convert.ToBoolean(Request.Form["activo"]);
+            //si se quiere agregar un nuevo usuario
+            if(Request.Form["esModificacion"] == "false")
+            {
+
+                //aquí va el código para agregar usuarios 
+
+
+            }//si se quiere modificar un usuario
+            else
+            {
+                newUsuario.IDEmpleado = Convert.ToInt32(Request.Form["id"]);
+
+                try
+                {
+                    #region validar coincidencias
+                    //voy a obtener algunos campos de los usuarios para hacer algunas comparaciones
+
+                    List<Usuario> nombreUsuarios = new List<Usuario>();
+
+                    string cadena = GetAvailableConnectionString();
+                    using (SqlConnection conexion = new SqlConnection(cadena))
+                    {
+                        conexion.Open();
+                        SqlCommand comando = new SqlCommand("sp_obtener_usuarios", conexion);
+                        comando.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        using (SqlDataReader lector = comando.ExecuteReader())
+                        {
+                            while (lector.Read())
+                            {
+                                Usuario usuario = new Usuario();
+                                usuario.LoginUsuario = lector.GetString(2);
+                                usuario.IDEmpleado = lector.GetInt32(4);
+                                nombreUsuarios.Add(usuario);
+                            }
+                        }
+                    }
+                    //recorriendo la lista para ver si el nuevo nombre que estamos asignando al proveedor ya está 
+                    //asignado a alguien más 
+                    foreach (var i in nombreUsuarios)
+                    {
+                        //si tienen el mismo código y nombre de usuario, significa que quiere cambiar un campo distinto al nombre de usuario
+                        if (i.IDEmpleado == newUsuario.IDEmpleado && i.LoginUsuario == newUsuario.LoginUsuario)
+                        {
+                            break;
+                        }//si tienen distinto código y mismo nombre de usuario significa que quiere asignar un nombre de usuario que ya está ocupado
+                        else if (i.IDEmpleado != newUsuario.IDEmpleado && i.LoginUsuario == newUsuario.LoginUsuario)
+                        {
+                            coincidencia += 1;
+                            break;
+                        }
+                    }
+
+                    #endregion
+
+                    if (coincidencia == 0)
+                    {
+                        using (SqlConnection conexion = new SqlConnection(cadena))
+                        {
+                            conexion.Open();
+                            SqlCommand comando = new SqlCommand("sp_modificar_usuario", conexion);
+
+                            comando.CommandType = CommandType.StoredProcedure;
+                            comando.Parameters.AddWithValue("@loginUsuario",newUsuario.LoginUsuario);
+                            comando.Parameters.AddWithValue("@nombresUsuario", newUsuario.NombreUsuario);
+                            comando.Parameters.AddWithValue("@apellidosUsuario", newUsuario.ApellidoUsuario);
+                            comando.Parameters.AddWithValue("@activoUsuario", newUsuario.ActivoUsuario);
+                            comando.Parameters.AddWithValue("@idEmpleado", newUsuario.IDEmpleado);
+
+                            comando.ExecuteNonQuery();
+                        }
+                        exito = true;
+                    }
+                    else
+                    {
+                        exito = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    mensajeError = ex.Message;
+                    return Page();
+                }
+            }
+
+
+            return RedirectToPage("/Usuarios/mostrarUsuarios");
+        }
+
+
+
+
+
+
+
 
         private string GetAvailableConnectionString()
         {

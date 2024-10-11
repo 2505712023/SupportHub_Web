@@ -36,6 +36,7 @@
                     <th>Usuario</th>
                     <th class="text-truncate col-nombre">Nombre</th>
                     <th class="text-truncate col-apellido">Apellidos</th>
+                    <th class="text-truncate col-activo">Activo</th>
                     <th class="text-truncate" col-codempleado>Código de empleado</th>
                     <th class="acciones">Acciones</th>
                 </tr>
@@ -43,14 +44,15 @@
             <tbody>
                 @foreach (var item in Model.listaUsuarios)
                 {
-                    <tr data-LoginUsuario="@item.LoginUsuario" data-nombre="@item.NombreUsuario" data-apellido="@item.ApellidoUsuario" data-CodEmpleado="@item.CodEmpleado" data-id="@item.IDEmpleado">
+                    <tr data-usuario="@item.LoginUsuario" data-nombre="@item.NombreUsuario" data-apellido="@item.ApellidoUsuario" data-empleado="@item.CodEmpleado" data-id="@item.IDEmpleado" data-activo="@item.ActivoUsuario">
                         <td align="left">@item.LoginUsuario</td>
                         <td align="left">@item.NombreUsuario</td>
-                        <td  align="left">@item.ApellidoUsuario</td>
+                        <td align="left">@item.ApellidoUsuario</td>
+                        <td align="left">@item.ActivoUsuario</td>
                         <td align="left">@item.CodEmpleado</td>
                         <td class="acciones">
                             <div class="botones">
-                                <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                                <button class="btn btn-edit" onclick="llenarModalModificarUsuario(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
                                     <i class="fas fa-pen"></i>Modificar
                                 </button>
                                 <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
@@ -64,3 +66,182 @@
         </table>
     </div>
 </div>
+
+<!-- Modal para agregar o modificar un  Usuario -->
+<div class="modal fade" id="AgregarModificar" tabindex="-1" aria-labelledby="AgregarModificar" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header encabezado-personalizado">
+                <h1 class="modal-title fs-5" id="AgregarModificar">Agregar Usuario</h1>
+                <button type="button" class="btn-close" onclick="limpiarModalModificarUsuario()" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="formAgregarUsuario">
+                    <!-- Campo de ID -->
+                    <input type="hidden" id="id" name="id" value="" />
+
+                    <!-- Campo de EsModificacion -->
+                    <input type="hidden" id="esModificacion" name="esModificacion" value="false" />
+
+                    <!-- Campo de Usuario -->
+                    <div class="mb-3">
+                        <label for="usuario">Usuario:</label>
+                        <input type="text" required class="form-control" id="usuario" name="usuario">
+                    </div>
+
+                    <!-- Campo de Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" required class="form-control" id="nombre" name="nombre">
+                    </div>
+
+                    <!-- Campo de Apellido -->
+                    <div class="mb-3">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" required class="form-control" id="apellido" name="apellido">
+                    </div>
+
+                    <!-- Campo de Usuario activo -->
+                    <div class="mb-3">
+                        <label for="codEmpleado">Usuario activo:</label>                       
+                        <select class="form-control" id="activo">
+                            <option value="">Seleccione</option>
+                            <option value="true">SÍ</option>
+                            <option value="false">NO</option>
+                        </select>
+                    </div>
+                    <!-- Campo de Código de empleado -->
+                    <div class="mb-3">
+                        <label for="codEmpleado">Código de empleado:</label>
+                        <input type="text" required class="form-control" id="codEmpleado" name="codEmpleado">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="limpiarModalModificarUsuario()" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="validarFormularioUsuario()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(function () {
+            function llenarModalModificarUsuario(button) {
+                var tr = $(button).closest("tr");
+
+                $(".modal #esModificacion").val("true")
+                $(".modal h1").text("Modificar Usuarios");
+                $(".modal #id").val(tr.data("id"));
+                $(".modal #usuario").val(tr.data("usuario"));
+                $(".modal #nombre").val(tr.data("nombre"));
+                $(".modal #apellido").val(tr.data("apellido"));
+               // $(".modal #activo").val(tr.data("activo"))
+                $(".modal #codEmpleado").val(tr.data("empleado"));
+
+                $(".modal #codEmpleado").prop("readonly", true);
+            }
+
+            function limpiarModalModificarUsuario() {
+                $(".modal #esModificacion").val("false")
+                $(".modal h1").text("Agregar Proveedor");
+                $("#formAgregarUsuario")[0].reset();
+
+                $(".modal #codEmpleado").prop("readonly", false);
+            }
+
+            function validarFormularioUsuario() {
+                var usuario = document.getElementById("usuario").value.trim();
+                var nombre = document.getElementById("nombre").value.trim();
+                var apellido = document.getElementById("apellido").value.trim();
+                var codEmpleado = document.getElementById("codEmpleado").value.trim();
+                var activo = document.getElementById("activo").value.trim();
+
+                if (usuario === "") {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Código es requerido!"
+                    });
+                    return false;
+                } else if (usuario.length > 25 ) {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "El nombre de usuario solo permite 25 caracteres!"
+                    });
+                    return false;
+                } else if (nombre === "") {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Nombre es requerido!"
+                    });
+                    return false;
+                } else if (nombre.length > 25) {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "El nombre solo permite 25 caracteres!"
+                    });
+                    return false;
+                } else if (apellido === "") {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Apellido es requerido!"
+                    });
+                    return false;
+                } else if (apellido.length > 25) {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "El apellido solo permite 25 caracteres!"
+                    });
+                    return false;
+                } else if (codEmpleado == "") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "El código de empleado es incorrecto!"
+                    });
+                    return false;
+                } else if (codEmpleado.length > 7) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "El código de empleado sólo permite 7 caracteres"
+                    });
+                    return false;
+                } else if (activo == ""){
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Debe indicar si el usuario está activo o no"
+                    });
+                    return false;
+                }
+                document.getElementById("formAgregarUsuario").submit();
+            }
+
+            //asignar la función al objeto window para que esté disponible globalmente
+            window.llenarModalModificarUsuario = llenarModalModificarUsuario;
+            window.limpiarModalModificarUsuario = limpiarModalModificarUsuario;
+            window.validarFormularioUsuario = validarFormularioUsuario;
+        });
+    </script>
+
+
+}
