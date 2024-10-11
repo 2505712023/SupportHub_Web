@@ -18,8 +18,7 @@ namespace SupportHub.Pages.Entregas
         private readonly ILogger logger;
         public List<Entrega> listaEntregas = new();
         public Entrega newEntrega = new();
-        [TempData]
-        public string mensajeError { get; set; } = string.Empty;
+        public string mensajeError { get; set; } = "";
         [TempData]
         public bool exito { get; set; } = false;
         [TempData]
@@ -37,6 +36,10 @@ namespace SupportHub.Pages.Entregas
 
         public void OnGet()
         {
+            if (!string.IsNullOrEmpty(this.mensajeError))
+            {
+                ViewData["mensajeError"] = this.mensajeError;
+            }
             try
             {
                 using (SqlConnection conexion = new(GetAvailableConnectionString()))
@@ -102,8 +105,6 @@ namespace SupportHub.Pages.Entregas
                 return null;
             }
         }
-
-        
 
         public string GetTiposDeEntregas()
         {
@@ -296,10 +297,15 @@ namespace SupportHub.Pages.Entregas
                         }
                     }
                 }
-                exito = registrosAlterados == 1;
-                eliminada = registrosEliminados == 1;
-                devolucion = devolucionesAgregadas == 1;
-                devolucionEliminada = devolucionesEliminadas == 1;
+                //exito = registrosAlterados == 1;
+                //eliminada = registrosEliminados == 1;
+                //devolucion = devolucionesAgregadas == 1;
+                //devolucionEliminada = devolucionesEliminadas == 1;
+                mensajeError = "Test";
+                if (!string.IsNullOrEmpty(this.mensajeError))
+                {
+                    ViewData["mensajeError"] = this.mensajeError;
+                }
             }
             catch (Exception ex)
             {

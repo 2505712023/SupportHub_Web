@@ -148,7 +148,7 @@
     <script type="text/javascript" src="/js/entregas.js"></script>
     <script type="text/javascript">
         // Verifica si la operación fue exitosa
-        @if (Model.exito)
+        @if (Model.exito == true)
         {
             <text>
                 Swal.fire({
@@ -162,13 +162,16 @@
     </script>
 
     <script type="text/javascript">
-            // Verifica si la operación fue exitosa
-        @if (!string.IsNullOrEmpty(Model.mensajeError))
+        @{
+            var mensajeError = ViewData["mensajeError"] as string;
+        }
+
+        @if (!string.IsNullOrEmpty(mensajeError))
         {
             <text>
                 Swal.fire({
                     title: "Oops...",
-                    text: @Model.mensajeError,
+                    text: @Html.Raw($"\"{mensajeError}\""),
                     icon: "error",
                     confirmButtonText: "OK"
                 });
@@ -211,12 +214,12 @@
         @if (Model.devolucionEliminada == true)
         {
             <text>
-                    Swal.fire({
-                        title: "¡Excelente!",
-                    text: "La fecha de devolución se ha eliminado correctamente.",
-                    icon: "success",
-                    confirmButtonText: "OK"
-                            });
+                Swal.fire({
+                    title: "¡Excelente!",
+                text: "La fecha de devolución se ha eliminado correctamente.",
+                icon: "success",
+                confirmButtonText: "OK"
+                });
             </text>
         }
     </script>
