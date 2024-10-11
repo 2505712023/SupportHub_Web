@@ -4,11 +4,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configura los servicios
 builder.Services.AddRazorPages();
+
+//aÃ±ade el servicio de sesiones 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(5); //la sesiÃ³n durarÃ¡ 5 minutos
+    options.Cookie.HttpOnly = true; //evita que la cookie de sesiÃ³n sea accesible desde JavaScrip en el cliente
+    options.Cookie.IsEssential = true; //marca la sesiÃ³n como escencial para que no sea bloqueada
+});
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Welcome/Login"; // Ruta para la página de inicio de sesión
-        options.LogoutPath = "/Welcome/Logout"; // Ruta para la página de logout
+        options.LoginPath = "/Welcome/Login"; // Ruta para la pÃ¡gina de inicio de sesiÃ³n
+        options.LogoutPath = "/Welcome/Logout"; // Ruta para la pÃ¡gina de logout
     });
 
 var app = builder.Build();
@@ -22,7 +31,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Asegúrate de que este middleware está aquí
+app.UseAuthentication(); // AsegÃºrate de que este middleware estÃ¡ aquÃ­
 app.UseAuthorization();
 
 app.MapGet("/", (context) =>
@@ -31,7 +40,9 @@ app.MapGet("/", (context) =>
     return Task.CompletedTask;
 });
 
-// Mapea las páginas Razor
+app.UseSession();
+
+// Map Razor Pages
 app.MapRazorPages();
 
 app.Run();

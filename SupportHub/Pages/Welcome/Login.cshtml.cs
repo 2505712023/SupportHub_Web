@@ -76,7 +76,7 @@ namespace SupportHub.Pages.Welcome
                         else
                         {
                             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                            ErrorMessage = "Usuario o contraseña incorrecta"; // Mensaje de error
+                            ErrorMessage = "Usuario o contraseï¿½a incorrecta"; // Mensaje de error
                             return Page();
                         }
                     }
@@ -98,7 +98,7 @@ namespace SupportHub.Pages.Welcome
         {
             try
             {
-                // Intenta primero con la cadena de conexión principal
+                // Intenta primero con la cadena de conexiï¿½n principal
                 if (PingHelper.PingHost("100.101.36.39"))
                 {
                     return configuracion.GetConnectionString("CadenaConexion");
@@ -115,7 +115,7 @@ namespace SupportHub.Pages.Welcome
             catch (Exception ex)
             {
 
-                mensajeError = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
+                mensajeError = "El sistema no tiene conexiï¿½n con el servidor. Favor notifique el impase al administrador.";
                 return null;
             }
 
