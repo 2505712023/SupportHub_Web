@@ -72,7 +72,8 @@
                         data-id-empleado-entrega="@item.idEmpleadoEntrega"
                         data-id-empleado-recibe="@item.idEmpleadoRecibe"
                         data-fecha-entrega="@(Convert.ToDateTime(item.fechaEntrega).ToString("yyyy-MM-dd"))"
-                        data-observacion-entrega="@item.observacionEntrega">
+                        data-observacion-entrega="@item.observacionEntrega"
+                        data-fecha-devolucion="@(string.IsNullOrEmpty(item.fechaDevolucion) ? string.Empty : Convert.ToDateTime(item.fechaDevolucion).ToString("yyyy-MM-dd"))">
                         <td align="left">@item.codEntrega</td>
                         <td align="left">@item.nombreTipoEntrega</td>
                         <td align="left">@item.tipoEquipo</td>
@@ -186,6 +187,36 @@
                     icon: "success",
                     confirmButtonText: "OK"
                 });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+            // Verifica si la operación fue exitosa
+        @if (Model.devolucion == true)
+        {
+            <text>
+                Swal.fire({
+                    title: "¡Excelente!",
+                    text: "La fecha de devolución se ha guardado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+            // Verifica si la operación fue exitosa
+        @if (Model.devolucionEliminada == true)
+        {
+            <text>
+                    Swal.fire({
+                        title: "¡Excelente!",
+                    text: "La fecha de devolución se ha eliminado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                            });
             </text>
         }
     </script>

@@ -24,6 +24,10 @@ namespace SupportHub.Pages.Entregas
         public bool exito { get; set; } = false;
         [TempData]
         public bool eliminada { get; set; } = false;
+        [TempData]
+        public bool devolucion { get; set; } = false;
+        [TempData]
+        public bool devolucionEliminada { get; set; } = false;
 
         public mostrarEntregasModel(IConfiguration configuracion, ILogger<mostrarEntregasModel> logger)
         {
@@ -76,19 +80,30 @@ namespace SupportHub.Pages.Entregas
 
         private string GetAvailableConnectionString()
         {
-            if (PingHelper.PingHost("100.101.36.39"))
+            try
             {
-                return configuracion.GetConnectionString("CadenaConexion");
+                // Intenta primero con la cadena de conexión principal
+                if (PingHelper.PingHost("100.101.36.39"))
+                {
+                    return configuracion.GetConnectionString("CadenaConexion");
+                }
+                else if (PingHelper.PingHost("25.2.143.28"))
+                {
+                    return configuracion.GetConnectionString("CadenaConexionHamachi");
+                }
+                else
+                {
+                    throw new Exception("No se puede conectar a ninguna base de datos.");
+                }
             }
-            else if (PingHelper.PingHost("25.2.143.28"))
+            catch (Exception)
             {
-                return configuracion.GetConnectionString("CadenaConexionHamachi");
-            }
-            else
-            {
-                throw new Exception("No se puede conectar a ninguna base de datos.");
+                mensajeError = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
+                return null;
             }
         }
+
+        
 
         public string GetTiposDeEntregas()
         {
@@ -192,6 +207,8 @@ namespace SupportHub.Pages.Entregas
             {
                 int registrosAlterados = 0;
                 int registrosEliminados = 0;
+                int devolucionesAgregadas = 0;
+                int devolucionesEliminadas = 0;
                 if (Request.Form["esEliminacion"] == "true")
                 {
                     using (SqlConnection conexion = new(GetAvailableConnectionString()))
@@ -202,6 +219,33 @@ namespace SupportHub.Pages.Entregas
                         comando.Parameters.AddWithValue("@codEntrega", newEntrega.codEntrega);
 
                         registrosEliminados = Convert.ToInt32(comando.ExecuteScalar().ToString());
+                    }
+                }
+                else if (Request.Form["esDevolucion"] == "true")
+                {
+                    DateTime fechaDevolucion = DateTime.ParseExact(Request.Form["fechaDevolucion"], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+                    using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                    {
+                        conexion.Open();
+                        SqlCommand comando = new("update dbo.Entregas set fechaDevolucion = @fechaDevolucion where codEntrega = @codEntrega", conexion);
+
+                        comando.Parameters.AddWithValue("@codEntrega", newEntrega.codEntrega);
+                        comando.Parameters.AddWithValue("@fechaDevolucion", fechaDevolucion);
+
+                        devolucionesAgregadas = comando.ExecuteNonQuery();
+                    }
+                }
+                else if (Request.Form["esEliminacionDevolucion"] == "true")
+                {
+                    using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                    {
+                        conexion.Open();
+                        SqlCommand comando = new("update dbo.Entregas set fechaDevolucion = null where codEntrega = @codEntrega", conexion);
+
+                        comando.Parameters.AddWithValue("@codEntrega", newEntrega.codEntrega);
+
+                        devolucionesEliminadas = comando.ExecuteNonQuery();
                     }
                 }
                 else
@@ -254,11 +298,13 @@ namespace SupportHub.Pages.Entregas
                 }
                 exito = registrosAlterados == 1;
                 eliminada = registrosEliminados == 1;
+                devolucion = devolucionesAgregadas == 1;
+                devolucionEliminada = devolucionesEliminadas == 1;
             }
             catch (Exception ex)
             {
                 mensajeError = $"Ocurrió el siguiente error al momento de agregar una nueva entrega: {ex.Message}.";
-                return Page();
+                return RedirectToPage("/Entregas/mostrarEntregas");
             }
 
             return RedirectToPage("/Entregas/mostrarEntregas");

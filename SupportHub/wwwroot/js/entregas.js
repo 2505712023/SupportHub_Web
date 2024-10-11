@@ -18,15 +18,17 @@
         }
     });
 
-    $('tr[data-idEntrega]').each(function () {
+    $('tr[data-id-entrega]').each(function () {
         var row = $(this);
         var fechaDevolucion = row.find('#fechaDevolucion');
         var devolucion = row.find('#devolucion');
 
         if (fechaDevolucion.text().trim() === "") {
             devolucion.attr('onclick', "openModal('agregarDevolucion', this)");
+            devolucion.html("<i class='fas fa-rotate-left'></i> Devolución");
         } else {
             devolucion.attr('onclick', "openModal('eliminarDevolucion', this)");
+            devolucion.html("<i class='fa fa-times' aria-hidden='true'></i> Devolución");
         }
     });
     
@@ -51,7 +53,6 @@ function ejecutarBusqueda() {
 $(document).on('input', '#formCantidadEntrega', function () {
 
     var cantidad = parseInt($("#formCantidadEntrega").val());
-    console.log("Cantidad disponible según el modal: " + parseInt($("#formIdEquipo option:selected").data("disponible")));
 
     if (!isNaN(cantidad) && parseInt($("#formIdEquipo option:selected").data("disponible")) < cantidad) {
         $("#alertaCantidadDisponible").show();
@@ -64,7 +65,6 @@ $(document).on('input', '#formCantidadEntrega', function () {
 });
 
 function openModal(opcion, button = null) {
-    //console.log(button);
 
     // Guardamos los selects del modal
     var selectIdTipoEntrega = $("#formIdTipoEntrega").closest("select").prop("outerHTML");
@@ -179,7 +179,6 @@ function openModal(opcion, button = null) {
             mostrarSelects();
 
             var tr = $(button).closest("tr");
-            //console.log(tr.data());
             $(".modal h1").text("Modificar Entrega");
             $(".modal #idEntrega").val(tr.data("idEntrega"));
             $(".modal #codEntrega").val(tr.data("codEntrega"));
@@ -194,28 +193,23 @@ function openModal(opcion, button = null) {
 
             // Obteniendo la cantidad anterior y actualizando el nuevo disponible
             var equipoSeleccionado = $(".modal #formIdEquipo option:selected");
-            var cantidadAnterior = parseInt($(".modal #formCantidadEntrega").val(), 10) || 0;
-            console.log("Cantidad entrega antes de comenzar la modificación: " + cantidadAnterior);
-
-            var cantidadDisponibleActual = parseInt(equipoSeleccionado.data("disponible"), 10) || 0;
-            console.log("Cantidad de data-disponible obtenida del option:selected al cargar el modal: " + cantidadDisponibleActual);
-
-            var nuevaCantidad = cantidadAnterior + cantidadDisponibleActual;
-            console.log("Nueva cantidad disponible calculada a partir de la cantidad de entrega antes de modificar y la cantidad de data-disponible en el option:selected: " + nuevaCantidad);
+            var cantidadEntregaAnterior = parseInt($(".modal #formCantidadEntrega").val(), 10) || 0;
+            var cantidadDisponibleAnterior = parseInt(equipoSeleccionado.data("disponible"), 10) || 0;
+            var nuevaCantidadDisponible = cantidadEntregaAnterior + cantidadDisponibleAnterior;
 
             // Obteniendo el texto anterior y actualizando el nuevo texto
             var textoAnterior = $(".modal #formIdEquipo option:selected").text();
-            var nuevoTexto = textoAnterior.replace(/\(\d+ disponibles\)/, '(' + nuevaCantidad + ' disponibles)');
+            var nuevoTexto = textoAnterior.replace(/\(\d+ disponibles\)/, '(' + nuevaCantidadDisponible + ' disponibles)');
 
-            // Actualizando valores del select luego de haber calculado la nueva cantidad y haber definido el nuevo texto
-            $(".modal #formIdEquipo option:selected").attr("data-disponible", nuevaCantidad).data("disponible", nuevaCantidad);
-            $(".modal #formIdEquipo option:selected").text(nuevoTexto);
+            if (tr.data("fechaDevolucion") === "") {
+                // Actualizando valores del select luego de haber calculado la nueva cantidad y haber definido el nuevo texto
+                $(".modal #formIdEquipo option:selected").attr("data-disponible", nuevaCantidadDisponible).data("disponible", nuevaCantidadDisponible);
+                $(".modal #formIdEquipo option:selected").text(nuevoTexto);
+            }
 
             // Guardando cambios en localStorage por si se necesitan revertir posteriormente sin guardar una modificación de entrega
-            localStorage.setItem('cantidadEntregaAntesDeModificar', cantidadAnterior);
-            localStorage.setItem('textoEquipoAntesDeModificar', textoAnterior);
-            console.log("Cantidad anterior que se guardó en el localStorage: " + cantidadAnterior);
-            console.log("Texto anterior que se guardó en el localStorage: " + textoAnterior); 
+            localStorage.setItem('cantidadDisponibleAnterior', cantidadDisponibleAnterior);
+            localStorage.setItem('textoAnterior', textoAnterior);
 
         } else if (opcion === "eliminar") {
             $("#modalActionButton").text("Eliminar");
@@ -232,8 +226,48 @@ function openModal(opcion, button = null) {
             `);
 
             var tr = $(button).closest("tr");
-            //console.log(tr.data());
             $(".modal h1").text("Eliminar Entrega");
+            $(".modal #codEntrega").val(tr.data("codEntrega"));
+            ocultarSelects();
+
+        } else if (opcion === "agregarDevolucion") {
+            $("#modalActionButton").text("Guardar");
+            $("#modalBody").html(`
+                <input type="hidden" name="codEntrega" id="codEntrega" value="" />
+                <input type="hidden" name="esDevolucion" id="esDevolucion" value="true" />
+
+                <label class="col-sm-12 col-form-label">Fecha devolución:</label>
+                <div class="col-sm-12">
+                    <input type="date" class="form-control" name="fechaDevolucion" id="formFechaDevolucion" />
+                </div>
+
+                ${selectIdTipoEntrega}
+                ${selectIdEquipo}
+                ${selectIdEmpleadoEntrega}
+                ${selectIdEmpleadoRecibe}
+            `);
+
+            var tr = $(button).closest("tr");
+            $(".modal h1").text("Asignar Devolución");
+            $(".modal #codEntrega").val(tr.data("codEntrega"));
+            ocultarSelects();
+
+        } else if (opcion === "eliminarDevolucion") {
+            $("#modalActionButton").text("Eliminar");
+            $("#modalActionButton").removeClass("btn-primary");
+            $("#modalActionButton").addClass("btn-danger");
+            $("#modalBody").html(`
+                <p>¿Seguro que desea eliminar la fecha de devolución de la entrega?</p>
+                <input type="hidden" name="codEntrega" id="codEntrega" value="" />
+                <input type="hidden" name="esEliminacionDevolucion" id="esEliminacionDevolucion" value="true" />
+                ${selectIdTipoEntrega}
+                ${selectIdEquipo}
+                ${selectIdEmpleadoEntrega}
+                ${selectIdEmpleadoRecibe}
+            `);
+
+            var tr = $(button).closest("tr");
+            $(".modal h1").text("Eliminar Devolución");
             $(".modal #codEntrega").val(tr.data("codEntrega"));
             ocultarSelects();
         }
@@ -243,6 +277,22 @@ function openModal(opcion, button = null) {
 function submitFormEntregas() {
     if ($(".modal #esEliminacion").val() === "true") {
         $("#formEntregas").submit();
+
+    } else if ($(".modal #esDevolucion").val() === "true") {
+        if ($("#formFechaDevolucion").val().trim() === "") {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Fecha devolución es requerido!"
+            });
+            return false;
+        }
+
+        $("#formEntregas").submit();
+
+    } else if ($(".modal #esEliminacionDevolucion").val() === "true") {
+        $("#formEntregas").submit();
+
     } else {
         if ($("#formIdTipoEntrega").val().trim() === "") {
 
@@ -308,32 +358,30 @@ function limpiarFiltroEntregas() {
 }
 
 function limpiarModalEntregas() {
-    if ($(".modal #esEliminacion").val() === "true") {
+    if ($(".modal #esEliminacion").val() === "true" || $(".modal #esEliminacionDevolucion").val() === "true") {
         $("#modalActionButton").removeClass("btn-danger");
         $("#modalActionButton").addClass("btn-primary");
     }
 
     if ($(".modal #esModificacion").val() === "true") {
         // Buscamos los valores que se guardaron en localStorage
-        cantidadAnterior = localStorage.getItem("cantidadEntregaAntesDeModificar");
-        console.log("Cantidad guardada en localStorage y se asigna denuevo al cerrar el modal: " + localStorage.getItem("cantidadEntregaAntesDeModificar"));
-        textoAnterior = localStorage.getItem("textoEquipoAntesDeModificar");
-        console.log("Texto guardado en localStorage y se asigna denuevo al cerrar el modal: " + localStorage.getItem("textoEquipoAntesDeModificar"));
+        cantidadDisponibleAnterior = localStorage.getItem("cantidadDisponibleAnterior");
+        textoAnterior = localStorage.getItem("textoAnterior");
 
         // Guardamos el option:selected
         var opcionSeleccionada = $(".modal #formIdEquipo option:selected");
 
         // Creamos una nueva opción modificada en base a lo anterior
-        let opcionNueva = $('<option>')
-            .attr("value", opcionSeleccionada.val())  // Copia el valor original
-            .attr("data-disponible", cantidadAnterior)  // Actualiza data-disponible
-            .text(textoAnterior);  // Actualiza el texto
+        let opcionAnterior = $('<option>')
+            .attr("value", opcionSeleccionada.val())
+            .attr("data-disponible", cantidadDisponibleAnterior)
+            .text(textoAnterior);
 
         // Intercambiamos la opción seleccionada por la nueva opción
-        opcionSeleccionada.replaceWith(opcionNueva);
+        opcionSeleccionada.replaceWith(opcionAnterior);
 
         // Detonamos el refresco de la UI
-        $(".modal #formIdEquipo").val(opcionNueva.val()).trigger("change");
+        $(".modal #formIdEquipo").val(opcionAnterior.val()).trigger("change");
     }
 
     $("#modalEntregas h1").text("Agregar Entrega");
