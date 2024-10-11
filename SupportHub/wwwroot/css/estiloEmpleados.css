@@ -11,10 +11,14 @@ table {
 
 .contenedor-tabla {
     overflow-x: auto;
-    max-width: 1400px;
-    width: 190%;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
 }
-
+.table th, .table td {
+    width: auto; /* Deja que las columnas se ajusten al contenido */
+    padding: 10px;
+}
 .content-wrapper {
     background-color: #ffffff;
     border-radius: 20px;
@@ -132,6 +136,12 @@ h1 {
 @media (max-width: 768px) {
     .btn-add {
         width: 100%;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap; /* Evita que las celdas se rompan en varias líneas */
     }
 }
 
