@@ -48,6 +48,38 @@ table {
     margin: 0 auto;
 }
 
+/* estilos para mi_información*/
+#dropdownMenuButton {
+    height: 40px;
+    padding: 0;
+}
+
+.btnTexto, .btnClave {
+    position: relative;
+    padding: 1px 1px; /* Espaciado interior */
+    font-size: 4.5px; /* Tamaño de fuente */
+    border: none; /* Sin borde */
+    cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+    transition: height 0.3s ease; /* Transición suave para la altura */
+    overflow: hidden; /* Ocultar el contenido que excede */
+    height: 30px;
+    line-height: 1.2; /* Espacio entre líneas */
+}
+
+.texto-editar, .texto-clave {
+    display: block; /* Hacer que ocupe el espacio completo */
+    transition: opacity 0.3s ease; /* Transición de opacidad */
+    white-space: normal; /* Permite que el texto se ajuste a varias líneas */
+}
+
+.btnTexto:hover, .btnClave:hover {
+    height: 50px; /* Aumentar la altura del botón al pasar el mouse */
+    border-radius: 1.75rem;
+    width: 85px;
+    color: white;
+}
+
+
 h1 {
     text-align: center;
     font-weight: 700;

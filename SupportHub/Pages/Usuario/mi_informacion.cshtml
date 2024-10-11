@@ -1,0 +1,163 @@
+﻿@page
+@model SupportHub.Pages.Usuario.mi_informacionModel
+@{
+	ViewData["Title"] = "Mi información";
+	Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/css/estiloPantallas.css">
+
+<div class="container">
+
+	<h1>MI INFORMACIÓN</h1> 
+    <br />
+	<table>
+	<thead>
+		<tr>
+			<th>ID</th>
+		     <th>USUARIO</th>
+			 <th>NOMBRE</th>
+			 <th>APELLIDO</th>
+			 <th></th>
+		</tr>
+	</thead>
+	<tbody>
+			@foreach (var i in Model.Usuario)
+			{
+                <tr  data-usuario="@i.loginUsuario" data-id="@i.idUsuario" data-nombre="@i.nombreUsuario" data-apellido="@i.apellidoUsuario">
+					<td>
+						<label>@i.idUsuario</label>
+					</td>
+					<td>
+						<label>@i.loginUsuario</label>
+					</td>
+					<td>
+						<label>@i.nombreUsuario</label>
+					</td>
+					<td>
+						<label>@i.apellidoUsuario</label>
+					</td>
+					<td>
+                        <button type="button" class="btn btn-edit btnTexto" onclick="ModalModificarUsuario(this)" data-bs-toggle="modal" data-bs-target="#Modificar"><span class="texto-editar">INFO</span></button>
+                        <button type="button" class="btn btn-edit btnClave" onclick="ModalModificarContraseña(this)" data-bs-toggle="modal" data-bs-target="#Modificar"><span class="texto-clave">CLAVE</span></button>
+					</td>
+				</tr>
+			}
+		</tbody>
+</table>
+</div>
+
+    <!-- Modal para editar usuario -->
+    <div class="modal fade" id="Modificar" tabindex="-1" aria-labelledby="Modificar" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header encabezado-personalizado">
+                    <h1 class="modal-title fs-5" id="Modificar">Modificar Usuario</h1>
+                <button type="button" class="btn-close" onclick="limpiarModalMUsuario()" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="ModificarinfoUsuario">
+                        <!-- Campo de ID -->
+                        <input type="hidden" id="id" name="id" />
+                      
+                        <!-- Campo de usuario -->
+                        <div class="mb-3">
+                            <label for="usuario">Usuario:</label>
+                        <input type="text" required class="form-control" id="usuario" name="usuario">
+                        </div>
+
+                        <!-- Campo de Nombre -->
+                        <div class="mb-3">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" required class="form-control" id="nombre" name="nombre">
+                        </div>
+
+                        <!-- Campo de apellido -->
+                        <div class="mb-3">
+                            <label for="apellido">Apellido:</label>
+                            <input type="text" required class="form-control" id="apellido" name="apellido">
+                        </div>
+
+                         <!-- Campo de contraseña actual -->
+                        <div class="mb-3">
+                        <label for="contraA">Contraseña actual:</label>
+                        <input type="text" required class="form-control" id="contraA" name="contraA">
+                        </div>
+
+                        <!-- Campo de Nueva contra -->
+                        <div class="mb-3">
+                            <label for="nContra">Nueva Contraseña:</label>
+                        <input type="password" required class="form-control" id="nContra" name="nContra">
+                        </div>
+
+                    <!-- Campo de confirmar Nueva contra -->
+                    <div class="mb-3">
+                        <label for="CnContra">Confirmar Contraseña:</label>
+                        <input type="password" required class="form-control" id="CnContra" name="CnContra">
+                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="limpiarModalMUsuario()" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="validarIformacionUsuario()">Modificar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    <script type="text/javascript">
+                       
+        function limpiarModalMUsuario() {
+           
+                $("#ModificarinfoUsuario")[0].reset();
+        }
+        sessionStorage.setItem("contra", '@HttpContext.Session.GetString("contra")');
+         @if (TempData["exito"] != null && (bool)TempData["exito"])
+        {
+            <text>
+                Swal.fire({
+                title: "¡Excelente!",
+                text: "Has modificado tu info correctamente.",
+                icon: "success",
+                confirmButtonText: "OK"
+                });
+            </text>
+            Model.exito = false;
+        }
+
+        //eventos para que el texto de los botones cambie dinámicamente
+            document.addEventListener('DOMContentLoaded', () => {
+                const boton = document.querySelector('.btnTexto');
+                const boton1 = document.querySelector('.btnClave');
+                const texto = document.querySelector('.texto-editar');
+                const clave = document.querySelector('.texto-clave');
+
+                if (boton && texto) {  // Verificar si los elementos existen
+                    boton.addEventListener('mouseenter', () => {
+                        texto.innerHTML = "EDITAR<br>INFO"; // Utiliza <br> para crear una nueva línea
+                    });
+
+                    boton.addEventListener('mouseleave', () => {
+                        texto.innerHTML = "EDITAR"; // Vuelve al texto original en una sola línea
+                    });
+                } else {
+                    console.error("El elemento .btnTexto o .texto-editar no se encontró.");
+                }
+
+                if (boton1 && clave) {  // Verificar si los elementos existen
+                    boton1.addEventListener('mouseenter', () => {
+                        clave.innerHTML = "EDITAR<br>CLAVE"; // Utiliza <br> para crear una nueva línea
+                    });
+
+                    boton1.addEventListener('mouseleave', () => {
+                        clave.innerHTML = "CLAVE"; // Vuelve al texto original en una sola línea
+                    });
+                } else {
+                    console.error("El elemento .btnTexto o .texto-editar no se encontró.");
+                }
+            });
+
+
+
+    </script>
+}

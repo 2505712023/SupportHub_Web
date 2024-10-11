@@ -67,7 +67,7 @@ namespace SupportHub.Pages.Welcome
                     else
                     {
                         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                        ErrorMessage = "Usuario o contraseña incorrecta"; // Mensaje de error
+                        ErrorMessage = "Usuario o contraseÃ±a incorrecta"; // Mensaje de error
                         return Page();
                     }
                 }
@@ -78,12 +78,12 @@ namespace SupportHub.Pages.Welcome
 
         private string GetAvailableConnectionString()
         {
-            // Intenta primero con la cadena de conexión principal
-            if (PingHelper.PingHost("100.101.36.39")) // Reemplaza con tu dirección del servidor
+            // Intenta primero con la cadena de conexiÃ³n principal
+            if (PingHelper.PingHost("100.101.36.39")) // Reemplaza con tu direcciÃ³n del servidor
             {
                 return configuracion.GetConnectionString("CadenaConexion");
             }
-            else if (PingHelper.PingHost("25.2.143.28")) // Reemplaza con tu dirección del servidor Hamachi
+            else if (PingHelper.PingHost("25.2.143.28")) // Reemplaza con tu direcciÃ³n del servidor Hamachi
             {
                 return configuracion.GetConnectionString("CadenaConexionHamachi");
             }
