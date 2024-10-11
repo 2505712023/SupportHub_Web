@@ -17,7 +17,7 @@
 		     <th>USUARIO</th>
 			 <th>NOMBRE</th>
 			 <th>APELLIDO</th>
-			 <th></th>
+			 <th>EDITAR</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -37,8 +37,8 @@
 						<label>@i.apellidoUsuario</label>
 					</td>
 					<td>
-                        <button type="button" class="btn btn-edit btnTexto" onclick="ModalModificarUsuario(this)" data-bs-toggle="modal" data-bs-target="#Modificar"><span class="texto-editar">INFO</span></button>
-                        <button type="button" class="btn btn-edit btnClave" onclick="ModalModificarContraseña(this)" data-bs-toggle="modal" data-bs-target="#Modificar"><span class="texto-clave">CLAVE</span></button>
+                        <button onclick="ModalModificarUsuario(this)" type="button" class="btn btn-edit btnTexto" data-bs-toggle="modal" data-bs-target="#Modificar"><span class="texto-editar">INFO</span></button>
+                        <button onclick="ModalModificarContraseña(this)" type="button" class="btn btn-edit btnClave" data-bs-toggle="modal" data-bs-target="#Modificar"><span class="texto-clave">CLAVE</span></button>
 					</td>
 				</tr>
 			}
@@ -80,7 +80,7 @@
                          <!-- Campo de contraseña actual -->
                         <div class="mb-3">
                         <label for="contraA">Contraseña actual:</label>
-                        <input type="text" required class="form-control" id="contraA" name="contraA">
+                        <input type="password" required class="form-control" id="contraA" name="contraA">
                         </div>
 
                         <!-- Campo de Nueva contra -->
@@ -123,41 +123,6 @@
                 });
             </text>
             Model.exito = false;
-        }
-
-        //eventos para que el texto de los botones cambie dinámicamente
-            document.addEventListener('DOMContentLoaded', () => {
-                const boton = document.querySelector('.btnTexto');
-                const boton1 = document.querySelector('.btnClave');
-                const texto = document.querySelector('.texto-editar');
-                const clave = document.querySelector('.texto-clave');
-
-                if (boton && texto) {  // Verificar si los elementos existen
-                    boton.addEventListener('mouseenter', () => {
-                        texto.innerHTML = "EDITAR<br>INFO"; // Utiliza <br> para crear una nueva línea
-                    });
-
-                    boton.addEventListener('mouseleave', () => {
-                        texto.innerHTML = "EDITAR"; // Vuelve al texto original en una sola línea
-                    });
-                } else {
-                    console.error("El elemento .btnTexto o .texto-editar no se encontró.");
-                }
-
-                if (boton1 && clave) {  // Verificar si los elementos existen
-                    boton1.addEventListener('mouseenter', () => {
-                        clave.innerHTML = "EDITAR<br>CLAVE"; // Utiliza <br> para crear una nueva línea
-                    });
-
-                    boton1.addEventListener('mouseleave', () => {
-                        clave.innerHTML = "CLAVE"; // Vuelve al texto original en una sola línea
-                    });
-                } else {
-                    console.error("El elemento .btnTexto o .texto-editar no se encontró.");
-                }
-            });
-
-
-
+        }                 
     </script>
 }

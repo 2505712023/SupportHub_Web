@@ -1,18 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SupportHub.Helpers;
 using SupportHub.Modelos;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Authorization;
 using System.Runtime.CompilerServices;
 
 namespace SupportHub.Pages.Usuario
 {
+    [Authorize]
     public class mi_informacionModel : PageModel
     {
         [TempData]
         public bool exito { get; set; } = false;
         public readonly IConfiguration configuracion;
         public List<Usuarios> Usuario = new List<Usuarios>();
+        public String mensajeError = "";
         public mi_informacionModel(IConfiguration configuracion)
         {
             this.configuracion = configuracion;
@@ -21,8 +25,9 @@ namespace SupportHub.Pages.Usuario
         {
             try
             {
+
                 string usuario = HttpContext.Session.GetString("usuario");
-                string cadena = configuracion.GetConnectionString("CadenaConexion");
+                string cadena = GetAvailableConnectionString();
                 string consulta = "Select * from Usuarios where loginUsuario = @usuario";
 
                 if (!string.IsNullOrEmpty(usuario))
@@ -125,6 +130,32 @@ namespace SupportHub.Pages.Usuario
                 }
             
             return RedirectToPage("/Usuario/mi_informacion");
+        }
+
+        private string GetAvailableConnectionString()
+        {
+            try
+            {
+                // Intenta primero con la cadena de conexión principal
+                if (PingHelper.PingHost("100.101.36.39"))
+                {
+                    return configuracion.GetConnectionString("CadenaConexion");
+                }
+                else if (PingHelper.PingHost("25.2.143.28"))
+                {
+                    return configuracion.GetConnectionString("CadenaConexionHamachi");
+                }
+                else
+                {
+                    throw new Exception("No se puede conectar a ninguna base de datos.");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                mensajeError = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
+                return null;
+            }
         }
     }
 }

@@ -28,6 +28,7 @@ namespace SupportHub.Pages.Welcome
 
         public string ErrorMessage { get; set; }
 
+        
         public void OnGet()
         {
         }
@@ -43,6 +44,8 @@ namespace SupportHub.Pages.Welcome
             }
             try
             {
+                HttpContext.Session.SetString("usuario", Username);
+                HttpContext.Session.SetString("contra", Password);
                 using (SqlConnection conn = new SqlConnection(cadena))
                 {
                     conn.Open();
