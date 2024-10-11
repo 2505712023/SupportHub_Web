@@ -28,7 +28,12 @@ namespace SupportHub.Pages.Proveedor
             this.esEliminacion = esEliminacion;
             this.eliminado = eliminado;
             string cadena = GetAvailableConnectionString();
+            if (cadena == null && !string.IsNullOrEmpty(mensajeError))
+            {
 
+                ViewData["ErrorMessage"] = mensajeError;
+
+            }
             try
             {
                
@@ -98,8 +103,17 @@ namespace SupportHub.Pages.Proveedor
                 int registrosEliminados = 0;
                 try
                 {
-                    using (var conexion = new SqlConnection(GetAvailableConnectionString()))
+                    string cadena = GetAvailableConnectionString();
+                    if (cadena == null && !string.IsNullOrEmpty(mensajeError))
                     {
+
+                        ViewData["ErrorMessage"] = mensajeError;
+
+                    }
+
+                    using (SqlConnection conexion = new SqlConnection(cadena))
+                    {
+                       
                         conexion.Open();
                         using (var comando = new SqlCommand("sp_eliminar_proveedor", conexion))
                         {
@@ -138,6 +152,12 @@ namespace SupportHub.Pages.Proveedor
                 try
                 {
                     string cadena = GetAvailableConnectionString();
+                    if (cadena == null && !string.IsNullOrEmpty(mensajeError))
+                    {
+
+                        ViewData["ErrorMessage"] = mensajeError;
+
+                    }
                     int registrosAgregados = 0;
                     using (SqlConnection conexion = new SqlConnection(cadena))
                     {
@@ -171,6 +191,12 @@ namespace SupportHub.Pages.Proveedor
                     List<Proveedores> nombreYCodigoProveedores = new List<Proveedores>();
 
                     string cadena = GetAvailableConnectionString();
+                    if (cadena == null && !string.IsNullOrEmpty(mensajeError))
+                    {
+
+                        ViewData["ErrorMessage"] = mensajeError;
+
+                    }
                     using (SqlConnection conexion = new SqlConnection(cadena))
                     {
                         conexion.Open();
@@ -246,18 +272,27 @@ namespace SupportHub.Pages.Proveedor
         
         private string GetAvailableConnectionString()
         {
-            // Intenta primero con la cadena de conexión principal
-            if (PingHelper.PingHost("100.101.36.39")) // Reemplaza con tu dirección del servidor
+            try
             {
-                return configuracion.GetConnectionString("CadenaConexion");
+                // Intenta primero con la cadena de conexión principal
+                if (PingHelper.PingHost("100.101.36.39"))
+                {
+                    return configuracion.GetConnectionString("CadenaConexion");
+                }
+                else if (PingHelper.PingHost("25.2.143.28"))
+                {
+                    return configuracion.GetConnectionString("CadenaConexionHamachi");
+                }
+                else
+                {
+                    throw new Exception("No se puede conectar a ninguna base de datos.");
+                }
             }
-            else if (PingHelper.PingHost("25.2.143.28")) // Reemplaza con tu dirección del servidor Hamachi
+            catch (Exception ex)
             {
-                return configuracion.GetConnectionString("CadenaConexionHamachi");
-            }
-            else
-            {
-                throw new Exception("No se puede conectar a ninguna base de datos.");
+
+                mensajeError = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
+                return null;
             }
         }
     }
