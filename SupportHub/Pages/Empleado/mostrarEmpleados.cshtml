@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" href="~/css/estiloEmpleados.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/css/intlTelInput.css" />
-<div class="content-wrapper" style="max-width: 1400px; border-radius: 20px;">
+<div class="content-wrapper" style="max-width: 1450px; border-radius: 20px;">
     <h1>Gestión de Empleados</h1>
 
     <div class="row mb-3">
@@ -204,7 +204,28 @@
         }
     </script>
 
+    <script type="text/javascript">
+        @{
+            var errorMessage = ViewData["ErrorMessage"] as string;
+        }
 
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <text>
+                Swal.fire({
+                    title: "Oops...",
+                    text: @Html.Raw($"\"{errorMessage}\""),
+                    icon: "error",
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirigir a la página Index
+                        window.location.href = '../Index';
+                    }
+                });
+            </text>
+        }
+    </script>
 
     <!--Script de intl-tel-input-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/intlTelInput.min.js"></script>

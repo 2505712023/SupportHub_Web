@@ -159,6 +159,32 @@
     </script>
 
     <script type="text/javascript">
+        @{
+            var errorMessage = ViewData["ErrorMessage"] as string;
+        }
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <text>
+                Swal.fire({
+                    title: "Oops...",
+                    text: @Html.Raw($"\"{errorMessage}\""),
+                    icon: "error",
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirigir a la página Index
+                        window.location.href = '../Index';
+                    }
+                });
+            </text>
+        }
+    </script>
+
+
+
+
+    <script type="text/javascript">
         // Verifica si la operación fue exitosa
         //validar que exito no sea nulo y que sea falso, también que intentoRealizado no sea nulo y que sea verdadero
     @if (TempData["exito"] != null && (bool)TempData["exito"] == false && TempData["intentoRealizado"]!= null && (bool)TempData["intentoRealizado"])
