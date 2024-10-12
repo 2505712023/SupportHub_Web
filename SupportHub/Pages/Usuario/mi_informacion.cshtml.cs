@@ -25,7 +25,6 @@ namespace SupportHub.Pages.Usuario
         {
             try
             {
-
                 string usuario = HttpContext.Session.GetString("usuario");
                 string cadena = GetAvailableConnectionString();
                 string consulta = "Select * from Usuarios where loginUsuario = @usuario";
@@ -63,7 +62,6 @@ namespace SupportHub.Pages.Usuario
 
         }
 
-
         public IActionResult OnPost()
         {
             Usuarios setUsuario = new Usuarios();
@@ -74,8 +72,6 @@ namespace SupportHub.Pages.Usuario
             setUsuario.nombreUsuario = Request.Form["nombre"];
             setUsuario.apellidoUsuario = Request.Form["apellido"];
             setUsuario.loginUsuario = Request.Form["usuario"];
-            
-            
             
                 try
                 {

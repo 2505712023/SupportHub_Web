@@ -67,13 +67,14 @@ function ModalModificarContraseña(button) {
     $("#usuario").val(tr.data("usuario"));
     $("#nombre").val(tr.data("nombre"));
     $("#apellido").val(tr.data("apellido"));
-
     $("#usuario").prop("readonly", true);
+
     // ocultando los input y label que no se van a usar en esta operación
     $("#nombre").attr("type", "hidden");
     $("#apellido").attr("type", "hidden");
     $('label[for="nombre"]').hide();
     $('label[for="apellido"]').hide();
+
     // mostrando los campos que sí se van a usar
     $("#nContra").attr("type", "password");
     $("#CnContra").attr("type", "password");
@@ -84,18 +85,19 @@ function ModalModificarContraseña(button) {
 function ModalModificarUsuario(button) {
     var tr = $(button).closest("tr");
 
-    $(".modal h1").text("Modificar mi Info");
+    $(".modal h1").text("Modificar Mi Información");
     $("#id").val(tr.data("id"));
     $("#usuario").val(tr.data("usuario"));
     $("#nombre").val(tr.data("nombre"));
     $("#apellido").val(tr.data("apellido"));
-
     $("#usuario").prop("readonly", true);
+
     // ocultando los input y label que no se van a usar en esta operación
     $("#nContra").attr("type", "hidden");
     $("#CnContra").attr("type", "hidden");
     $('label[for="nContra"]').hide();
     $('label[for="CnContra"]').hide();
+
     //  mostrando los campos que sí se van a usar
     $("#nombre").attr("type", "text");
     $("#apellido").attr("type", "text");
@@ -162,7 +164,6 @@ function validarIformacionUsuario() {
 function submitFormModificarInfoUsuario() {
     document.getElementById("ModificarinfoUsuario").submit();
 }
-
 
 function submitForm() {
     document.getElementById("formAgregarProveedor").submit();
