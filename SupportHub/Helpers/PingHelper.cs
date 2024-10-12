@@ -4,7 +4,7 @@ namespace SupportHub.Helpers
 {
     public static class PingHelper
     {
-        public static bool PingHost(string hostUri, int timeout = 1000) 
+        public static bool PingHost(string hostUri, int timeout = 100) 
 
         {
             try

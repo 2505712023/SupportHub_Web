@@ -5,13 +5,17 @@ using System.Data.SqlClient;
 using System.Data;
 using SupportHub.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
+using System.Data.Common;
 
 namespace SupportHub.Pages.Usuarios
 {
     public class mostrarUsuariosModel : PageModel
     {
         private readonly IConfiguration configuracion;
-        public List<Usuario> listaUsuarios = new List<Usuario>();
+        public List<Usuario> listaUsuarios { get; set; } = new List<Usuario>();
+        public List<Usuario> ListaCodigo = new List<Usuario>();
+        public List<Usuario> Roles { get; set; } = new List<Usuario>();
         public Usuario newUsuario= new Usuario();
         public String mensajeError = "";
         public String mensajeExito = "";
@@ -59,11 +63,80 @@ namespace SupportHub.Pages.Usuarios
                             Usuario.NombreUsuario = lector.GetString(1);
                             Usuario.ApellidoUsuario = lector.GetString(2);
                             Usuario.CodEmpleado = lector.GetString(3);
-                            Usuario.IDEmpleado= lector.GetInt32(4);
+                            Usuario.IDEmpleado = lector.GetInt32(4);
                             Usuario.ActivoUsuario = lector.GetBoolean(5);
                             listaUsuarios.Add(Usuario);
                         }
                     }
+                    ;
+
+                    string queryrol = "SELECT nombreRol FROM Roles";
+
+                    using (SqlCommand command = new SqlCommand(queryrol, conexion))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var rol = new Usuario
+                                {
+                                    RolUsuario = reader.GetString(0)
+                                };
+
+                                Roles.Add(rol);
+                            }
+                        }
+                    }
+
+                    JsonResult OnGetPersonData(string codEmpleado)
+                    {
+                        string querycodigo = "SELECT nombreEmpleado, apellidoEmpleado FROM Empleado WHERE codEmpleado = @codEmpleado";
+                        using (SqlCommand command = new SqlCommand(querycodigo, conexion)) { 
+                        command.Parameters.AddWithValue("@codEmpleado", codEmpleado);
+
+                        conexion.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        string nombre = "";
+                        string apellido = "";
+
+                        if (reader.Read())
+                        {
+                            nombre = reader["nombreEmpleado"].ToString();
+                            apellido = reader["apellidoEmpleado"].ToString();
+                        }
+
+                        conexion.Close();
+                            return new JsonResult(new { nombre, apellido });
+                        }
+                            
+                        
+
+                       
+                    }
+
+
+
+                    string querycodigo = "SELECT codempleado FROM Empleados";
+
+                    using (SqlCommand command = new SqlCommand(querycodigo, conexion))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var codigoempleados = new Usuario
+                                {
+                                    CodEmpleado = reader.GetString(0)
+                                };
+
+                                ListaCodigo.Add(codigoempleados);
+                            }
+                        }
+                    }
+
+
+                    
+
                 }
             }
             catch (Exception ex)
@@ -72,6 +145,8 @@ namespace SupportHub.Pages.Usuarios
             }
 
         }
+
+
         [TempData]
         public bool exito { get; set; } = false;
         [TempData]
@@ -80,6 +155,11 @@ namespace SupportHub.Pages.Usuarios
         [TempData]
         public bool eliminado { get; set; } = false;
         public int coincidencia { get; set; } = 0;
+
+
+
+        
+
 
         public IActionResult OnPost()
         {

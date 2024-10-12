@@ -89,32 +89,56 @@
                         <input type="text" required class="form-control" id="usuario" name="usuario">
                     </div>
 
-                    <!-- Campo de Nombre -->
+                    <!-- Campo codigo -->
                     <div class="mb-3">
-                        <label for="nombre">Nombre:</label>
-                        <input type="text" required class="form-control" id="nombre" name="nombre">
+                        <label for="codigo">Codigo de empleado:</label>
+                        <select class="form-control" id="codigoempleado">
+                            <option value="">Selecciona el código del empleado</option>
+                            @foreach (var nombre in Model.ListaCodigo)
+                            {
+                                <option value="@nombre.CodEmpleado">@nombre.CodEmpleado</option>
+                            }
+                        </select>
+                    </div>
+                    <!-- Campo de Nombre del empleado -->
+                    <div class="mb-3">
+                        <label for="Nombre">Nombre:</label>
+                        <input type="text" required class="form-control" id="nombre" name="nombre" readonly>
                     </div>
 
                     <!-- Campo de Apellido -->
                     <div class="mb-3">
                         <label for="apellido">Apellido:</label>
-                        <input type="text" required class="form-control" id="apellido" name="apellido">
+                        <input type="text" required class="form-control" id="apellido" name="apellido" readonly>
+                    </div>
+                    <!-- Campo de contraseña -->
+                    <div class="mb-3">
+                        <label for="codEmpleado">Contraseña</label>
+                        <input type="text" required class="form-control" id="Contrasenia" name="Contrasenia">
                     </div>
 
                     <!-- Campo de Usuario activo -->
                     <div class="mb-3">
-                        <label for="codEmpleado">Usuario activo:</label>                       
+                        <label for="codEmpleado">Usuario activo</label>                       
                         <select class="form-control" id="activo">
                             <option value="">Seleccione</option>
-                            <option value="true">SÍ</option>
-                            <option value="false">NO</option>
+                            <option value="true">si</option>
+                            <option value="false">no</option>
+                       
                         </select>
                     </div>
-                    <!-- Campo de Código de empleado -->
+                    <!--campo para mostrar tipos de usuario-->
                     <div class="mb-3">
-                        <label for="codEmpleado">Código de empleado:</label>
-                        <input type="text" required class="form-control" id="codEmpleado" name="codEmpleado">
+                        <label for="codEmpleado">Tipo de usuario</label>
+                        <select class="form-control" id="TipoUsuario">
+                            <option value="">Selecciona un rol</option> 
+                            @foreach (var rol in Model.Roles) 
+                            {
+                                <option value="@rol.RolUsuario">@rol.RolUsuario</option> 
+                            }
+                        </select>
                     </div>
+                
                 </form>
             </div>
             <div class="modal-footer">
@@ -130,6 +154,7 @@
 
 
 @section Scripts {
+    <script type="text/javascript" src="~/js/Usuario.js"></script>
 
     <script type="text/javascript">
         $(function () {
@@ -155,7 +180,8 @@
 
                 $(".modal #codEmpleado").prop("readonly", false);
             }
-
+            
+            }
             function validarFormularioUsuario() {
                 var usuario = document.getElementById("usuario").value.trim();
                 var nombre = document.getElementById("nombre").value.trim();

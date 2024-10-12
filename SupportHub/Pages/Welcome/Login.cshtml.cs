@@ -34,6 +34,7 @@ namespace SupportHub.Pages.Welcome
 
         public IActionResult OnPost()
         {
+
             using (SqlConnection conn = new SqlConnection(GetAvailableConnectionString()))
             {
                 conn.Open();
@@ -73,11 +74,10 @@ namespace SupportHub.Pages.Welcome
                 }
             }
         }
-
-
-
+       
         private string GetAvailableConnectionString()
         {
+
             // Intenta primero con la cadena de conexión principal
             if (PingHelper.PingHost("100.101.36.39")) // Reemplaza con tu dirección del servidor
             {
@@ -92,5 +92,7 @@ namespace SupportHub.Pages.Welcome
                 throw new Exception("No se puede conectar a ninguna base de datos.");
             }
         }
+        
     }
+    
 }

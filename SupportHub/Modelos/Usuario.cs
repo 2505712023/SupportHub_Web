@@ -10,5 +10,7 @@ namespace SupportHub.Modelos
         public string CodEmpleado {  get; set; }
         public int IDEmpleado { get; set; }
         public bool ActivoUsuario { get; set; }
+
+        public string RolUsuario { get; set; }
     }
 }
