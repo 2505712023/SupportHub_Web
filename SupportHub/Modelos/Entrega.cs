@@ -15,8 +15,6 @@
         public int idEmpleadoRecibe { get; set; }
         public string? nombreEmpleadoRecibio { get; set; }
         public int idEquipo { get; set; }
-        public string? tipoEquipo { get; set; }
-        public string? marcaEquipo { get; set; }
-        public string? modeloEquipo { get; set; }
+        public string? equipo { get; set; }
     }
 }

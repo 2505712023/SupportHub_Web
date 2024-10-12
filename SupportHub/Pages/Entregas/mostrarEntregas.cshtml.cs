@@ -15,7 +15,7 @@ namespace SupportHub.Pages.Entregas
     public class mostrarEntregasModel : PageModel
     {
         private readonly IConfiguration configuracion;
-        private readonly ILogger logger;
+        private readonly Conexiones conexion;
         public List<Entrega> listaEntregas = new();
         public Entrega newEntrega = new();
         public string mensajeError { get; set; } = "";
@@ -28,21 +28,23 @@ namespace SupportHub.Pages.Entregas
         [TempData]
         public bool devolucionEliminada { get; set; } = false;
 
-        public mostrarEntregasModel(IConfiguration configuracion, ILogger<mostrarEntregasModel> logger)
+        public mostrarEntregasModel(IConfiguration configuracion)
         {
             this.configuracion = configuracion;
-            this.logger = logger;
+            conexion = new(this.configuracion);
         }
 
         public void OnGet()
         {
-            if (!string.IsNullOrEmpty(this.mensajeError))
+            string cadena = conexion.ObtenerCadenaDisponible();
+            if (string.IsNullOrEmpty(cadena))
             {
-                ViewData["mensajeError"] = this.mensajeError;
+                ViewData["errorConexion"] = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
             }
+
             try
             {
-                using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                using (SqlConnection conexion = new(cadena))
                 {
                     conexion.Open();
                     using (SqlCommand comando = new("[dbo].[sp_obtener_entregas]", conexion))
@@ -56,19 +58,17 @@ namespace SupportHub.Pages.Entregas
                                 newEntrega.idEntrega = lector.GetInt32(0);
                                 newEntrega.codEntrega = lector.GetString(1);
                                 newEntrega.nombreTipoEntrega = lector.GetString(2);
-                                newEntrega.tipoEquipo = lector.GetString(3);
-                                newEntrega.marcaEquipo = lector.GetString(4);
-                                newEntrega.modeloEquipo = lector.GetString(5);
-                                newEntrega.cantidadEntrega = lector.GetInt32(6);
-                                newEntrega.nombreEmpleadoEntrego = lector.GetString(7);
-                                newEntrega.nombreEmpleadoRecibio = lector.GetString(8);
-                                newEntrega.fechaEntrega = lector.IsDBNull(9) ? string.Empty : lector.GetDateTime(9).ToString("dd-MM-yyyy");
-                                newEntrega.fechaDevolucion = lector.IsDBNull(10) ? string.Empty : lector.GetDateTime(10).ToString("dd-MM-yyyy");
-                                newEntrega.observacionEntrega = lector.IsDBNull(11) ? string.Empty : lector.GetString(11);
-                                newEntrega.idTipoEntrega = lector.GetInt32(12);
-                                newEntrega.idEquipo = lector.GetInt32(13);
-                                newEntrega.idEmpleadoEntrega = lector.GetInt32(14);
-                                newEntrega.idEmpleadoRecibe = lector.GetInt32(15);
+                                newEntrega.equipo = lector.GetString(3);
+                                newEntrega.cantidadEntrega = lector.GetInt32(4);
+                                newEntrega.nombreEmpleadoEntrego = lector.GetString(5);
+                                newEntrega.nombreEmpleadoRecibio = lector.GetString(6);
+                                newEntrega.fechaEntrega = lector.IsDBNull(7) ? string.Empty : lector.GetDateTime(7).ToString("dd-MM-yyyy");
+                                newEntrega.fechaDevolucion = lector.IsDBNull(8) ? string.Empty : lector.GetDateTime(8).ToString("dd-MM-yyyy");
+                                newEntrega.observacionEntrega = lector.IsDBNull(9) ? string.Empty : lector.GetString(9);
+                                newEntrega.idTipoEntrega = lector.GetInt32(10);
+                                newEntrega.idEquipo = lector.GetInt32(11);
+                                newEntrega.idEmpleadoEntrega = lector.GetInt32(12);
+                                newEntrega.idEmpleadoRecibe = lector.GetInt32(13);
                                 listaEntregas.Add(newEntrega);
                             }
                         }
@@ -77,39 +77,21 @@ namespace SupportHub.Pages.Entregas
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
-
-        private string GetAvailableConnectionString()
-        {
-            try
-            {
-                // Intenta primero con la cadena de conexión principal
-                if (PingHelper.PingHost("100.101.36.39"))
-                {
-                    return configuracion.GetConnectionString("CadenaConexion");
-                }
-                else if (PingHelper.PingHost("25.2.143.28"))
-                {
-                    return configuracion.GetConnectionString("CadenaConexionHamachi");
-                }
-                else
-                {
-                    throw new Exception("No se puede conectar a ninguna base de datos.");
-                }
-            }
-            catch (Exception)
-            {
-                mensajeError = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
-                return null;
+               ViewData["errorSQL"] = "Error: " + ex.Message;
             }
         }
 
         public string GetTiposDeEntregas()
         {
+            string cadena = conexion.ObtenerCadenaDisponible();
+            if (string.IsNullOrEmpty(cadena))
+            {
+                ViewData["errorConexion"] = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
+                return "";
+            }
+
             List<SelectListItem> tiposDeEntregas = [];
-            using (SqlConnection conection = new(GetAvailableConnectionString()))
+            using (SqlConnection conection = new(cadena))
             {
                 conection.Open();
                 using (SqlCommand comando = new("select * from dbo.TiposEntregas", conection))
@@ -142,8 +124,15 @@ namespace SupportHub.Pages.Entregas
 
         public string GetEmpleados()
         {
+            string cadena = conexion.ObtenerCadenaDisponible();
+            if (string.IsNullOrEmpty(cadena))
+            {
+                ViewData["errorConexion"] = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
+                return "";
+            }
+
             List<SelectListItem> empleados = [];
-            using (SqlConnection conection = new(GetAvailableConnectionString()))
+            using (SqlConnection conection = new(cadena))
             {
                 conection.Open();
                 using (SqlCommand comando = new("select idEmpleado, codEmpleado + ' - ' + nombreEmpleado + ' ' + apellidoEmpleado from dbo.Empleados", conection))
@@ -176,8 +165,15 @@ namespace SupportHub.Pages.Entregas
 
         public string GetEquipos()
         {
+            string cadena = conexion.ObtenerCadenaDisponible();
+            if (string.IsNullOrEmpty(cadena))
+            {
+                ViewData["errorConexion"] = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
+                return "";
+            }
+
             var sb = new StringBuilder();
-            using (SqlConnection conection = new(GetAvailableConnectionString()))
+            using (SqlConnection conection = new(cadena))
             {
                 conection.Open();
                 using (SqlCommand comando = new("select E.idEquipo, E.codEquipo + ' - ' + E.tipoEquipo + ' ' + E.marcaEquipo + ' ' + E.modeloEquipo, ED.cantidadDisponible from dbo.Equipos E inner join dbo.vwCantidadEquiposDisponibles ED on E.idEquipo = ED.idEquipo", conection))
@@ -197,9 +193,11 @@ namespace SupportHub.Pages.Entregas
 
         public IActionResult OnPost()
         {
-            foreach (var key in Request.Form.Keys)
+            string cadena = conexion.ObtenerCadenaDisponible();
+            if (string.IsNullOrEmpty(cadena))
             {
-                logger.LogInformation($"Form key: {key}, value: {Request.Form[$"{key}"]}");
+                ViewData["errorConexion"] = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
+                return Page();
             }
 
             newEntrega.codEntrega = Request.Form["codEntrega"].ToString();
@@ -212,7 +210,7 @@ namespace SupportHub.Pages.Entregas
                 int devolucionesEliminadas = 0;
                 if (Request.Form["esEliminacion"] == "true")
                 {
-                    using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                    using (SqlConnection conexion = new(cadena))
                     {
                         conexion.Open();
                         SqlCommand comando = new("dbo.sp_eliminar_entrega @codEntrega", conexion);
@@ -226,7 +224,7 @@ namespace SupportHub.Pages.Entregas
                 {
                     DateTime fechaDevolucion = DateTime.ParseExact(Request.Form["fechaDevolucion"], "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-                    using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                    using (SqlConnection conexion = new(cadena))
                     {
                         conexion.Open();
                         SqlCommand comando = new("update dbo.Entregas set fechaDevolucion = @fechaDevolucion where codEntrega = @codEntrega", conexion);
@@ -239,7 +237,8 @@ namespace SupportHub.Pages.Entregas
                 }
                 else if (Request.Form["esEliminacionDevolucion"] == "true")
                 {
-                    using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                    cadena = string.Empty;
+                    using (SqlConnection conexion = new(cadena))
                     {
                         conexion.Open();
                         SqlCommand comando = new("update dbo.Entregas set fechaDevolucion = null where codEntrega = @codEntrega", conexion);
@@ -261,7 +260,7 @@ namespace SupportHub.Pages.Entregas
                     newEntrega.observacionEntrega = Request.Form["observacionEntrega"].ToString();
                     if (Request.Form["esModificacion"] == "true")
                     {
-                        using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                        using (SqlConnection conexion = new(cadena))
                         {
                             conexion.Open();
                             SqlCommand comando = new("dbo.sp_modificar_entrega @codEntrega, @idTipoEntrega, @cantidadEntrega, @fechaEntrega, @observacionEntrega, @idEmpleadoEntrega, @idEmpleadoRecibe, @idEquipo", conexion);
@@ -280,7 +279,7 @@ namespace SupportHub.Pages.Entregas
                     }
                     else
                     {
-                        using (SqlConnection conexion = new(GetAvailableConnectionString()))
+                        using (SqlConnection conexion = new(cadena))
                         {
                             conexion.Open();
                             SqlCommand comando = new("dbo.sp_crear_entrega @idTipoEntrega, @fechaEntrega, @idEmpleadoEntrega, @idEmpleadoRecibe, @idEquipo, @cantidadEntrega, @observacionEntrega", conexion);
@@ -297,20 +296,15 @@ namespace SupportHub.Pages.Entregas
                         }
                     }
                 }
-                //exito = registrosAlterados == 1;
-                //eliminada = registrosEliminados == 1;
-                //devolucion = devolucionesAgregadas == 1;
-                //devolucionEliminada = devolucionesEliminadas == 1;
-                mensajeError = "Test";
-                if (!string.IsNullOrEmpty(this.mensajeError))
-                {
-                    ViewData["mensajeError"] = this.mensajeError;
-                }
+                exito = registrosAlterados == 1;
+                eliminada = registrosEliminados == 1;
+                devolucion = devolucionesAgregadas == 1;
+                devolucionEliminada = devolucionesEliminadas == 1;
             }
             catch (Exception ex)
             {
-                mensajeError = $"Ocurrió el siguiente error al momento de agregar una nueva entrega: {ex.Message}.";
-                return RedirectToPage("/Entregas/mostrarEntregas");
+                ViewData["errorSQL"] = $"Ocurrió el siguiente error al momento de agregar una nueva entrega: {ex.Message}.";
+                return Page();
             }
 
             return RedirectToPage("/Entregas/mostrarEntregas");

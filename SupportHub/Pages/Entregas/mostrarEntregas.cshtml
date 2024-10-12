@@ -22,15 +22,13 @@
                     <select class="form-select select-filtro me-2" id="filtros">
                         <option value="0">Código</option>
                         <option value="1">Tipo de Entrega</option>
-                        <option value="2">Tipo Equipo</option>
-                        <option value="3">Marca Equipo</option>
-                        <option value="4">Modelo Equipo</option>
-                        <option value="5">Cantidad Entrega</option>
-                        <option value="6">Empleado Entregó</option>
-                        <option value="7">Empleado Recibió</option>
-                        <option value="8">Fecha Entrega</option>
-                        <option value="9">Fecha Devolución</option>
-                        <option value="10">Observación Entrega</option>
+                        <option value="2">Equipo</option>
+                        <option value="3">Cantidad Entrega</option>
+                        <option value="4">Empleado Entregó</option>
+                        <option value="5">Empleado Recibió</option>
+                        <option value="6">Fecha Entrega</option>
+                        <option value="7">Fecha Devolución</option>
+                        <option value="8">Observación Entrega</option>
                     </select>
                     <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
                 </div>
@@ -49,9 +47,7 @@
                 <tr>
                     <th>Código</th>
                     <th>Tipo de Entrega</th>
-                    <th>Tipo Equipo</th>
-                    <th>Marca Equipo</th>
-                    <th>Modelo Equipo</th>
+                    <th>Equipo</th>
                     <th>Cantidad Entrega</th>
                     <th>Empleado Entregó</th>
                     <th>Empleado Recibió</th>
@@ -74,16 +70,14 @@
                         data-fecha-entrega="@(Convert.ToDateTime(item.fechaEntrega).ToString("yyyy-MM-dd"))"
                         data-observacion-entrega="@item.observacionEntrega"
                         data-fecha-devolucion="@(string.IsNullOrEmpty(item.fechaDevolucion) ? string.Empty : Convert.ToDateTime(item.fechaDevolucion).ToString("yyyy-MM-dd"))">
-                        <td align="left">@item.codEntrega</td>
-                        <td align="left">@item.nombreTipoEntrega</td>
-                        <td align="left">@item.tipoEquipo</td>
-                        <td align="left">@item.marcaEquipo</td>
-                        <td align="left">@item.modeloEquipo</td>
+                        <td align="center">@item.codEntrega</td>
+                        <td align="center">@item.nombreTipoEntrega</td>
+                        <td align="left">@item.equipo</td>
                         <td align="center">@item.cantidadEntrega</td>
                         <td align="left">@item.nombreEmpleadoEntrego</td>
                         <td align="left">@item.nombreEmpleadoRecibio</td>
-                        <td align="left" style="white-space: nowrap;">@item.fechaEntrega</td>
-                        <td align="left" style="white-space: nowrap;" id="fechaDevolucion">@item.fechaDevolucion</td>
+                        <td align="center" style="white-space: nowrap;">@item.fechaEntrega</td>
+                        <td align="center" style="white-space: nowrap;" id="fechaDevolucion">@item.fechaDevolucion</td>
                         <td align="left">@item.observacionEntrega</td>
                         <td>
                             <button class="btn btn-edit btn-acciones" onclick="openModal('modificar', this)" data-bs-toggle="modal" data-bs-target="#modalEntregas">
@@ -163,15 +157,37 @@
 
     <script type="text/javascript">
         @{
-            var mensajeError = ViewData["mensajeError"] as string;
+            var errorConexion = ViewData["errorConexion"] as string;
         }
 
-        @if (!string.IsNullOrEmpty(mensajeError))
+        @if (!string.IsNullOrEmpty(errorConexion))
         {
             <text>
                 Swal.fire({
                     title: "Oops...",
-                    text: @Html.Raw($"\"{mensajeError}\""),
+                    text: @Html.Raw($"\"{errorConexion}\""),
+                    icon: "error",
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '../Index';
+                    }
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+        @{
+            var errorSQL = ViewData["errorSQL"] as string;
+        }
+
+        @if (!string.IsNullOrEmpty(errorSQL))
+        {
+            <text>
+                Swal.fire({
+                    title: "Oops...",
+                            text: @Html.Raw($"\"{errorSQL}\""),
                     icon: "error",
                     confirmButtonText: "OK"
                 });
