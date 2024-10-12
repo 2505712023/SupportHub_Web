@@ -237,7 +237,6 @@ namespace SupportHub.Pages.Entregas
                 }
                 else if (Request.Form["esEliminacionDevolucion"] == "true")
                 {
-                    cadena = string.Empty;
                     using (SqlConnection conexion = new(cadena))
                     {
                         conexion.Open();
