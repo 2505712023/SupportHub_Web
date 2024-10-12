@@ -36,8 +36,7 @@ namespace SupportHub.Pages.Entregas
 
         public void OnGet()
         {
-            string cadena = conexion.ObtenerCadenaDisponible();
-            if (string.IsNullOrEmpty(cadena))
+            if (string.IsNullOrEmpty(conexion.ObtenerCadenaDisponible()))
             {
                 ViewData["errorConexion"] = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
             }
