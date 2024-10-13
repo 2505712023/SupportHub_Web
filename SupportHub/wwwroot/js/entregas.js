@@ -22,6 +22,7 @@
         var row = $(this);
         var fechaDevolucion = row.find('#fechaDevolucion');
         var devolucion = row.find('#devolucion');
+        var modificar = row.find(".btn-edit");
 
         if (fechaDevolucion.text().trim() === "") {
             devolucion.attr('onclick', "openModal('agregarDevolucion', this)");
@@ -29,6 +30,8 @@
         } else {
             devolucion.attr('onclick', "openModal('eliminarDevolucion', this)");
             devolucion.html("<i class='fa fa-times' aria-hidden='true'></i> Devolución");
+            modificar.attr("disabled", true);
+            modificar.addClass("text-decoration-line-through");
         }
     });
     
@@ -38,6 +41,9 @@
         ejecutarBusqueda();
     });
 
+    $("#formIdEquipo").on("change", function () {
+        $("#formCantidadEntrega").val("0");
+    });
 });
 
 function ejecutarBusqueda() {
