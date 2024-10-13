@@ -134,7 +134,7 @@ function validarIformacionUsuario() {
             text: "La contraseña actual es incorrecta!"
         });
         return false;
-    } else if (nuevaContra != "" || confirmarNuevaContra != "") {
+    } else if (nuevaContra != "" && confirmarNuevaContra == "" || nuevaContra == "" && confirmarNuevaContra != "") {
         Swal.fire({
             icon: "error",
             title: "Oops...",
