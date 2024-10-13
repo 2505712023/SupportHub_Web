@@ -136,7 +136,7 @@ function validarIformacionUsuario() {
         return false;
     } else if (nuevaContra != "" && confirmarNuevaContra == "" || nuevaContra == "" && confirmarNuevaContra != "") {
         Swal.fire({
-            icon: "error",
+            icon: "error", 
             title: "Oops...",
             text: "Por favor, complete ambos campos de nueva contraseña."
         });
