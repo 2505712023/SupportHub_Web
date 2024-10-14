@@ -50,10 +50,6 @@ table {
 }
 
 /* estilos para mi_información*/
-#dropdownMenuButton {
-    height: 40px;
-    padding: 0;
-}
 
 .btnTexto, .btnClave {
     position: relative;
