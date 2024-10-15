@@ -25,7 +25,13 @@ namespace SupportHub.Pages.Empleado
         public void OnGet(string searchQuery = null, bool exito = false, bool intentoRealizado = false, bool esEliminacion = false, bool eliminado = false)
         {
             string cadena = GetAvailableConnectionString();
-
+            if (cadena == null && !string.IsNullOrEmpty(mensajeError))
+            {
+                // Pasar ErrorMessage a la vista si hay un error de conexión
+                ViewData["ErrorMessage"] = mensajeError;
+                
+            }
+            
             try
             {
                 using (SqlConnection conexion = new SqlConnection(cadena))
@@ -165,6 +171,12 @@ namespace SupportHub.Pages.Empleado
             {
                 // Obtenemos la cadena de conexión
                 string cadena = GetAvailableConnectionString();
+                if (cadena == null && !string.IsNullOrEmpty(mensajeError))
+                {
+                    
+                    ViewData["ErrorMessage"] = mensajeError;
+            
+                }
                 int registrosAgregados = 0;
                 using (SqlConnection conexion = new SqlConnection(cadena))
                 {
@@ -198,17 +210,27 @@ namespace SupportHub.Pages.Empleado
         private string GetAvailableConnectionString()
         {
 
-            if (PingHelper.PingHost("100.101.36.39"))
+            try
             {
-                return configuracion.GetConnectionString("CadenaConexion");
+                // Intenta primero con la cadena de conexión principal
+                if (PingHelper.PingHost("100.101.36.39")) 
+                {
+                    return configuracion.GetConnectionString("CadenaConexion");
+                }
+                else if (PingHelper.PingHost("25.2.143.28")) 
+                {
+                    return configuracion.GetConnectionString("CadenaConexionHamachi");
+                }
+                else
+                {
+                    throw new Exception("No se puede conectar a ninguna base de datos.");
+                }
             }
-            else if (PingHelper.PingHost("25.2.143.28"))
+            catch (Exception ex)
             {
-                return configuracion.GetConnectionString("CadenaConexionHamachi");
-            }
-            else
-            {
-                throw new Exception("No se puede conectar a ninguna base de datos.");
+         
+                mensajeError = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
+                return null; 
             }
         }
     }
