@@ -37,12 +37,13 @@ namespace SupportHub.Pages.Welcome
             string cadena = GetAvailableConnectionString();
             if (cadena == null && !string.IsNullOrEmpty(mensajeError))
             {
-
                 ViewData["ErrorMessage"] = mensajeError;
-
             }
+
             try
             {
+                HttpContext.Session.SetString("usuario", Username);
+                HttpContext.Session.SetString("contra", Password);
                 using (SqlConnection conn = new SqlConnection(cadena))
                 {
                     conn.Open();
@@ -60,15 +61,14 @@ namespace SupportHub.Pages.Welcome
 
                             // Crear los claims del usuario autenticado
                             var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, nombreCompleto)  // Usar el nombre completo
-                };
+                            {
+                                new Claim(ClaimTypes.Name, nombreCompleto)  // Usar el nombre completo
+                            };
 
                             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                             // Autenticar al usuario creando la cookie
-                            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                                new ClaimsPrincipal(claimsIdentity));
+                            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
                             // Redirigir al usuario autenticado
                             return Redirect("/Index");
@@ -84,15 +84,10 @@ namespace SupportHub.Pages.Welcome
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine("Error: " + ex.Message);
                 return Page();
             }
-            
-
         }
-
-
 
         private string GetAvailableConnectionString()
         {
@@ -114,11 +109,9 @@ namespace SupportHub.Pages.Welcome
             }
             catch (Exception ex)
             {
-
                 mensajeError = "El sistema no tiene conexi�n con el servidor. Favor notifique el impase al administrador.";
                 return null;
             }
-
         }
     }
 }
