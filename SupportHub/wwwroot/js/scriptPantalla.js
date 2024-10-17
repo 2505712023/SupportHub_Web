@@ -136,9 +136,9 @@ function validarIformacionUsuario() {
             text: "La contraseña actual es incorrecta!"
         });
         return false;
-    } else if (nuevaContra != "" || confirmarNuevaContra != "") {
+    } else if (nuevaContra != "" && confirmarNuevaContra == "" || nuevaContra == "" && confirmarNuevaContra != "") {
         Swal.fire({
-            icon: "error",
+            icon: "error", 
             title: "Oops...",
             text: "Por favor, complete ambos campos de nueva contraseña."
         });
@@ -193,6 +193,8 @@ function llenarModal(button) {
     $(".modal #codigo").prop("readonly", true);
 
 }
+//funciones para modificar usuario
+
 
 
 function limpiarModal() {
