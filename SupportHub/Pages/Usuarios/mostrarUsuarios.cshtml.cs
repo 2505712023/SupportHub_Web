@@ -13,10 +13,10 @@ namespace SupportHub.Pages.Usuarios
     public class mostrarUsuariosModel : PageModel
     {
         private readonly IConfiguration configuracion;
-        public List<Usuario> listaUsuarios { get; set; } = new List<Usuario>();
-        public List<Usuario> ListaCodigo = new List<Usuario>();
-        public List<Usuario> Roles { get; set; } = new List<Usuario>();
-        public Usuario newUsuario= new Usuario();
+        public List<Modelos.Usuario> listaUsuarios { get; set; } = new List<Modelos.Usuario>();
+        public List<Modelos.Usuario> ListaCodigo = new List<Modelos.Usuario>();
+        public List<Modelos.Usuario> Roles { get; set; } = new List<Modelos.Usuario>();
+        public Modelos.Usuario newUsuario = new Modelos.Usuario();
         public String mensajeError = "";
         public String mensajeExito = "";
 
@@ -58,7 +58,7 @@ namespace SupportHub.Pages.Usuarios
                     {
                         while (lector.Read())
                         {
-                            Usuario Usuario = new Usuario();
+                            Modelos.Usuario Usuario = new Modelos.Usuario();
                             Usuario.LoginUsuario = lector.GetString(0);
                             Usuario.NombreUsuario = lector.GetString(1);
                             Usuario.ApellidoUsuario = lector.GetString(2);
@@ -78,7 +78,7 @@ namespace SupportHub.Pages.Usuarios
                         {
                             while (reader.Read())
                             {
-                                var rol = new Usuario
+                                var rol = new Modelos.Usuario
                                 {
                                     RolUsuario = reader.GetString(0)
                                 };
@@ -124,7 +124,7 @@ namespace SupportHub.Pages.Usuarios
                         {
                             while (reader.Read())
                             {
-                                var codigoempleados = new Usuario
+                                var codigoempleados = new Modelos.Usuario
                                 {
                                     CodEmpleado = reader.GetString(0)
                                 };
@@ -185,7 +185,7 @@ namespace SupportHub.Pages.Usuarios
                     #region validar coincidencias
                     //voy a obtener algunos campos de los usuarios para hacer algunas comparaciones
 
-                    List<Usuario> nombreUsuarios = new List<Usuario>();
+                    List<Modelos.Usuario> nombreUsuarios = new List<Modelos.Usuario>();
 
                     string cadena = GetAvailableConnectionString();
                     using (SqlConnection conexion = new SqlConnection(cadena))
@@ -198,7 +198,7 @@ namespace SupportHub.Pages.Usuarios
                         {
                             while (lector.Read())
                             {
-                                Usuario usuario = new Usuario();
+                                Modelos.Usuario usuario = new Modelos.Usuario();
                                 usuario.LoginUsuario = lector.GetString(2);
                                 usuario.IDEmpleado = lector.GetInt32(4);
                                 nombreUsuarios.Add(usuario);

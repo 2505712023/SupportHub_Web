@@ -15,7 +15,7 @@ namespace SupportHub.Pages.Usuario
         [TempData]
         public bool exito { get; set; } = false;
         public readonly IConfiguration configuracion;
-        public List<Usuarios> Usuario = new List<Usuarios>();
+        public List<Modelos.Usuarios> Usuario = new List<Modelos.Usuarios>();
         public String mensajeError = "";
         public mi_informacionModel(IConfiguration configuracion)
         {
@@ -42,7 +42,7 @@ namespace SupportHub.Pages.Usuario
                         {
                             while (lector.Read())
                             {
-                                Usuarios newUsuario = new Usuarios();
+                                Modelos.Usuarios newUsuario = new Modelos.Usuarios();
 
                                 newUsuario.idUsuario = lector.GetInt32(0);
                                 newUsuario.loginUsuario = lector.GetString(2);
@@ -64,7 +64,7 @@ namespace SupportHub.Pages.Usuario
 
         public IActionResult OnPost()
         {
-            Usuarios setUsuario = new Usuarios();
+            Modelos.Usuarios setUsuario = new Modelos.Usuarios();
             string contraseñaActual = Request.Form["contraA"];
             string nuevaContraseña = Request.Form["nContra"];
             string ConfirmarNuevaContra = Request.Form["CnContra"];
