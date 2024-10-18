@@ -6,18 +6,16 @@
 }
 <br />
 
-<link rel="stylesheet" href="~/css/estiloPantallas.css">
-<!-- CSS de intl-tel-input -->
+<link rel="stylesheet" href="~/css/estiloEquipos.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/css/intlTelInput.css" />
-
-<div class="cotent-wrapper" style="max-width: 1700px; border-radius: 20px;">
+<div class="cotent-wrapper" style="max-width: 1450px; border-radius: 20px;">
   <h1>Gestión de Equipos</h1>
 
-  <div class="row mb-3 align-items-center">
+  <div class="row mb-3">
       <div class="col-md-8">
           <form method="get">
-                <div class="search-bar align-items-center d-flex">
-                  <input type="text" name="searchQuery" class="form-control me-2" placeholder="Buscar por código o tipo de equipo..."
+                <div class="search-bar d-flex">
+                  <input type="text" name="searchQuery" class="form-control me-2" placeholder="Buscar por código, tipo de equipo o marca de equipo..."
                          value="@Request.Query["searchQuery"]" oninput="checkSearch(this)" />
                   <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
               </div>
@@ -29,21 +27,20 @@
           </button> 
       </div>
   </div>
-
-  <div>
-      <table class="table table-hover align-middle text-center" style="max-width: 550px; width: 100%;">
+  <div class="contenedor-tabla">
+      <table class="table table-hover align-middle text-center" style="max-width: 1500px; width: 100%;">
          <thead>
              <tr>
                  <th>Código</th>
-                 <th class="text-truncate col-tipoEquipo">Tipo de Equipo</th>
-                 <th class="text-truncate col-marcaEquipo">Marca de Equipo</th>
-                 <th class="text-truncate col-modeloEquipo">Modelo de Equipo</th>
-                 <th class="text-truncate col-cantidadAdquirida">Cantidad Adquirida</th>
-                 <th class="text-truncate col-cantidadDisponible">Cantidad Disponible</th>
-                 <th class="text-truncate col-precioEquipo">Precio de Equipo</th>
-                 <th class="text-truncate col-Proveedor">Proveedor</th>
-                 <th class="text-truncate col-Descripcion">Descripción</th>
-                 <th class="acciones">Acciones</th>
+                 <th>Tipo de Equipo</th>
+                 <th>Marca de Equipo</th>
+                 <th>Modelo de Equipo</th>
+                 <th>Cantidad Adquirida</th>
+                 <th>Cantidad Disponible</th>
+                 <th>Precio de Equipo</th>
+                 <th>Proveedor</th>
+                 <th>Descripción</th>
+                 <th>Acciones</th>
              </tr>
          </thead>
          <tbody>
@@ -60,18 +57,22 @@
                         <td align="left">@item.nombreproveedor</td>
                         <td align="left">@item.descripcionEquipo</td>
                         <td class="acciones">
-                            <div class="botones">
                                 <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
                                  <i class="fas fa-pen"></i>Modificar
                                 </button>
                                 <button class="btn btn-delete" onclick="llenarModalElimminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
                                     <i class="fas fa-trash"></i>Eliminar
                                 </button>
-                            </div>
                         </td>
                     </tr>
                 }
          </tbody>
          </table>
       </div>
+
+    <div id="pagination" class="pagination">
+        <ul class="pagination-list"></ul>
+    </div>
 </div>
+
+
