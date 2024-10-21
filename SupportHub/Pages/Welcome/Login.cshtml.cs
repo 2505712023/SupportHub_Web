@@ -58,16 +58,19 @@ namespace SupportHub.Pages.Welcome
                         {
                             // Obtener el nombre y apellido del usuario
                             string nombreCompleto = reader["nombreUsuario"].ToString() + " " + reader["apellidoUsuario"].ToString();
-
+                            //obtener el rol del usuario
+                            string rol = reader["nombreRol"].ToString();
                             // Crear los claims del usuario autenticado
                             var claims = new List<Claim>
                             {
-                                new Claim(ClaimTypes.Name, nombreCompleto)  // Usar el nombre completo
+                                new Claim(ClaimTypes.Name, nombreCompleto), // Usar el nombre completo
+                                new Claim(ClaimTypes.Role, rol)
                             };
 
                             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                             // Autenticar al usuario creando la cookie
+                            //await
                             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
                             // Redirigir al usuario autenticado
