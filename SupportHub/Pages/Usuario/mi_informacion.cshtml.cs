@@ -27,7 +27,9 @@ namespace SupportHub.Pages.Usuario
             {
                 string usuario = HttpContext.Session.GetString("usuario");
                 string cadena = GetAvailableConnectionString();
-                string consulta = "Select * from Usuarios where loginUsuario = @usuario";
+                string consulta = "select u.idUsuario, u.loginUsuario, u.nombreUsuario, u.apellidoUsuario, r.nombreRol " +
+                    "from Usuarios u join UsuariosXRoles ur on u.idUsuario = ur.idUsuario " +
+                    "join Roles r on ur.idRol = r.idRol where u.loginUsuario = @usuario";
 
                 if (!string.IsNullOrEmpty(usuario))
                 {
@@ -45,10 +47,10 @@ namespace SupportHub.Pages.Usuario
                                 Usuarios newUsuario = new Usuarios();
 
                                 newUsuario.idUsuario = lector.GetInt32(0);
-                                newUsuario.loginUsuario = lector.GetString(2);
-                                newUsuario.nombreUsuario = lector.GetString(3);
-                                newUsuario.apellidoUsuario = lector.GetString(4);
-
+                                newUsuario.loginUsuario = lector.GetString(1);
+                                newUsuario.nombreUsuario = lector.GetString(2);
+                                newUsuario.apellidoUsuario = lector.GetString(3);
+                                newUsuario.rol = lector.GetString(4);
                                 Usuario.Add(newUsuario);
                             }
                         }

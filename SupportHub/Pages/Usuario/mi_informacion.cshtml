@@ -17,6 +17,7 @@
 		     <th>USUARIO</th>
 			 <th>NOMBRE</th>
 			 <th>APELLIDO</th>
+			 <th>ROL</th>
 			 <th>EDITAR</th>
 		</tr>
 	</thead>
@@ -36,6 +37,9 @@
 					<td>
 						<label>@i.apellidoUsuario</label>
 					</td>
+                    <td>
+                        <label>@i.rol</label>
+                    </td>
 					<td>
                         <button onclick="ModalModificarUsuario(this)" type="button" class="btn btn-edit btnTexto" data-bs-toggle="modal" data-bs-target="#Modificar"><span class="texto-editar">INFO</span></button>
                         <button onclick="ModalModificarContraseña(this)" type="button" class="btn btn-edit btnClave" data-bs-toggle="modal" data-bs-target="#Modificar"><span class="texto-clave">CLAVE</span></button>
