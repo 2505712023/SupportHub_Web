@@ -22,10 +22,8 @@ namespace SupportHub.Pages.Welcome
 
         [BindProperty]
         public string Username { get; set; }
-
         [BindProperty]
         public string Password { get; set; }
-
         public string ErrorMessage { get; set; }
 
         public void OnGet()
@@ -79,7 +77,7 @@ namespace SupportHub.Pages.Welcome
                         else
                         {
                             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                            ErrorMessage = "Usuario o contrase�a incorrecta"; // Mensaje de error
+                            ErrorMessage = "Usuario o contraseña incorrecta"; // Mensaje de error
                             return Page();
                         }
                     }
@@ -112,7 +110,7 @@ namespace SupportHub.Pages.Welcome
             }
             catch (Exception ex)
             {
-                mensajeError = "El sistema no tiene conexi�n con el servidor. Favor notifique el impase al administrador.";
+                mensajeError = "El sistema no tiene conexión con el servidor. Favor notifique el impase al administrador.";
                 return null;
             }
         }

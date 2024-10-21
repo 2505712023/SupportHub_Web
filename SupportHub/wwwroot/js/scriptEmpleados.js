@@ -36,7 +36,6 @@
             if (i === currentPage) {
                 pageDot.classList.add("active");
             }
-
       
             pageDot.addEventListener("click", function () {
                 showPage(i);
@@ -119,11 +118,8 @@ function validarFormularioEmpleado() {
     document.getElementById('formAgregarEmpleado').submit();
 }
 
-
 function limpiarModalEmpleado() {
     $(".modal #esModificacion").val("false")
     $(".modal h1").text("Agregar Empleados");
     $("#formAgregarEmpleado")[0].reset();
-
-
 }

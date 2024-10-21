@@ -193,6 +193,8 @@ function llenarModal(button) {
     $(".modal #codigo").prop("readonly", true);
 
 }
+//funciones para modificar usuario
+
 
 
 function limpiarModal() {

@@ -1,0 +1,76 @@
+﻿@page
+@model SupportHub.Pages.Equipo.mostrarEquiposModel
+@{
+    ViewData["Title"] = "Equipos";
+    Layout = "_Layout";
+}
+<br />
+
+<link rel="stylesheet" href="~/css/estiloEquipos.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/css/intlTelInput.css" />
+<div class="content-wrapper" style="max-width: 1450px; border-radius: 20px;">
+  <h1>Gestión de Equipos</h1>
+
+  <div class="row mb-3">
+      <div class="col-md-8">
+          <form method="get">
+                <div class="search-bar d-flex">
+                  <input type="text" name="searchQuery" class="form-control me-2" placeholder="Buscar por código, tipo de equipo o marca de equipo..."
+                         value="@Request.Query["searchQuery"]" oninput="checkSearch(this)" />
+                  <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
+              </div>
+          </form>
+      </div>
+      <div class="col-md-4 text-end">
+          <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+              <i class="fas fa-plus-circle"></i> Agregar Equipos
+          </button> 
+      </div>
+  </div>
+  <div class="contenedor-tabla">
+      <table class="table table-hover align-middle text-center" style="max-width: 1500px; width: 100%;">
+         <thead>
+             <tr>
+                 <th>Código</th>
+                 <th>Tipo de Equipo</th>
+                 <th>Marca de Equipo</th>
+                 <th>Modelo de Equipo</th>
+                 <th>Cantidad Adquirida</th>
+                 <th>Cantidad Disponible</th>
+                 <th>Precio de Equipo</th>
+                 <th>Proveedor</th>
+                 <th>Descripción</th>
+                 <th>Acciones</th>
+             </tr>
+         </thead>
+         <tbody>
+             @foreach (var item in Model.listaEquipos)
+                {
+                    <tr data-codigo="@item.codEquipo" data-tipoEquipo="@item.tipoEquipo" data-marcaEquipo="@item.marcaEquipo" data-modeloEquipo="@item.modeloEquipo" >
+                        <td align="left">@item.codEquipo</td>
+                        <td align="left">@item.tipoEquipo</td>
+                        <td align="left">@item.marcaEquipo</td>
+                        <td align="left">@item.modeloEquipo</td>
+                        <td align="left">@item.cantidadAdquirida</td>
+                        <td align="left">@item.cantidadDisponible</td>
+                        <td align="left">@item.precioEquipo</td>
+                        <td align="left">@item.nombreproveedor</td>
+                        <td align="left">@item.descripcionEquipo</td>
+                        <td class="acciones">
+                                <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                                 <i class="fas fa-pen"></i>Modificar
+                                </button>
+                                <button class="btn btn-delete" onclick="llenarModalElimminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
+                                    <i class="fas fa-trash"></i>Eliminar
+                                </button>
+                        </td>
+                    </tr>
+                }
+         </tbody>
+         </table>
+      </div>
+
+    <div id="pagination" class="pagination">
+        <ul class="pagination-list"></ul>
+    </div>
+</div>
