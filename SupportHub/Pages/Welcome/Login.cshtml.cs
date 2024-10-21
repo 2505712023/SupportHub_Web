@@ -32,7 +32,7 @@ namespace SupportHub.Pages.Welcome
         {
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost()
         {
             string cadena = GetAvailableConnectionString();
             if (cadena == null && !string.IsNullOrEmpty(mensajeError))
@@ -70,7 +70,7 @@ namespace SupportHub.Pages.Welcome
                             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                             // Autenticar al usuario creando la cookie
-                            //await
+                            await
                             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
                             // Redirigir al usuario autenticado

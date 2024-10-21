@@ -55,9 +55,12 @@
                                 <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
                                  <i class="fas fa-pen"></i>Modificar
                                 </button>
-                                <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
-                                    <i class="fas fa-trash"></i>Eliminar
-                                </button>
+                                @if (User.IsInRole("Administrador"))
+                                { //solo el administrador puede ver este botón
+                                    <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
+                                        <i class="fas fa-trash"></i>Eliminar
+                                    </button>
+                                }
                             </div>
                         </td>
                     </tr>

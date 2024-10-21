@@ -209,15 +209,18 @@ namespace SupportHub.Pages.Entregas
                 int devolucionesAgregadas = 0;
                 int devolucionesEliminadas = 0;
                 if (Request.Form["esEliminacion"] == "true")
-                {
-                    using (SqlConnection conexion = new(cadena))
+                {   //solo si es administrador puede ejecutar la acción de eliminar un registro
+                    if (User.IsInRole("Administrador"))
                     {
-                        conexion.Open();
-                        SqlCommand comando = new("dbo.sp_eliminar_entrega @codEntrega", conexion);
+                        using (SqlConnection conexion = new(cadena))
+                        {
+                            conexion.Open();
+                            SqlCommand comando = new("dbo.sp_eliminar_entrega @codEntrega", conexion);
 
-                        comando.Parameters.AddWithValue("@codEntrega", newEntrega.codEntrega);
+                            comando.Parameters.AddWithValue("@codEntrega", newEntrega.codEntrega);
 
-                        registrosEliminados = Convert.ToInt32(comando.ExecuteScalar().ToString());
+                            registrosEliminados = Convert.ToInt32(comando.ExecuteScalar().ToString());
+                        }
                     }
                 }
                 else if (Request.Form["esDevolucion"] == "true")

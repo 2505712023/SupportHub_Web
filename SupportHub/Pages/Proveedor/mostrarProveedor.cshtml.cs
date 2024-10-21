@@ -98,43 +98,46 @@ namespace SupportHub.Pages.Proveedor
             //newProveedor.idProveedor = Convert.ToInt32(Request.Form["id"]);
 
             if (esEliminacion)
-            {
-                newProveedor.idProveedor = Convert.ToInt32(Request.Form["idProveedor"]);
-                int registrosEliminados = 0;
-                try
+            {   //solo el administrador puede ejecutar esta acción
+                if (User.IsInRole("Administrador"))
                 {
-                    string cadena = GetAvailableConnectionString();
-                    if (cadena == null && !string.IsNullOrEmpty(mensajeError))
+                    newProveedor.idProveedor = Convert.ToInt32(Request.Form["idProveedor"]);
+                    int registrosEliminados = 0;
+                    try
                     {
-
-                        ViewData["ErrorMessage"] = mensajeError;
-
-                    }
-
-                    using (SqlConnection conexion = new SqlConnection(cadena))
-                    {
-                       
-                        conexion.Open();
-                        using (var comando = new SqlCommand("sp_eliminar_proveedor", conexion))
+                        string cadena = GetAvailableConnectionString();
+                        if (cadena == null && !string.IsNullOrEmpty(mensajeError))
                         {
-                            comando.CommandType = CommandType.StoredProcedure;
-                            comando.Parameters.AddWithValue("@idProveedor", newProveedor.idProveedor);
-                            registrosEliminados = Convert.ToInt32(comando.ExecuteScalar());
+
+                            ViewData["ErrorMessage"] = mensajeError;
+
+                        }
+
+                        using (SqlConnection conexion = new SqlConnection(cadena))
+                        {
+
+                            conexion.Open();
+                            using (var comando = new SqlCommand("sp_eliminar_proveedor", conexion))
+                            {
+                                comando.CommandType = CommandType.StoredProcedure;
+                                comando.Parameters.AddWithValue("@idProveedor", newProveedor.idProveedor);
+                                registrosEliminados = Convert.ToInt32(comando.ExecuteScalar());
+                            }
+                        }
+                        exito = registrosEliminados == 1 ? true : false;
+
+                        if (exito)
+                        {
+                            esEliminacion = false;
+                            eliminado = true;
+                            return RedirectToPage("/Proveedor/mostrarProveedor");
                         }
                     }
-                    exito = registrosEliminados == 1 ? true : false;
-
-                    if (exito)
+                    catch (Exception ex)
                     {
-                        esEliminacion = false;
-                        eliminado = true;
-                        return RedirectToPage("/Proveedor/mostrarProveedor");
+                        mensajeError = ex.Message;
+                        return Page();
                     }
-                }
-                catch (Exception ex)
-                {
-                    mensajeError = ex.Message;
-                    return Page();
                 }
             }
 

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 namespace SupportHub.Pages.Empleado
 {
-    [Authorize]
+    [Authorize(Roles = "Administrador")]
     public class mostrarEmpleadosModel : PageModel
     {
         private readonly IConfiguration configuracion;

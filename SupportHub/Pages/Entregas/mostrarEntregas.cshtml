@@ -83,9 +83,12 @@
                             <button class="btn btn-edit btn-acciones" onclick="openModal('modificar', this)" data-bs-toggle="modal" data-bs-target="#modalEntregas">
                                 <i class="fas fa-pen"></i> Modificar
                             </button>
-                            <button class="btn btn-delete btn-acciones" onclick="openModal('eliminar', this)" data-bs-toggle="modal" data-bs-target="#modalEntregas">
-                                <i class="fas fa-trash"></i> Eliminar
-                            </button>
+                            @if (User.IsInRole("Administrador"))
+                            {   //solo el administrador puede ver este botón
+                                <button class="btn btn-delete btn-acciones" onclick="openModal('eliminar', this)" data-bs-toggle="modal" data-bs-target="#modalEntregas">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            }
                             <button class="btn btn-warning btn-acciones" id="devolucion" data-bs-toggle="modal" data-bs-target="#modalEntregas">
                                 <i class="fas fa-rotate-left"></i> Devolución
                             </button>
