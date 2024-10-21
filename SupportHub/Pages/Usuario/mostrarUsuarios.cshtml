@@ -1,5 +1,5 @@
 ﻿@page
-@model SupportHub.Pages.Usuarios.mostrarUsuariosModel
+@model mostrarUsuariosModel
 @{
 	ViewData["Title"] = "Usuarios";
     Layout = "_Layout";
@@ -38,7 +38,10 @@
                     <th class="text-truncate col-apellido">Apellidos</th>
                     <th class="text-truncate col-activo">Activo</th>
                     <th class="text-truncate" col-codempleado>Código de empleado</th>
-                    <th class="acciones">Acciones</th>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <th class="acciones">Acciones</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -50,16 +53,19 @@
                         <td align="left">@item.ApellidoUsuario</td>
                         <td align="left">@(item.ActivoUsuario == true ? "Activo" : "Inactivo")</td>
                         <td align="left">@item.CodEmpleado</td>
-                        <td class="acciones">
-                            <div class="botones">
-                                <button class="btn btn-edit" onclick="llenarModalModificarUsuario(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
-                                    <i class="fas fa-pen"></i>Modificar
-                                </button>
-                                <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
-                                    <i class="fas fa-trash"></i>Eliminar
-                                </button>
-                            </div>
-                        </td>
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <td class="acciones">
+                                <div class="botones">
+                                    <button class="btn btn-edit" onclick="llenarModalModificarUsuario(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                                        <i class="fas fa-pen"></i>Modificar
+                                    </button>
+                                    <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
+                                        <i class="fas fa-trash"></i>Eliminar
+                                    </button>
+                                </div>
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>

@@ -41,7 +41,10 @@
                     <th>Área</th>
                     <th>Cod Cargo</th>
                     <th>Cargo</th>
-                    <th>Acciones</th>
+                    @if(User.IsInRole("Administrador"))
+                    {
+                        <th>Acciones</th>
+                    }
                 </tr>
             </thead>
             <tbody id="empleadosBody">
@@ -57,14 +60,17 @@
                         <td align="left">@item.nombreArea</td>
                         <td align="left">@item.codCargo</td>
                         <td align="left">@item.nombreCargo</td>
-                        <td class="actions">
-                            <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
-                                <i class="fas fa-pen"></i> Modificar
-                            </button>
-                            <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
-                                <i class="fas fa-trash"></i> Eliminar
-                            </button>
-                        </td>
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <td class="actions">
+                                <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                                    <i class="fas fa-pen"></i> Modificar
+                                </button>
+                                <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>

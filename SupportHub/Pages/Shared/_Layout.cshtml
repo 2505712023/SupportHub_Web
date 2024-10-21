@@ -81,7 +81,7 @@
                 @if (User.IsInRole("Administrador"))
                 {
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" asp-area="" asp-page="/Usuario/mostrarUsuarios">
                             <i class="fas fa-users-cog"></i> Usuarios
                         </a>
                     </li>

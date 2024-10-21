@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using System.Data.Common;
 
-namespace SupportHub.Pages.Usuarios
+namespace SupportHub.Pages.Usuario
 {
+    [Authorize(Roles = "Administrador,Común")]
     public class mostrarUsuariosModel : PageModel
     {
         private readonly IConfiguration configuracion;
@@ -17,12 +18,12 @@ namespace SupportHub.Pages.Usuarios
         public List<Modelos.Usuario> ListaCodigo = new List<Modelos.Usuario>();
         public List<Modelos.Usuario> Roles { get; set; } = new List<Modelos.Usuario>();
         public Modelos.Usuario newUsuario = new Modelos.Usuario();
-        public String mensajeError = "";
-        public String mensajeExito = "";
+        public string mensajeError = "";
+        public string mensajeExito = "";
 
         public mostrarUsuariosModel(IConfiguration configuration)
         {
-            this.configuracion = configuration;
+            configuracion = configuration;
         }
 
         public void OnGet(string searchQuery = null, bool exito = false, bool intentoRealizado = false, bool esEliminacion = false, bool eliminado = false)
@@ -43,7 +44,7 @@ namespace SupportHub.Pages.Usuarios
                     if (!string.IsNullOrEmpty(searchQuery))
                     {
                         comando = new SqlCommand("sp_obtener_usuario", conexion);
-                        comando.CommandType = System.Data.CommandType.StoredProcedure;
+                        comando.CommandType = CommandType.StoredProcedure;
                         comando.Parameters.AddWithValue("@LoginUsuario ", searchQuery);
                         comando.Parameters.AddWithValue("@codEmpleado ", searchQuery);
 
@@ -51,7 +52,7 @@ namespace SupportHub.Pages.Usuarios
                     else
                     {
                         comando = new SqlCommand("sp_obtener_usuarios", conexion);
-                        comando.CommandType = System.Data.CommandType.StoredProcedure;
+                        comando.CommandType = CommandType.StoredProcedure;
                     }
 
                     using (SqlDataReader lector = comando.ExecuteReader())
@@ -91,27 +92,28 @@ namespace SupportHub.Pages.Usuarios
                     JsonResult OnGetPersonData(string codEmpleado)
                     {
                         string querycodigo = "SELECT nombreEmpleado, apellidoEmpleado FROM Empleado WHERE codEmpleado = @codEmpleado";
-                        using (SqlCommand command = new SqlCommand(querycodigo, conexion)) { 
-                        command.Parameters.AddWithValue("@codEmpleado", codEmpleado);
-
-                        conexion.Open();
-                        SqlDataReader reader = command.ExecuteReader();
-                        string nombre = "";
-                        string apellido = "";
-
-                        if (reader.Read())
+                        using (SqlCommand command = new SqlCommand(querycodigo, conexion))
                         {
-                            nombre = reader["nombreEmpleado"].ToString();
-                            apellido = reader["apellidoEmpleado"].ToString();
-                        }
+                            command.Parameters.AddWithValue("@codEmpleado", codEmpleado);
 
-                        conexion.Close();
+                            conexion.Open();
+                            SqlDataReader reader = command.ExecuteReader();
+                            string nombre = "";
+                            string apellido = "";
+
+                            if (reader.Read())
+                            {
+                                nombre = reader["nombreEmpleado"].ToString();
+                                apellido = reader["apellidoEmpleado"].ToString();
+                            }
+
+                            conexion.Close();
                             return new JsonResult(new { nombre, apellido });
                         }
-                            
-                        
 
-                       
+
+
+
                     }
 
 
@@ -135,7 +137,7 @@ namespace SupportHub.Pages.Usuarios
                     }
 
 
-                    
+
 
                 }
             }
@@ -158,7 +160,7 @@ namespace SupportHub.Pages.Usuarios
 
 
 
-        
+
 
 
         public IActionResult OnPost()
@@ -167,9 +169,9 @@ namespace SupportHub.Pages.Usuarios
             newUsuario.NombreUsuario = Request.Form["nombre"];
             newUsuario.ApellidoUsuario = Request.Form["apellido"];
             newUsuario.CodEmpleado = Request.Form["codEmpleado"];
-            newUsuario.ActivoUsuario =Convert.ToBoolean(Request.Form["activo"]);
+            newUsuario.ActivoUsuario = Convert.ToBoolean(Request.Form["activo"]);
             //si se quiere agregar un nuevo usuario
-            if(Request.Form["esModificacion"] == "false")
+            if (Request.Form["esModificacion"] == "false")
             {
 
                 //aquí va el código para agregar usuarios 
@@ -192,7 +194,7 @@ namespace SupportHub.Pages.Usuarios
                     {
                         conexion.Open();
                         SqlCommand comando = new SqlCommand("sp_obtener_usuarios", conexion);
-                        comando.CommandType = System.Data.CommandType.StoredProcedure;
+                        comando.CommandType = CommandType.StoredProcedure;
 
                         using (SqlDataReader lector = comando.ExecuteReader())
                         {
@@ -231,7 +233,7 @@ namespace SupportHub.Pages.Usuarios
                             SqlCommand comando = new SqlCommand("sp_modificar_usuario", conexion);
 
                             comando.CommandType = CommandType.StoredProcedure;
-                            comando.Parameters.AddWithValue("@loginUsuario",newUsuario.LoginUsuario);
+                            comando.Parameters.AddWithValue("@loginUsuario", newUsuario.LoginUsuario);
                             comando.Parameters.AddWithValue("@nombresUsuario", newUsuario.NombreUsuario);
                             comando.Parameters.AddWithValue("@apellidosUsuario", newUsuario.ApellidoUsuario);
                             comando.Parameters.AddWithValue("@activoUsuario", newUsuario.ActivoUsuario);

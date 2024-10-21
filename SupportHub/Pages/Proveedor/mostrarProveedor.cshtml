@@ -39,7 +39,10 @@
                     <th class="text-truncate col-nombre">Nombre</th>
                     <th class="text-truncate col-direccion">Dirección</th>
                     <th>Teléfono</th>
-                    <th class="acciones">Acciones</th>
+                    @if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
+                    {
+                        <th class="acciones">Acciones</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -50,19 +53,22 @@
                         <td align="left">@item.nombreProveedor</td>
                         <td style="max-width: 20%" align="left">@item.direccionProveedor</td>
                         <td align="left">@item.telefonoProveedor</td>
-                        <td class="acciones">
-                            <div class="botones">
-                                <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
-                                 <i class="fas fa-pen"></i>Modificar
-                                </button>
-                                @if (User.IsInRole("Administrador"))
-                                { //solo el administrador puede ver este botón
-                                    <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
-                                        <i class="fas fa-trash"></i>Eliminar
+                        @if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
+                        {
+                            <td class="acciones">
+                                <div class="botones">
+                                    <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                                        <i class="fas fa-pen"></i>Modificar
                                     </button>
-                                }
-                            </div>
-                        </td>
+                                    @if (User.IsInRole("Administrador"))
+                                    { //solo el administrador puede ver este botón
+                                        <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
+                                            <i class="fas fa-trash"></i>Eliminar
+                                        </button>
+                                    }
+                                </div>
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>

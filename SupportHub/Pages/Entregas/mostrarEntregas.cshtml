@@ -54,7 +54,10 @@
                     <th>Fecha Entrega</th>
                     <th>Fecha Devolución</th>
                     <th>Observación Entrega</th>
-                    <th>Acciones</th>
+                    @if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
+                    {   //los usuarios con rol Común no podrán ver esta columna
+                        <th>Acciones</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -79,20 +82,25 @@
                         <td align="center" style="white-space: nowrap;">@item.fechaEntrega</td>
                         <td align="center" style="white-space: nowrap;" id="fechaDevolucion">@item.fechaDevolucion</td>
                         <td align="left">@item.observacionEntrega</td>
-                        <td>
+                        @if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
+                       {
+                          <td>
                             <button class="btn btn-edit btn-acciones" onclick="openModal('modificar', this)" data-bs-toggle="modal" data-bs-target="#modalEntregas">
                                 <i class="fas fa-pen"></i> Modificar
                             </button>
-                            @if (User.IsInRole("Administrador"))
-                            {   //solo el administrador puede ver este botón
-                                <button class="btn btn-delete btn-acciones" onclick="openModal('eliminar', this)" data-bs-toggle="modal" data-bs-target="#modalEntregas">
-                                    <i class="fas fa-trash"></i> Eliminar
+                                                      
+                                @if (User.IsInRole("Administrador"))
+                                { //solo el administrador puede ver este botón eliminar
+                                    <button class="btn btn-delete btn-acciones" onclick="openModal('eliminar', this)" data-bs-toggle="modal" data-bs-target="#modalEntregas">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                }
+                                <button class="btn btn-warning btn-acciones" id="devolucion" data-bs-toggle="modal" data-bs-target="#modalEntregas">
+                                    <i class="fas fa-rotate-left"></i> Devolución
                                 </button>
-                            }
-                            <button class="btn btn-warning btn-acciones" id="devolucion" data-bs-toggle="modal" data-bs-target="#modalEntregas">
-                                <i class="fas fa-rotate-left"></i> Devolución
-                            </button>
-                        </td>
+                            
+                          </td>
+                        }
                     </tr>
                 }
             </tbody>

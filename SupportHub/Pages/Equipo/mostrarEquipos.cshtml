@@ -40,8 +40,11 @@
                  <th>Precio de Equipo</th>
                  <th>Proveedor</th>
                  <th>Descripción</th>
-                 <th>Acciones</th>
-             </tr>
+                    @if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
+                    {
+                        <th>Acciones</th>
+                    }
+                </tr>
          </thead>
          <tbody>
              @foreach (var item in Model.listaEquipos)
@@ -56,14 +59,20 @@
                         <td align="left">@item.precioEquipo</td>
                         <td align="left">@item.nombreproveedor</td>
                         <td align="left">@item.descripcionEquipo</td>
-                        <td class="acciones">
+                        @if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
+                        { 
+                            <td class="acciones">
                                 <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
-                                 <i class="fas fa-pen"></i>Modificar
+                                    <i class="fas fa-pen"></i>Modificar
                                 </button>
-                                <button class="btn btn-delete" onclick="llenarModalElimminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
-                                    <i class="fas fa-trash"></i>Eliminar
-                                </button>
-                        </td>
+                                @if (User.IsInRole("Administrador"))
+                                {
+                                    <button class="btn btn-delete" onclick="llenarModalElimminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
+                                        <i class="fas fa-trash"></i>Eliminar
+                                    </button>
+                                }
+                            </td>
+                        }
                     </tr>
                 }
          </tbody>

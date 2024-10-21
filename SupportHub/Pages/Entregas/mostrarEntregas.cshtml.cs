@@ -12,6 +12,7 @@ using System.Globalization;
 
 namespace SupportHub.Pages.Entregas
 {
+    [Authorize]
     public class mostrarEntregasModel : PageModel
     {
         private readonly IConfiguration configuracion;
