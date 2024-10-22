@@ -11,8 +11,8 @@
 
         public string descripcion { get; set; }
         public string imagen { get; set; }
-        public DateTime fechaCreacion { get; set; }
-        public DateTime fechaFinalizado { get; set; }
+        public string fechaCreacion { get; set; }
+        public string fechaFinalizado { get; set; }
         public int idEmpleado { get; set; }
 
         public string nombreEmpleado { get; set; }
