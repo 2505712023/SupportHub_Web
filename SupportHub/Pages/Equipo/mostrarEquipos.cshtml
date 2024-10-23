@@ -74,3 +74,91 @@
         <ul class="pagination-list"></ul>
     </div>
 </div>
+
+<div class="modal fade" id="AgregarModificar" tabindex="1" arial-labelledby="AgregarModificar" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header encabezado-personalizado">
+                <h1  class="modal-title fs-5" id="AgregarModificar">Agregar Equipo</h1>
+                <button type="button" class="btn-close" onclick="limpiarModalEquipo()" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script src="~/js/scriptEquipos.js"></script>
+
+    <script type="text/javascript">
+        // Verifica si la operación fue exitosa
+        //validar que exito no sea nulo y que sea true, también que no se haya eliminado a nadie
+        // para que no se confunda y no muestre el alert de Eliminado correctamente
+        @if (TempData["exito"] != null && (bool)TempData["exito"] && TempData["eliminado"] != null && (bool)TempData["eliminado"] == false)
+        {
+            <text>
+                Swal.fire({
+                    title: "¡Excelente!",
+                    text: "El proveedor ha sido guardado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            </text>
+            Model.exito = false;
+        }
+    </script>
+
+    <script type="text/javascript">
+            // Verifica si la operación fue exitosa
+            //validar que exito no sea nulo y que sea falso, también que intentoRealizado no sea nulo y que sea verdadero
+        @if (TempData["exito"] != null && (bool)TempData["exito"] == false && TempData["intentoRealizado"] != null && (bool)TempData["intentoRealizado"])
+        {
+            <text>
+                Swal.fire({
+                    title: "Oops...",
+                    text: "Hubo un error al guardar el registro, valide que el código o el nombre del proveedor no exista.",
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+            // Verifica si la operación fue exitosa
+            //validar que exito no sea nulo y que sea true, también que eliminado no sea nulo y que sea verdadero
+        @if (TempData["exito"] != null && (bool)TempData["exito"] == true && TempData["eliminado"] != null && (bool)TempData["eliminado"])
+        {
+            <text>
+                Swal.fire({
+                    title: "¡Excelente!",
+                    text: "El proveedor ha sido eliminado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+            </text>
+        }
+    </script>
+
+    <script type="text/javascript">
+        @{
+            var errorMessage = ViewData["ErrorMessage"] as string;
+        }
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <text>
+                Swal.fire({
+                    title: "Oops...",
+                    text: @Html.Raw($"\"{errorMessage}\""),
+                    icon: "error",
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirigir a la página Index
+                        window.location.href = '../Index';
+                    }
+                });
+            </text>
+        }
+    </script>
