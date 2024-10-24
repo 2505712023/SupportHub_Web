@@ -11,22 +11,20 @@
 <div class="content-wrapper" style="max-width: 1750px; border-radius: 20px;">
     <h1>Gestión de Tickets</h1>
 
-
-
-<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header encabezado-ticket">
-                <h5 class="modal-title" id="imageModalLabel">Imagen de Ticket</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center">
-                <!-- Aquí se cargará dinámicamente la imagen grande -->
-                <img id="modalImage" src="" alt="Imagen en grande" class="img-fluid" />
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header encabezado-ticket">
+                    <h5 class="modal-title" id="imageModalLabel">Imagen de Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <!-- Aquí se cargará dinámicamente la imagen grande -->
+                    <img id="modalImage" src="" alt="Imagen en grande" class="img-fluid" />
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <div class="row mb-3">
         <div class="col-md-8">
@@ -50,7 +48,7 @@
             <thead>
                 <tr>
                     <th>Código de Ticket</th>
-                    <th>Titulo</th>
+                    <th>Título</th>
                     <th>Descripción</th>
                     <th>Imagen</th>
                     <th>Fecha Creación</th>
@@ -58,7 +56,7 @@
                     <th>Usuario</th>
                     <th>Estado</th>
                     <th>Prioridad</th>
-                    <th>It responsable</th>
+                    <th>IT responsable</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -70,15 +68,15 @@
                         <td align="left">@item.titulo</td>
                         <td align="left">@item.descripcion</td>
 
-                            <td>
-                    <!-- El texto o miniatura que abre el modal -->
-                    <a href="javascript:void(0);" onclick="showImageInModal('data:image/png;base64,@item.imagen')">
-                        Ver Imagen
-                    </a>
-                </td>
+                        <td>
+                            <!-- El texto o miniatura que abre el modal -->
+                            <a href="javascript:void(0);" onclick="showImageInModal('data:image/png;base64,@item.imagen')">
+                                Ver Imagen
+                            </a>
+                        </td>
 
-                        <td align="left">@item.fechaCreacion</td>
-                        <td align="left">@item.fechaFinalizado</td>
+                        <td align="left">@(string.IsNullOrEmpty(item.fechaCreacion) ? "" : Convert.ToDateTime(item.fechaCreacion).ToString("dd/MM/yyyy"))</td>
+                        <td align="left">@(string.IsNullOrEmpty(item.fechaFinalizado) ? "" : Convert.ToDateTime(item.fechaFinalizado).ToString("dd/MM/yyyy"))</td>
                         <td align="left">@item.nombreEmpleado</td>
                         <td align="left">@item.nombreEstado</td>
                         <td align="left">@item.nombrePrioridad</td>
@@ -97,18 +95,12 @@
         </table>
     </div>
 
-
-
-
-
     <!-- Paginación -->
     <div id="pagination" class="pagination">
         <ul class="pagination-list"></ul>
     </div>
-</div
-
+</div>
 
 @section Scripts {
-
     <script src="~/js/scriptTickets.js"></script>
 }

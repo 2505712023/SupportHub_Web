@@ -4,6 +4,7 @@
     // Mostrar el modal
     $('#imageModal').modal('show');
 }
+
 document.addEventListener("DOMContentLoaded", function () {
     const rowsPerPage = 10; // Mostrar 10 empleados por página
     const tableBody = document.getElementById("ticketsBody");
