@@ -15,7 +15,7 @@
         <div class="col-md-8">
             <form method="get">
                 <div class="search-bar d-flex">
-                    <input type="text" name="searchQuery" class="form-control me-2" placeholder="Buscar por código, Nombre o Apellido de empleado."
+                    <input type="text" maxlength="100" name="searchQuery" class="form-control me-2" placeholder="Buscar por código, Nombre o Apellido de empleado."
                            value="@Request.Query["searchQuery"]" oninput="checkSearch(this)" />
                     <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
                 </div>
@@ -95,25 +95,25 @@
                     <!-- Campo de Nombre -->
                     <div class="mb-3">
                         <label for="nombre">Nombre Empleado:</label>
-                        <input type="text" required class="form-control" id="nombre" name="nombre">
+                        <input type="text" maxlength="50" required class="form-control" id="nombre" name="nombre">
                     </div>
 
                     <!-- Campo de Nombre -->
                     <div class="mb-3">
                         <label for="nombre">Apellido Empleado:</label>
-                        <input type="text" required class="form-control" id="apellido" name="apellido">
+                        <input type="text" maxlength="50" required class="form-control" id="apellido" name="apellido">
                     </div>
 
                     <!-- Campo de Teléfono -->
                     <div class="mb-3">
                         <label for="telefono">Teléfono:</label><br />
-                        <input type="text" required class="form-control" id="telefono" name="telefono">
+                        <input type="text" maxlength="14"  required class="form-control" id="telefono" name="telefono">
                     </div>
 
                     <!-- Campo de Correo -->
                     <div class="mb-3">
                         <label for="direccion">Email:</label>
-                        <input type="email" required class="form-control" id="email" name="email">
+                        <input type="email" maxlength="100" required class="form-control" id="email" name="email">
                     </div>
 
                     <!-- Campo de Area -->

@@ -4,12 +4,13 @@ using SupportHub.Modelos;
 using System.Data.SqlClient;
 using System.Data;
 using SupportHub.Helpers;
-using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.Extensions.Configuration;
 using System.Data.Common;
-
+using Microsoft.AspNetCore.Authorization;
 namespace SupportHub.Pages.Usuarios
 {
+
     public class mostrarUsuariosModel : PageModel
     {
         private readonly IConfiguration configuracion;

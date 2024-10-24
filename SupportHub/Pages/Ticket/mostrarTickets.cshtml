@@ -1,0 +1,114 @@
+﻿@page
+@model SupportHub.Pages.Ticket.mostrarTicketsModel
+@{
+    ViewData["Title"] = "Tickets";
+    Layout = "_Layout";
+}
+<br />
+
+<link rel="stylesheet" href="~/css/estiloTickets.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/css/intlTelInput.css" />
+<div class="content-wrapper" style="max-width: 1750px; border-radius: 20px;">
+    <h1>Gestión de Tickets</h1>
+
+
+
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header encabezado-ticket">
+                <h5 class="modal-title" id="imageModalLabel">Imagen de Ticket</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <!-- Aquí se cargará dinámicamente la imagen grande -->
+                <img id="modalImage" src="" alt="Imagen en grande" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <form method="get">
+                <div class="search-bar d-flex">
+                    <input type="text" name="searchQuery" class="form-control me-2" placeholder="Buscar por numero de ticket, titulo, nombre usuario o IT"
+                           value="@Request.Query["searchQuery"]" oninput="checkSearch(this)" />
+                    <button type="submit" class="btn"><i class="fas fa-search"></i>Buscar</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 text-end">
+            <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                <i class="fas fa-plus-circle"></i> Crear ticket
+            </button>
+        </div>
+    </div>
+
+    <div class="contenedor-tabla">
+        <table class="table table-hover align-middle text-center" style="max-width: 1700px; width: 100%;" >
+            <thead>
+                <tr>
+                    <th>Código de Ticket</th>
+                    <th>Titulo</th>
+                    <th>Descripción</th>
+                    <th>Imagen</th>
+                    <th>Fecha Creación</th>
+                    <th>Fecha Finalizado</th>
+                    <th>Usuario</th>
+                    <th>Estado</th>
+                    <th>Prioridad</th>
+                    <th>It responsable</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody tbody id="ticketsBody">
+                @foreach (var item in Model.listaTickets)
+                {
+                    <tr data-codigo="@item.codTicket" data-titulo="@item.titulo" data-descripcion="@item.descripcion" data-imagen="@item.imagen" data-fechaCreacion="@item.fechaCreacion" data-fechaFinalizado="@item.fechaFinalizado" data-nombreEmpleado="@item.nombreEmpleado" data-estado="@item.nombreEstado" data-prioridad="@item.nombrePrioridad" data-empleadoIT="@item.nombreEmpleadoIT" data-id="@item.idTicket">
+                        <td align="left">@item.codTicket</td>
+                        <td align="left">@item.titulo</td>
+                        <td align="left">@item.descripcion</td>
+
+                            <td>
+                    <!-- El texto o miniatura que abre el modal -->
+                    <a href="javascript:void(0);" onclick="showImageInModal('data:image/png;base64,@item.imagen')">
+                        Ver Imagen
+                    </a>
+                </td>
+
+                        <td align="left">@item.fechaCreacion</td>
+                        <td align="left">@item.fechaFinalizado</td>
+                        <td align="left">@item.nombreEmpleado</td>
+                        <td align="left">@item.nombreEstado</td>
+                        <td align="left">@item.nombrePrioridad</td>
+                        <td align="left">@item.nombreEmpleadoIT</td>
+                        <td class="actions">
+                            <button class="btn btn-edit" onclick="llenarModal(this)" data-bs-toggle="modal" data-bs-target="#AgregarModificar">
+                                <i class="fas fa-pen"></i> Modificar
+                            </button>
+                            <button class="btn btn-delete" onclick="llenarModalEliminar(this)" data-bs-toggle="modal" data-bs-target="#Eliminar">
+                                <i class="fas fa-times"></i> Cerrar Ticket
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+    <!-- Paginación -->
+    <div id="pagination" class="pagination">
+        <ul class="pagination-list"></ul>
+    </div>
+</div
+
+
+@section Scripts {
+
+    <script src="~/js/scriptTickets.js"></script>
+}
